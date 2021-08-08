@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {Grid} from '@material-ui/core';
 import "./styles.scss";
 
-const AuthLayout: FC<any> = ({children, ...props}) => {
+const AuthLayout: FC<any> = ({children}) => {
   return (
     <Grid container className="auth-container">
       <Grid md={7} className="auth-img"/>
