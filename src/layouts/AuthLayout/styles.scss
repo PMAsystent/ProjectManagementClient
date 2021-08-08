@@ -1,0 +1,13 @@
+.auth-container {
+  height: 100%;
+  .auth-form {
+    background-color: rgba(41,41,41,255);
+    height: 100%;
+  }
+  .auth-img {
+    background-image: url('../../assets/auth-img.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+}

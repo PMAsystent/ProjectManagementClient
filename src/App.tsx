@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {Suspense} from 'react';
+import MainPage from './containers/MainPage';
+import "./styles.scss";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-      </header>
-    </div>
+    <>
+      <Suspense fallback={<div>Loading...</div>}>
+        <MainPage/>
+      </Suspense>
+    </>
   );
 }
 
