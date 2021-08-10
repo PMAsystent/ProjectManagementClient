@@ -1,9 +1,10 @@
 import React, {FC, forwardRef} from 'react';
+import { TextField } from '@material-ui/core';
 import "./styles.scss";
 
-const CustomInput = forwardRef(({className ,...props}: any, ref) => {
+const CustomInput = forwardRef(({...props}: any, ref) => {
   return (
-    <input className={className} ref={ref} {...props} />
+    <TextField inputRef={ref} {...props} />
   )
 })
 

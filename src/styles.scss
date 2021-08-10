@@ -1,3 +1,5 @@
+@use './assets/styles/colors';
+
 *, *::after, *::before {
   box-sizing: border-box;
 }
@@ -8,4 +10,18 @@ html, body, #root {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
+  background-color: colors.$bgColor;
+}
+
+// Forms
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active
+{
+  -webkit-box-shadow: 0 0 0 40px colors.$secondaryColor inset !important;
+}
+input:-webkit-autofill
+{
+  -webkit-text-fill-color: colors.$textColor !important;
 }

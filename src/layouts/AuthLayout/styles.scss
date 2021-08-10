@@ -1,11 +1,13 @@
+@use '../../assets/styles/colors';
+
 .auth-container {
   height: 100%;
   .auth-form {
-    background-color: rgba(41,41,41,255);
+    background-color: colors.$bgColor;
     height: 100%;
   }
   .auth-img {
-    background-image: url('../../assets/auth-img.png');
+    background-image: url('../../assets/images/auth-img.png');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;

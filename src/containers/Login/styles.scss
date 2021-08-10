@@ -1,3 +1,5 @@
+@use '../../assets/styles/colors';
+
 .login-container {
   width: 100%;
   height: 100%;
@@ -21,7 +23,7 @@
     }
 
     h3 {
-      color: #7b7a7a;
+      color: colors.$textColor;
       font-weight: 200;
       font-size: 26px;
     }
@@ -41,7 +43,7 @@
 
     p {
       width: 100%;
-      color: #7b7a7a;
+      color: colors.$textColor;
       margin: 0;
     }
 
@@ -52,7 +54,7 @@
     .new-account {
       text-align: center;
       b {
-        color: rgb(255, 153, 0);
+        color: colors.$primaryColor;
         cursor: pointer;
       }
     }
