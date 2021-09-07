@@ -5,7 +5,7 @@ import "./styles.scss";
 function App() {
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Test...</div>}>
         <MainPage/>
       </Suspense>
     </>
