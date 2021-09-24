@@ -1,24 +1,20 @@
 import React, {useMemo, useState} from "react";
-import "./styles.scss";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {useHistory} from "react-router-dom";
-import {getForgotPasswordPath, getRegisterPath} from "../../core/routes";
+import * as yup from "yup";
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny').required('Email jest wymagany!'),
-  password: yup.string().required('Hasło jest wymagane!'),
+  confirmEmail: yup.string().required('Hasło jest wymagane!'),
 });
 
-const Login = () => {
+const Index = () => {
   const [defaultValue, setDefaultValue] = useState<any>({
     email: '',
-    password: '',
+    confirmEmail: '',
   });
-  const history = useHistory();
 
   const {
     register,
@@ -34,17 +30,9 @@ const Login = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const handleGotoRegister = () => {
-    history.push(getRegisterPath);
-  }
-
-  const handleGotoForgotPassword = () => {
-    history.push(getForgotPasswordPath);
-  }
-
   const onSubmit = (values: any) => {
     console.log(values);
-  }
+  };
 
   return (
     <div className="container">
@@ -53,7 +41,7 @@ const Login = () => {
         <h3>Wspieramy Twój Projekt</h3>
       </div>
       <div className="form">
-        <form onSubmit={handleSubmit(onSubmit)} key={'login'}>
+        <form onSubmit={handleSubmit(onSubmit)} key={'forgotPassword'}>
           <CustomInput
             {...register('email')}
             placeholder="Email"
@@ -62,21 +50,17 @@ const Login = () => {
             error={errors.email}
           />
           <CustomInput
-            {...register('password')}
-            placeholder="Hasło"
-            type="password"
-            helperText={errors.password?.message}
-            error={errors.password}
+            {...register('confirmEmail')}
+            placeholder="Powtórz email"
+            type="email"
+            helperText={errors.confirmPassword?.message}
+            error={errors.confirmPassword}
           />
-          <div className="forgot-password">
-            <span onClick={handleGotoForgotPassword}>Przypomnij hasło</span>
-          </div>
-          <CustomButton type='submit' className="btn-primary">Zaloguj się</CustomButton>
-          <p className="new-account" onClick={handleGotoRegister}>Nie masz konta? <b>Zarejestruj się!</b></p>
+          <CustomButton type='submit' className="btn-primary">Zarejestruj się</CustomButton>
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login;
+export default Index;
