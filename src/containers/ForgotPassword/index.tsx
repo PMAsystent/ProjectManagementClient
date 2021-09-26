@@ -4,10 +4,14 @@ import CustomButton from "../../components/CustomButton";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import {useHistory} from "react-router-dom";
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny').required('Email jest wymagany!'),
-  confirmEmail: yup.string().required('Hasło jest wymagane!'),
+  confirmEmail: yup.string()
+    .oneOf([yup.ref("email")], "Emaile muszą być takie same!")
+    .email('Email jest niepoprawny').required('Email jest wymagany!'),
 });
 
 const Index = () => {
@@ -15,6 +19,7 @@ const Index = () => {
     email: '',
     confirmEmail: '',
   });
+  const history = useHistory();
 
   const {
     register,
@@ -30,6 +35,10 @@ const Index = () => {
     resolver: yupResolver(validationSchema),
   });
 
+  const handlegoBack = () => {
+    history.goBack();
+  }
+
   const onSubmit = (values: any) => {
     console.log(values);
   };
@@ -38,7 +47,7 @@ const Index = () => {
     <div className="container">
       <div className="text">
         <h1>LOGO</h1>
-        <h3>Wspieramy Twój Projekt</h3>
+        <h3>Przypomnij sobie hasło</h3>
       </div>
       <div className="form">
         <form onSubmit={handleSubmit(onSubmit)} key={'forgotPassword'}>
@@ -53,10 +62,11 @@ const Index = () => {
             {...register('confirmEmail')}
             placeholder="Powtórz email"
             type="email"
-            helperText={errors.confirmPassword?.message}
-            error={errors.confirmPassword}
+            helperText={errors.confirmEmail?.message}
+            error={errors.confirmEmail}
           />
-          <CustomButton type='submit' className="btn-primary">Zarejestruj się</CustomButton>
+          <CustomButton type='submit' className="btn-primary">Wyślij kod</CustomButton>
+          <ArrowBackIcon className="icon" onClick={handlegoBack} />
         </form>
       </div>
     </div>

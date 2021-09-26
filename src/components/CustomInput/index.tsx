@@ -1,4 +1,4 @@
-import React, {FC, forwardRef} from 'react';
+import React, {forwardRef} from 'react';
 import { TextField } from '@material-ui/core';
 import "./styles.scss";
 

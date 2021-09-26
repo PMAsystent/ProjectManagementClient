@@ -72,7 +72,7 @@ const Login = () => {
             <span onClick={handleGotoForgotPassword}>Przypomnij hasło</span>
           </div>
           <CustomButton type='submit' className="btn-primary">Zaloguj się</CustomButton>
-          <p className="new-account" onClick={handleGotoRegister}>Nie masz konta? <b>Zarejestruj się!</b></p>
+          <p className="new-account">Nie masz konta? <b onClick={handleGotoRegister}>Zarejestruj się!</b></p>
         </form>
       </div>
     </div>

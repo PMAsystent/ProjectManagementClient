@@ -1,13 +1,11 @@
-import React, {Suspense} from 'react';
+import React from 'react';
 import MainPage from './containers/MainPage';
 import "./styles.scss";
 
 function App() {
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <MainPage/>
-      </Suspense>
+      <MainPage/>
     </>
   );
 }

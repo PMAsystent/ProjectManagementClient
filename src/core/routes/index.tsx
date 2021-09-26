@@ -1,5 +1,6 @@
-import React, {lazy} from 'react'
+import React, {lazy, Suspense} from 'react'
 import AuthLayout from '../../layouts/AuthLayout';
+import AuthSpinner from '../../components/AuthSpinner';
 
 // paths
 export const getLoginPath = '/auth/login';
@@ -21,7 +22,9 @@ const routes = [
     component: () =>
       (
         <AuthLayout>
-          <Login/>
+          <Suspense fallback={<AuthSpinner/>}>
+            <Login/>
+          </Suspense>
         </AuthLayout>
       )
   },
@@ -33,7 +36,9 @@ const routes = [
     component: () =>
       (
         <AuthLayout>
-          <Register/>
+          <Suspense fallback={<AuthSpinner/>}>
+            <Register/>
+          </Suspense>
         </AuthLayout>
       )
   },
@@ -45,7 +50,9 @@ const routes = [
     component: () =>
       (
         <AuthLayout>
-          <ForgotPassword/>
+          <Suspense fallback={<AuthSpinner/>}>
+            <ForgotPassword/>
+          </Suspense>
         </AuthLayout>
       )
   },
