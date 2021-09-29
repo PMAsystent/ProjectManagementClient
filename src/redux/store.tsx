@@ -3,7 +3,7 @@ import rootReducer from "./rootReducer";
 
 const createStore = () => {
   return configureStore({
-    reducer: rootReducer
+    reducer: rootReducer,
   });
 };
 

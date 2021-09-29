@@ -6,6 +6,8 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import * as yup from "yup";
 import {useHistory} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {registerUser} from "../../redux/auth/auth.thunks";
 
 const validationSchema = yup.object({
   userName: yup.string()
@@ -26,6 +28,7 @@ const Register = () => {
     confirmPassword: '',
   });
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -46,7 +49,9 @@ const Register = () => {
   }
 
   const onSubmit = (values: any) => {
-    console.log(values);
+    const payload = values;
+    delete payload['confirmPassword'];
+    dispatch(registerUser(payload));
   };
 
   return (

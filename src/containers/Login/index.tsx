@@ -7,6 +7,8 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useHistory} from "react-router-dom";
 import {getForgotPasswordPath, getRegisterPath} from "../../core/routes";
+import {useDispatch} from "react-redux";
+import {loginUser} from "../../redux/auth/auth.thunks";
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny').required('Email jest wymagany!'),
@@ -19,6 +21,7 @@ const Login = () => {
     password: '',
   });
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -43,7 +46,8 @@ const Login = () => {
   }
 
   const onSubmit = (values: any) => {
-    console.log(values);
+    const payload = values;
+    dispatch(loginUser(payload));
   }
 
   return (
