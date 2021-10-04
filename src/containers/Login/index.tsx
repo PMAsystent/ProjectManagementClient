@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo} from "react";
 import "./styles.scss";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
@@ -9,6 +9,7 @@ import {useHistory} from "react-router-dom";
 import {getForgotPasswordPath, getRegisterPath} from "../../core/routes";
 import {useDispatch} from "react-redux";
 import {loginUser} from "../../redux/auth/auth.thunks";
+import {loginUserType} from "../../core/types/requests/auth.types";
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny').required('Email jest wymagany!'),
@@ -16,10 +17,10 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
-  const [defaultValue, setDefaultValue] = useState<any>({
+  const defaultValue = useMemo(() => ({
     email: '',
     password: '',
-  });
+  }), []);
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -45,9 +46,8 @@ const Login = () => {
     history.push(getForgotPasswordPath);
   }
 
-  const onSubmit = (values: any) => {
-    const payload = values;
-    dispatch(loginUser(payload));
+  const onSubmit = (values: loginUserType) => {
+    dispatch(loginUser(values));
   }
 
   return (
@@ -63,14 +63,14 @@ const Login = () => {
             placeholder="Email"
             type="email"
             helperText={errors.email?.message}
-            error={errors.email}
+            error={!!errors.email}
           />
           <CustomInput
             {...register('password')}
             placeholder="Hasło"
             type="password"
             helperText={errors.password?.message}
-            error={errors.password}
+            error={!!errors.password}
           />
           <div className="forgot-password">
             <span onClick={handleGotoForgotPassword}>Przypomnij hasło</span>

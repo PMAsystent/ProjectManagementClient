@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo} from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import {useForm} from "react-hook-form";
@@ -15,10 +15,10 @@ const validationSchema = yup.object({
 });
 
 const Index = () => {
-  const [defaultValue, setDefaultValue] = useState<any>({
+  const defaultValue = useMemo(() => ({
     email: '',
     confirmEmail: '',
-  });
+  }), []);
   const history = useHistory();
 
   const {
@@ -56,14 +56,14 @@ const Index = () => {
             placeholder="Email"
             type="email"
             helperText={errors.email?.message}
-            error={errors.email}
+            error={!!errors.email}
           />
           <CustomInput
             {...register('confirmEmail')}
             placeholder="Powtórz email"
             type="email"
             helperText={errors.confirmEmail?.message}
-            error={errors.confirmEmail}
+            error={!!errors.confirmEmail}
           />
           <CustomButton type='submit' className="btn-primary">Wyślij kod</CustomButton>
           <ArrowBackIcon className="icon" onClick={handlegoBack} />

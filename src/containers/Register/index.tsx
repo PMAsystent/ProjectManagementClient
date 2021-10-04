@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo} from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import {useForm} from "react-hook-form";
@@ -21,12 +21,12 @@ const validationSchema = yup.object({
 });
 
 const Register = () => {
-  const [defaultValue, setDefaultValue] = useState<any>({
+  const defaultValue = useMemo(() => ({
     userName: '',
     email: '',
     password: '',
     confirmPassword: '',
-  });
+  }), []);
   const history = useHistory();
   const dispatch = useDispatch();
 

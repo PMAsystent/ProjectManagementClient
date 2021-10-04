@@ -1,5 +1,8 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {loginUser, registerUser} from "./auth.thunks";
+import SnackbarUtils from "../../core/utils/SnackbarUtils";
+import {history} from "../../core/utils";
+import { getLoginPath } from "../../core/routes";
 
 interface authInterface {
   registerFetchStatus: null | string,
@@ -21,9 +24,11 @@ export const authSlice = createSlice({
       state.loginFetchStatus = action.meta.requestStatus;
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
+      SnackbarUtils.success("Zalogowano pomyślnie!");
       state.loginFetchStatus = action.meta.requestStatus;
     });
     builder.addCase(loginUser.rejected, (state, action) => {
+      SnackbarUtils.error(action.payload || "Nie udało się zarejestrować!");
       state.loginFetchStatus = action.meta.requestStatus;
     });
     // REGISTER
@@ -31,9 +36,12 @@ export const authSlice = createSlice({
       state.loginFetchStatus = action.meta.requestStatus;
     });
     builder.addCase(registerUser.fulfilled, (state, action) => {
+      SnackbarUtils.success("Zarejestrowano pomyślnie!");
+      history.push(getLoginPath);
       state.loginFetchStatus = action.meta.requestStatus;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
+      SnackbarUtils.error(action.payload || "Nie udało się zalogować!");
       state.loginFetchStatus = action.meta.requestStatus;
     });
   }
