@@ -1,15 +1,14 @@
-import React, {useMemo} from "react";
-import "./styles.scss";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
-import * as yup from "yup";
-import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
-import {useHistory} from "react-router-dom";
-import {getForgotPasswordPath, getRegisterPath} from "../../core/routes";
-import {useDispatch} from "react-redux";
-import {loginUser} from "../../redux/auth/auth.thunks";
-import {loginUserType} from "../../core/types/requests/auth.types";
+import React, { useMemo } from 'react';
+import './styles.scss';
+import CustomInput from 'components/CustomInput/CustomInput';
+import CustomButton from 'components/CustomButton/CustomButton';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useHistory } from 'react-router-dom';
+import { getForgotPasswordPath, getRegisterPath } from 'core/routes';
+import { useDispatch } from 'react-redux';
+import { loginUserType } from 'core/types/requests/auth.types';
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny').required('Email jest wymagany!'),
@@ -17,10 +16,13 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
-  const defaultValue = useMemo(() => ({
-    email: '',
-    password: '',
-  }), []);
+  const defaultValue = useMemo(
+    () => ({
+      email: '',
+      password: '',
+    }),
+    []
+  );
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -28,9 +30,7 @@ const Login = () => {
     register,
     handleSubmit,
 
-    formState: {
-      errors,
-    },
+    formState: { errors },
   } = useForm({
     defaultValues: useMemo(() => {
       return defaultValue;
@@ -40,15 +40,15 @@ const Login = () => {
 
   const handleGotoRegister = () => {
     history.push(getRegisterPath);
-  }
+  };
 
   const handleGotoForgotPassword = () => {
     history.push(getForgotPasswordPath);
-  }
+  };
 
   const onSubmit = (values: loginUserType) => {
-    dispatch(loginUser(values));
-  }
+    //dispatch(loginUser(values));
+  };
 
   return (
     <div className="container">
@@ -58,13 +58,7 @@ const Login = () => {
       </div>
       <div className="form">
         <form onSubmit={handleSubmit(onSubmit)} key={'login'}>
-          <CustomInput
-            {...register('email')}
-            placeholder="Email"
-            type="email"
-            helperText={errors.email?.message}
-            error={!!errors.email}
-          />
+          <CustomInput {...register('email')} placeholder="Email" type="email" helperText={errors.email?.message} error={!!errors.email} />
           <CustomInput
             {...register('password')}
             placeholder="Hasło"
@@ -75,12 +69,16 @@ const Login = () => {
           <div className="forgot-password">
             <span onClick={handleGotoForgotPassword}>Przypomnij hasło</span>
           </div>
-          <CustomButton type='submit' className="btn-primary">Zaloguj się</CustomButton>
-          <p className="new-account">Nie masz konta? <b onClick={handleGotoRegister}>Zarejestruj się!</b></p>
+          <CustomButton type="submit" className="btn-primary">
+            Zaloguj się
+          </CustomButton>
+          <p className="new-account">
+            Nie masz konta? <b onClick={handleGotoRegister}>Zarejestruj się!</b>
+          </p>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Login;

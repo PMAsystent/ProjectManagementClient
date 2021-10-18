@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 
-const Index = () => {
+const AuthSpinner = () => {
   return (
     <div className="container">
-      <CircularProgress/>
+      <CircularProgress />
     </div>
-  )
-}
+  );
+};
 
-export default Index;
+export default AuthSpinner;
