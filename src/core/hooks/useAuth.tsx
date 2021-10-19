@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux';
+import { selectAccessToken } from '../../redux/auth/auth.slice';
 
 const useAuth = () => {
-  const user = null;
-  return !!user;
+  const accessToken = useSelector(selectAccessToken);
+  return !!accessToken;
 };
 
 export default useAuth;

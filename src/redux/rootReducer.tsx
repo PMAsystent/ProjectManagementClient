@@ -1,7 +1,12 @@
 import { combineReducers } from 'redux';
+import { authReducer, authReducerInterface } from './auth/auth.slice';
 
-const rootReducer = combineReducers({
-  // auth: authReducer,
+export interface rootReducerInterface {
+  auth: authReducerInterface;
+}
+
+const rootReducer = combineReducers<rootReducerInterface>({
+  auth: authReducer.reducer,
 });
 
 export default rootReducer;

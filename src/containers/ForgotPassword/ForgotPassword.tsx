@@ -7,6 +7,8 @@ import * as yup from 'yup';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
 
+// TODO: FORGOT PASSWORD FUNCTIONS MUST BE ADDED
+
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny').required('Email jest wymagany!'),
   confirmEmail: yup

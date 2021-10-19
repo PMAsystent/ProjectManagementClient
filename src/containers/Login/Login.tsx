@@ -6,9 +6,11 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useHistory } from 'react-router-dom';
-import { getForgotPasswordPath, getRegisterPath } from 'core/routes';
-import { useDispatch } from 'react-redux';
+import { getDashboardPath, getForgotPasswordPath, getRegisterPath } from 'core/routes';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUserType } from 'core/types/requests/auth.types';
+import { clearLoginFetchStatus, postLogin, selectLoginFetchStatus } from 'redux/auth/auth.slice';
+import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny').required('Email jest wymagany!'),
@@ -25,6 +27,7 @@ const Login = () => {
   );
   const history = useHistory();
   const dispatch = useDispatch();
+  const loginFetchStatus = useSelector(selectLoginFetchStatus);
 
   const {
     register,
@@ -47,8 +50,10 @@ const Login = () => {
   };
 
   const onSubmit = (values: loginUserType) => {
-    //dispatch(loginUser(values));
+    dispatch(postLogin(values));
   };
+
+  useRedirectOnDoneFetchStatus({ status: loginFetchStatus, path: getDashboardPath, clearFunction: clearLoginFetchStatus });
 
   return (
     <div className="container">
@@ -69,7 +74,7 @@ const Login = () => {
           <div className="forgot-password">
             <span onClick={handleGotoForgotPassword}>Przypomnij hasło</span>
           </div>
-          <CustomButton type="submit" className="btn-primary">
+          <CustomButton type="submit" className="btn-primary" status={loginFetchStatus}>
             Zaloguj się
           </CustomButton>
           <p className="new-account">

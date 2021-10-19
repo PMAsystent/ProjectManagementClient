@@ -6,7 +6,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import * as yup from 'yup';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearRegisterFetchStatus, postRegister, selectRegisterFetchStatus } from 'redux/auth/auth.slice';
+import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
+import { getLoginPath } from '../../core/routes';
 
 const validationSchema = yup.object({
   userName: yup.string().required('Nazwa jest wymagana!'),
@@ -30,6 +33,7 @@ const Register = () => {
   );
   const history = useHistory();
   const dispatch = useDispatch();
+  const registerFetchStatus = useSelector(selectRegisterFetchStatus);
 
   const {
     register,
@@ -50,8 +54,10 @@ const Register = () => {
   const onSubmit = (values: any) => {
     const payload = values;
     delete payload['confirmPassword'];
-    //dispatch(registerUser(payload));
+    dispatch(postRegister(payload));
   };
+
+  useRedirectOnDoneFetchStatus({ status: registerFetchStatus, path: getLoginPath, clearFunction: clearRegisterFetchStatus });
 
   return (
     <div className="container">
@@ -83,7 +89,7 @@ const Register = () => {
             helperText={errors.confirmPassword?.message}
             error={!!errors.confirmPassword}
           />
-          <CustomButton type="submit" className="btn-primary">
+          <CustomButton type="submit" className="btn-primary" status={registerFetchStatus}>
             Zarejestruj się
           </CustomButton>
           <ArrowBackIcon className="icon" onClick={handlegoBack} />

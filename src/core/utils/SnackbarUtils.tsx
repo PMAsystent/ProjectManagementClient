@@ -19,7 +19,7 @@ export const SnackbarUtilsConfigurator = () => {
   return <InnerSnackbarUtilsConfigurator setUseSnackbarRef={setUseSnackbarRef} />;
 };
 
-export default {
+const toast = {
   success(msg: string, options: OptionsObject = {}) {
     this.toast(msg, { ...options, variant: 'success' });
   },
@@ -36,3 +36,5 @@ export default {
     useSnackbarRef.enqueueSnackbar(msg, options);
   },
 };
+
+export default toast;

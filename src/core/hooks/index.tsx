@@ -1,3 +1,3 @@
 import useAuth from './useAuth';
-
-export { useAuth };
+import useRedirectOnDoneFetchStatus from './useRedirectOnDoneFetchStatus';
+export { useAuth, useRedirectOnDoneFetchStatus };
