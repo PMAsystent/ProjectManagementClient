@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const CustomButton: FC<any> = ({ status, children, ...props }) => {
   return (
-    <button disabled={status === fetchStatues.PENDING} {...props}>
+    <button data-test="custom-button" disabled={status === fetchStatues.PENDING} {...props}>
       {status !== fetchStatues.PENDING ? children : <CircularProgress />}
     </button>
   );
