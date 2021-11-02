@@ -11,14 +11,14 @@ describe('Login Unit Tests', () => {
     render(<Login />);
 
     fireEvent.click(screen.getByText('Zaloguj się'));
-    await waitFor(() => screen.getByText(/Email jest wymagany!/));
+    await waitFor(() => screen.getByText(/Email jest wymagany!/i));
   });
 
   it('Should render password error - required', async () => {
     render(<Login />);
     fireEvent.click(screen.getByText('Zaloguj się'));
 
-    await waitFor(() => screen.getByText(/Hasło jest wymagane!/));
+    await waitFor(() => screen.getByText(/Hasło jest wymagane!/i));
   });
 
   it('Should render login error - not email', async () => {
@@ -30,7 +30,7 @@ describe('Login Unit Tests', () => {
     });
     fireEvent.click(screen.getByText('Zaloguj się'));
 
-    await waitFor(() => screen.getByText(/Email jest niepoprawny!/));
+    await waitFor(() => screen.getByText(/Email jest niepoprawny!/i));
   });
 
   it('Should render password error - min', async () => {
@@ -42,11 +42,18 @@ describe('Login Unit Tests', () => {
     });
     fireEvent.click(screen.getByText('Zaloguj się'));
 
-    await waitFor(() => screen.getByText(/Hasło musi być dłuższe niż 8 znaków!/));
+    await waitFor(() => screen.getByText(/Hasło musi być dłuższe niż 8 znaków!/i));
   });
 
   it('Should render password error - regex', async () => {
-    // TODO: REGEX
+    render(<Login />);
+
+    const password = screen.getByPlaceholderText('Hasło');
+    fireEvent.change(password, {
+      target: { value: '1234567890' },
+    });
+    fireEvent.click(screen.getByText('Zaloguj się'));
+    await waitFor(() => screen.getByText(/Hasło musi zawierać dużą literę, cyfrę oraz znak specjalny!/i));
   });
 });
 

@@ -14,11 +14,15 @@ import { getLoginPath } from '../../core/routes';
 const validationSchema = yup.object({
   userName: yup.string().required('Nazwa jest wymagana!'),
   email: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
-  password: yup.string().min(8, 'Minimalna długość hasła to 8 znaków!').required('Hasło jest wymagane!'),
+  password: yup
+    .string()
+    .required('Hasło jest wymagane!')
+    .min(8, 'Hasło musi być dłuższe niż 8 znaków!')
+    .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Hasło musi zawierać dużą literę, cyfrę oraz znak specjalny!'),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref('password')], 'Hasła muszą być takie same!')
-    .required('Hasło jest wymagane!'),
+    .required('Potwierdzenie hasła jest wymagane!'),
 });
 
 const Register = () => {
