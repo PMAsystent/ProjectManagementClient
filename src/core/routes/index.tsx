@@ -1,12 +1,13 @@
 import React, { lazy, Suspense } from 'react';
 import AuthLayout from 'layouts/AuthLayout/AuthLayout';
 import AuthSpinner from 'components/AuthSpinner/AuthSpinner';
+import { Redirect } from 'react-router-dom';
 
 // paths
 export const getLoginPath = '/auth/login';
 export const getRegisterPath = '/auth/register';
 export const getForgotPasswordPath = '/auth/forgotpassword';
-export const getDashboardPath = '/';
+export const getDashboardPath = '/dashboard/overview';
 
 // containers
 const Login = lazy(() => import('containers/Login/Login'));
@@ -14,7 +15,28 @@ const Register = lazy(() => import('containers/Register/Register'));
 const ForgotPassword = lazy(() => import('containers/ForgotPassword/ForgotPassword'));
 const Dashboard = lazy(() => import('containers/Dashboard/Dashboard'));
 
-const routes = [
+export const routes = [
+  {
+    path: `${getDashboardPath}`,
+    exact: true,
+    name: 'Dashboard',
+    state: 'dashboard',
+    component: () => (
+      <Suspense fallback={<AuthSpinner />}>
+        <Dashboard />
+      </Suspense>
+    ),
+  },
+  {
+    path: `/`,
+    exact: false,
+    name: 'Redirect',
+    state: 'Redirect',
+    component: () => <Redirect to={getDashboardPath} />,
+  },
+];
+
+export const publicRoutes = [
   {
     path: `${getLoginPath}`,
     exact: true,
@@ -55,17 +77,10 @@ const routes = [
     ),
   },
   {
-    path: `${getDashboardPath}`,
+    path: `/`,
     exact: false,
-    name: 'Dashboard',
-    state: 'dashboard',
-    auth: true,
-    component: () => (
-      <Suspense fallback={<AuthSpinner />}>
-        <Dashboard />
-      </Suspense>
-    ),
+    name: 'Redirect',
+    state: 'Redirect',
+    component: () => <Redirect to={getLoginPath} />,
   },
 ];
-
-export default routes;

@@ -1,8 +1,13 @@
 @use '../../assets/styles/colors';
 
 .MuiTextField-root {
-  height: 75px;
+  height: 77px;
   width: 100%;
+  .Mui-error {
+    input {
+      border: 2px solid rgba(colors.$errorColor, 0.25);
+    }
+  }
   .MuiInputBase-input.MuiInput-input {
     color: colors.$textColor;
     background-color: colors.$secondaryColor;
