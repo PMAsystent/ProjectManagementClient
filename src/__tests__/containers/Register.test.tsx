@@ -70,5 +70,55 @@ describe('Register Unit Tests', () => {
 });
 
 describe('Register Integration Tests', () => {
-  // TODO: SUCCESS / FAILED / PENDING TESTS
+  it('should register success', async () => {
+    render(<Register />);
+
+    const userName = screen.getByPlaceholderText('Nazwa użytkownika');
+    fireEvent.change(userName, {
+      target: { value: 'test' },
+    });
+
+    const email = screen.getByPlaceholderText('Email');
+    fireEvent.change(email, {
+      target: { value: 'test@test.com' },
+    });
+
+    const password = screen.getByPlaceholderText('Hasło');
+    fireEvent.change(password, {
+      target: { value: 'Zaq!2wsxcde' },
+    });
+    const confirmPassword = screen.getByPlaceholderText('Powtórz hasło');
+    fireEvent.change(confirmPassword, {
+      target: { value: 'Zaq!2wsxcde' },
+    });
+
+    fireEvent.click(screen.getByText('Zarejestruj się'));
+    await waitFor(() => screen.getByText(/Zarejestrowano pomyślnie/i));
+  });
+
+  it('should register failed', async () => {
+    render(<Register />);
+
+    const userName = screen.getByPlaceholderText('Nazwa użytkownika');
+    fireEvent.change(userName, {
+      target: { value: 'failed' },
+    });
+
+    const email = screen.getByPlaceholderText('Email');
+    fireEvent.change(email, {
+      target: { value: 'test@test.com' },
+    });
+
+    const password = screen.getByPlaceholderText('Hasło');
+    fireEvent.change(password, {
+      target: { value: 'Zaq!2wsxcde' },
+    });
+    const confirmPassword = screen.getByPlaceholderText('Powtórz hasło');
+    fireEvent.change(confirmPassword, {
+      target: { value: 'Zaq!2wsxcde' },
+    });
+
+    fireEvent.click(screen.getByText('Zarejestruj się'));
+    await waitFor(() => screen.getByText(/Nie udało się zarejestrować/i));
+  });
 });

@@ -58,5 +58,39 @@ describe('Login Unit Tests', () => {
 });
 
 describe('Login Integration Tests', () => {
-  // TODO: SUCCESS / FAILED / PENDING TESTS
+  it('should login success', async () => {
+    render(<Login />);
+
+    const email = screen.getByPlaceholderText('Email');
+    fireEvent.change(email, {
+      target: { value: 'doe@test.com' },
+    });
+
+    const password = screen.getByPlaceholderText('Hasło');
+    fireEvent.change(password, {
+      target: { value: 'Zaq12wsx!' },
+    });
+
+    fireEvent.click(screen.getByText('Zaloguj się'));
+
+    await waitFor(() => screen.getByText(/Zalogowano pomyślnie/i));
+  });
+
+  it('should login failed', async () => {
+    render(<Login />);
+
+    const email = screen.getByPlaceholderText('Email');
+    fireEvent.change(email, {
+      target: { value: 'doe@test.com' },
+    });
+
+    const password = screen.getByPlaceholderText('Hasło');
+    fireEvent.change(password, {
+      target: { value: '!Zaq12wsx' },
+    });
+
+    fireEvent.click(screen.getByText('Zaloguj się'));
+
+    await waitFor(() => screen.getByText(/Nie udało się zalogować/i));
+  });
 });
