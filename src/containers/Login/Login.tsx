@@ -13,8 +13,12 @@ import { clearLoginFetchStatus, postLogin, selectLoginFetchStatus } from 'redux/
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
 
 const validationSchema = yup.object({
-  email: yup.string().email('Email jest niepoprawny').required('Email jest wymagany!'),
-  password: yup.string().required('Hasło jest wymagane!'),
+  email: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
+  password: yup
+    .string()
+    .required('Hasło jest wymagane!')
+    .min(8, 'Hasło musi być dłuższe niż 8 znaków!')
+    .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Hasło musi zawierać dużą literę, cyfrę oraz znak specjalny!'),
 });
 
 const Login = () => {

@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 // TODO: FORGOT PASSWORD FUNCTIONS MUST BE ADDED
 
 const validationSchema = yup.object({
-  email: yup.string().email('Email jest niepoprawny').required('Email jest wymagany!'),
+  email: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
   confirmEmail: yup
     .string()
     .oneOf([yup.ref('email')], 'Emaile muszą być takie same!')
