@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import AuthLayout from 'layouts/AuthLayout/AuthLayout';
 import AuthSpinner from 'components/AuthSpinner/AuthSpinner';
 import { Redirect } from 'react-router-dom';
+import DashboardLayout from '../../layouts/DashboardLayout';
 
 // paths
 export const getLoginPath = '/auth/login';
@@ -22,9 +23,11 @@ export const routes = [
     name: 'Dashboard',
     state: 'dashboard',
     component: () => (
-      <Suspense fallback={<AuthSpinner />}>
-        <Dashboard />
-      </Suspense>
+      <DashboardLayout>
+        <Suspense fallback={<AuthSpinner />}>
+          <Dashboard />
+        </Suspense>
+      </DashboardLayout>
     ),
   },
   {
