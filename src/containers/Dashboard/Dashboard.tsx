@@ -9,12 +9,12 @@ import './styles.scss';
 
 const cards = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
 
-const Dashboard = () => {
+const MainLayout = () => {
   return (
     <Box className="container">
-      {cards.map((card) => {
+      {cards.map((card, i) => {
         return (
-          <Card variant="outlined" className="card-item">
+          <Card variant="outlined" className="card-item" key={i}>
             <CardContent>
               <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                 App {card.id}
@@ -34,4 +34,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default MainLayout;
