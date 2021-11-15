@@ -3,6 +3,7 @@ import AuthLayout from 'layouts/AuthLayout/AuthLayout';
 import AuthSpinner from 'components/AuthSpinner/AuthSpinner';
 import { Redirect } from 'react-router-dom';
 import { UserDetails } from 'containers/UserDetails/UserDetails';
+import DashboardLayout from '../../layouts/DashboardLayout';
 
 // paths
 export const getLoginPath = '/auth/login';
@@ -24,9 +25,11 @@ export const routes = [
     name: 'Dashboard',
     state: 'dashboard',
     component: () => (
-      <Suspense fallback={<AuthSpinner />}>
-        <Dashboard />
-      </Suspense>
+      <DashboardLayout>
+        <Suspense fallback={<AuthSpinner />}>
+          <Dashboard />
+        </Suspense>
+      </DashboardLayout>
     ),
   },
   {

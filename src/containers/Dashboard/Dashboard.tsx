@@ -1,21 +1,36 @@
 import React from 'react';
-import CustomButton from '../../components/CustomButton/CustomButton';
-import { useDispatch } from 'react-redux';
-import { logout } from 'redux/auth/auth.slice';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import './styles.scss';
+
+const cards = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
-
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-
   return (
-    <div>
-      <CustomButton onClick={handleLogout} className="btn-primary">
-        Wyloguj
-      </CustomButton>
-    </div>
+    <Box className="container">
+      {cards.map((card) => {
+        return (
+          <Card variant="outlined" className="card-item">
+            <CardContent>
+              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                App {card.id}
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                Description {card.id}
+              </Typography>
+              <Typography variant="body2">...</Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small">Click</Button>
+            </CardActions>
+          </Card>
+        );
+      })}
+    </Box>
   );
 };
 
