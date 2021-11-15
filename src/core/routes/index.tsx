@@ -2,12 +2,14 @@ import React, { lazy, Suspense } from 'react';
 import AuthLayout from 'layouts/AuthLayout/AuthLayout';
 import AuthSpinner from 'components/AuthSpinner/AuthSpinner';
 import { Redirect } from 'react-router-dom';
+import { UserDetails } from 'containers/UserDetails/UserDetails';
 
 // paths
 export const getLoginPath = '/auth/login';
 export const getRegisterPath = '/auth/register';
 export const getForgotPasswordPath = '/auth/forgotpassword';
 export const getDashboardPath = '/dashboard/overview';
+export const getUserDetailsPath = '/user/details';
 
 // containers
 const Login = lazy(() => import('containers/Login/Login'));
@@ -26,6 +28,13 @@ export const routes = [
         <Dashboard />
       </Suspense>
     ),
+  },
+  {
+    path: `${getUserDetailsPath}`,
+    exact: true,
+    name: 'UserDetails',
+    state: 'userDetails',
+    component: () => <UserDetails />,
   },
   {
     path: `/`,
