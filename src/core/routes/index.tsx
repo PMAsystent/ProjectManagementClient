@@ -37,7 +37,11 @@ export const routes = [
     exact: true,
     name: 'UserDetails',
     state: 'userDetails',
-    component: () => <UserDetails />,
+    component: () => (
+      <DashboardLayout>
+        <UserDetails />
+      </DashboardLayout>
+    ),
   },
   {
     path: `/`,
