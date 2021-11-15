@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Box } from '@mui/material';
 import './styles.scss';
-import Navbar from '../../components/Navbar';
+import Navbar from '../../components/Navbar/Navbar';
 import Sidebar from '../../components/Sidebar';
 
 const DashboardLayout: FC<any> = ({ children }) => {
