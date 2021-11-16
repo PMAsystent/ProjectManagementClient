@@ -1,1 +1,19 @@
-@use './constants';.dashboard-layout-root{  height: 100%;  display: flex;  flex-direction: column;  flex: 1 1 auto;  max-width: 100%;  padding-top: constants.$NavbarHeight;  @media (min-width: constants.$MediaMinWidth) {    padding-left: constants.$SidebarWidth;  }  .dashboard-layout-content{    display: flex;    flex-grow: 1;    flex-direction: column;    justify-content: center;  }}
+@use './constants';
+
+.dashboard-layout-root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  max-width: 100%;
+  padding-top: constants.$NavbarHeight;
+  @media (min-width: constants.$MediaMinWidth) {
+    padding-left: constants.$SidebarWidth;
+  }
+  .dashboard-layout-content {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
