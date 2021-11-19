@@ -62,7 +62,7 @@ export const UserDetails = () => {
       <div className="text">
         <h3>Profil użytkownika</h3>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} onChange={() => setCheckChanges(!checkChanges)} key={'login'}>
+      <form onSubmit={handleSubmit(onSubmit)} onChange={() => setCheckChanges(!checkChanges)}>
         <div className="form">
           <CustomInput {...register('firstName')} placeholder="Imię" helperText={errors.firstName?.message} error={errors.firstName != null} />
           <CustomInput {...register('lastName')} placeholder="Nazwisko" helperText={errors.lastName?.message} error={errors.lastName != null} />
