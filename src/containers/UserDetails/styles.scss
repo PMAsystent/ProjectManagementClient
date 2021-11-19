@@ -1,15 +1,1 @@
 @use '../../assets/styles/colors';
-@use '../../layouts/DashboardLayout/constants';
-
-.footer {
-  bottom: 0;
-  position: fixed;
-  width: calc(100% - #{constants.$SidebarWidth});
-  left: constants.$SidebarWidth;
-  margin-top: 1rem;
-  padding: 0.5rem;
-  background-color: colors.$secondaryColor;
-  display: flex;
-  flex-direction: row-reverse;
-  column-gap: 2rem;
-}

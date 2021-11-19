@@ -1,13 +1,21 @@
+import './styles.scss';
 import { fetchStatues } from 'core/enums/redux.statues';
 import React, { FC } from 'react';
-import './styles.scss';
 import CircularProgress from '@mui/material/CircularProgress';
+import { IconContext } from 'react-icons';
 
-const CustomButton: FC<any> = ({ status, children, ...props }) => {
+const CustomButton: FC<any> = ({ status, icon, children, className, disabled, ...props }) => {
   return (
-    <button data-test="custom-button" disabled={status === fetchStatues.PENDING} {...props}>
-      {status !== fetchStatues.PENDING ? children : <CircularProgress />}
-    </button>
+    <IconContext.Provider value={{ className: 'icon' }}>
+      <button
+        data-test="custom-button"
+        disabled={status === fetchStatues.PENDING || disabled}
+        className={`${className}${disabled === true ? ' disabled' : ''}`}
+        {...props}
+      >
+        {status !== fetchStatues.PENDING ? [icon != null ? icon : null, children] : <CircularProgress />}
+      </button>
+    </IconContext.Provider>
   );
 };
 

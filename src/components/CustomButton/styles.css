@@ -9,4 +9,18 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+.btn-primary .icon {
+  vertical-align: middle;
+  height: 1.3rem;
+  width: 1.3rem;
+  margin-right: 0.3rem;
+  margin-left: 0.5rem;
+}
+
+.btn-primary.disabled {
+  background-color: #f8ba5e;
+  color: #ececec;
+  cursor: default;
+}
 /*# sourceMappingURL=styles.css.map */
