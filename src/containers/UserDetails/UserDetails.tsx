@@ -7,7 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButton from 'components/CustomButton/CustomButton';
 import { RiArrowGoBackLine } from 'react-icons/ri';
 
-
 const validationSchema = yup.object({
   firstName: yup.string().required('Imię jest wymagane!'),
   lastName: yup.string().required('Nazwisko jest wymagane!'),
@@ -47,27 +46,25 @@ export const UserDetails = () => {
   };
 
   return (
-   
-      <div className="container">
-        <div className="text">
-          <h3>Profil użytkownika</h3>
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)} key={'login'}>
-          <div className="form">
-            <CustomInput {...register('firstName')} placeholder="Imię" helperText={errors.firstName?.message} error={!!errors.firstName} />
-            <CustomInput {...register('lastName')} placeholder="Nazwisko" helperText={errors.lastName?.message} error={!!errors.lastName} />
-          </div>
-
-          <div className="buttons-container">
-            <CustomButton type="submit" icon={<RiArrowGoBackLine />} className="btn-primary" disabled={!isDirty} onClick={onResetClick}>
-              Cofnij zmiany
-            </CustomButton>
-            <CustomButton type="submit" className="btn-primary" disabled={!(isDirty && isValid)} onClick={onSubmit}>
-              Zapisz zmiany
-            </CustomButton>
-          </div>
-        </form>
+    <div className="container">
+      <div className="text">
+        <h3>Profil użytkownika</h3>
       </div>
-    
+      <form onSubmit={handleSubmit(onSubmit)} key={'login'}>
+        <div className="form">
+          <CustomInput {...register('firstName')} placeholder="Imię" helperText={errors.firstName?.message} error={!!errors.firstName} />
+          <CustomInput {...register('lastName')} placeholder="Nazwisko" helperText={errors.lastName?.message} error={!!errors.lastName} />
+        </div>
+
+        <div className="buttons-container">
+          <CustomButton type="submit" icon={<RiArrowGoBackLine />} className="btn-primary" disabled={!isDirty} onClick={onResetClick}>
+            Cofnij zmiany
+          </CustomButton>
+          <CustomButton type="submit" className="btn-primary" disabled={!(isDirty && isValid)} onClick={onSubmit}>
+            Zapisz zmiany
+          </CustomButton>
+        </div>
+      </form>
+    </div>
   );
 };
