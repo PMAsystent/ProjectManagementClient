@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@mui/material';
 
 const validationSchema = yup.object({
-  firstName: yup.string().required('Imię jest wymagane!').min(8, 'Hasło musi być dłuższe niż 8 znaków!'),
+  firstName: yup.string().required('Imię jest wymagane!'),
   lastName: yup.string().required('Nazwisko jest wymagane!'),
 });
 
