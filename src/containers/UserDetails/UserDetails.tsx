@@ -1,6 +1,5 @@
-import CustomButton from 'components/CustomButton/CustomButton';
 import CustomInput from 'components/CustomInput/CustomInput';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
 import { useForm, useFormState } from 'react-hook-form';
@@ -35,25 +34,13 @@ export const UserDetails = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const [showFooter, setShowFooter] = useState(false);
-  const [checkChanges, setCheckChanges] = useState(false);
-  const [canSubmitChanges, setCanSubmitChanges] = useState(false);
+  const { isDirty, isValid } = useFormState({ control });
 
-  useEffect(() => {
-    setTimeout(() => {
-      setCanSubmitChanges(isValid);
-      setShowFooter(isDirty);
-      console.log('tyk');
-    }, 100);
-  }, [checkChanges]);
-  const { isDirty, isValid } = useFormState({ control: control });
-
-  const onSubmit = () => {
-    console.log('zapis');
+  const onSubmit = (data: any) => {
+    console.log('zapis: ', data);
   };
 
-  const onResetClick = () => {
-    console.log('resett');
+  const onResetClick = async () => {
     reset();
   };
 
@@ -62,22 +49,20 @@ export const UserDetails = () => {
       <div className="text">
         <h3>Profil użytkownika</h3>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} onChange={() => setCheckChanges(!checkChanges)}>
+      <form onSubmit={handleSubmit(onSubmit)} key={'login'}>
         <div className="form">
-          <CustomInput {...register('firstName')} placeholder="Imię" helperText={errors.firstName?.message} error={errors.firstName != null} />
-          <CustomInput {...register('lastName')} placeholder="Nazwisko" helperText={errors.lastName?.message} error={errors.lastName != null} />
+          <CustomInput {...register('firstName')} placeholder="Imię" helperText={errors.firstName?.message} error={!!errors.firstName} />
+          <CustomInput {...register('lastName')} placeholder="Nazwisko" helperText={errors.lastName?.message} error={!!errors.lastName} />
         </div>
 
-        {showFooter ? (
-          <div className="footer">
-            <Button variant="outlined" onClick={onResetClick} className="button-footer">
-              Cofnij zmiany
-            </Button>
-            <Button disabled={canSubmitChanges} variant="outlined" type="submit" className="button-footer">
-              Zapisz zmiany
-            </Button>
-          </div>
-        ) : null}
+        <div className="footer">
+          <Button variant="outlined" disabled={!isDirty} onClick={onResetClick} className="button-footer">
+            Cofnij zmiany
+          </Button>
+          <Button variant="outlined" disabled={!(isDirty && isValid)} type="submit" className="button-footer">
+            Zapisz zmiany
+          </Button>
+        </div>
       </form>
     </div>
   );
