@@ -30,3 +30,37 @@
     background-color: colors.$primaryColor;
   }
 }
+
+.btn-success {
+  border: 0;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-weight: 900;
+  height: 56px;
+  min-width: 100px;
+  background-color: colors.$primaryColor;
+  transition: opacity 300ms;
+  opacity: 0.85;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.btn-go-back {
+  border: 0;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-weight: 900;
+  height: 56px;
+  min-width: 100px;
+  background-color: colors.$red;
+  transition: opacity 300ms;
+  opacity: 0.85;
+  &:hover {
+    opacity: 1;
+  }
+}
