@@ -1,0 +1,74 @@
+@use '../../assets/styles/colors';
+
+.tile-container {
+  position: relative;
+  opacity: 0.8;
+  background-color: colors.$secondaryColor;
+  padding: 0 20px 5px 25px;
+  max-width: 350px;
+  color: white;
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 50px;
+  box-shadow: 0 0 1em #181818;
+  transition-duration: 300ms;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  div:first-of-type {
+    position: absolute;
+    width: 60px;
+    right: -30px;
+    top: -30px;
+  }
+
+  h3 {
+    flex-basis: 100%;
+    font-style: oblique;
+    font-weight: 900;
+  }
+
+  p {
+    color: colors.$textColor;
+  }
+
+  h4 {
+    font-weight: lighter;
+  }
+
+  div {
+    flex-basis: 50%;
+    margin-bottom: 5px;
+
+    * {
+      margin: 2px;
+      padding: 0;
+    }
+  }
+  //Circular Progress bar
+  .CircularProgressbar .CircularProgressbar-path {
+    stroke: #d38825;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease 0s;
+    stroke-width: 12px;
+  }
+
+  .CircularProgressbar .CircularProgressbar-trail {
+    stroke: #181818;
+    stroke-linecap: round;
+    stroke-width: 12px;
+  }
+
+  .CircularProgressbar .CircularProgressbar-text {
+    fill: White;
+    font-size: 25px;
+    font-style: oblique;
+    font-weight: 900;
+    dominant-baseline: middle;
+    text-anchor: middle;
+  }
+}
+

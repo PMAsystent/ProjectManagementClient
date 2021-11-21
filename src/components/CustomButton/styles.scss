@@ -10,3 +10,23 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+.btn-project {
+  font-weight: bold;
+  background-color: colors.$primaryColor;
+  border-radius: 15px;
+  padding: 7px 10px;
+  margin: 10px 0;
+  border: none;
+  color: white;
+  transition-duration: 300ms;
+  cursor: pointer;
+
+  :active {
+    border: none;
+  }
+
+  &:hover {
+    background-color: colors.$primaryColor;
+  }
+}
