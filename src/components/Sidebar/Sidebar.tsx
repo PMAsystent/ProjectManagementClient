@@ -6,18 +6,32 @@ import TreeItem from '@mui/lab/TreeItem';
 import './styles.scss';
 import CustomButton from '../CustomButton/CustomButton';
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/auth/auth.slice';
 import { Apps } from '@material-ui/icons';
+import { myProjectsType } from '../../core/types/requests/project.types';
+import { selectProjects } from '../../redux/project/project.slice';
 
 const Sidebar = (props: { open: any; onClose: any }) => {
   const { open, onClose } = props;
   const lgUp = useMediaQuery('(min-width:1200px)');
+  const entities: myProjectsType = useSelector(selectProjects);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  const projects = entities.projectsList?.map((project: any) => {
+    return {
+      id: project.id,
+      name: project.name,
+      activeTasks: 26,
+      progressBar: project.progressPercentage,
+      typeOfProject: 'Aplikacja',
+      endDate: project.dueDate,
+    };
+  });
 
   const content = (
     <div className="sidebar-root">
@@ -36,13 +50,13 @@ const Sidebar = (props: { open: any; onClose: any }) => {
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
       >
-        <TreeItem nodeId="1" label="App1">
-          <TreeItem nodeId="2" label="Task1" className="tree-item-task" />
-        </TreeItem>
-        <TreeItem nodeId="3" label="App2">
-          <TreeItem nodeId="4" label="Task2" className="tree-item-task" />
-          <TreeItem nodeId="5" label="Task3" className="tree-item-task" />
-        </TreeItem>
+        {projects.map((project: any) => {
+          return (
+            <TreeItem nodeId={project.id} label={project.name}>
+              <TreeItem nodeId={project.id + '_1'} label={`Tasks_${project.name}`} className="tree-item-task" />
+            </TreeItem>
+          );
+        })}
       </TreeView>
       <div className="logout-button-wrapper">
         <CustomButton onClick={handleLogout} className="btn-secondary">
