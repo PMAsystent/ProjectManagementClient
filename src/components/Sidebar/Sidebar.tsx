@@ -60,7 +60,7 @@ const Sidebar = (props: { open: any; onClose: any }) => {
       </TreeView>
       <div className="logout-button-wrapper">
         <CustomButton onClick={handleLogout} className="btn-secondary">
-          <h3>Wyloguj</h3>
+          <h3> Wyloguj </h3>
         </CustomButton>
       </div>
     </div>
