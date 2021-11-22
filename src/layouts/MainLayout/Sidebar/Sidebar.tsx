@@ -4,12 +4,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import './styles.scss';
-import CustomButton from '../CustomButton/CustomButton';
+import CustomButton from '../../../components/CustomButton/CustomButton';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../redux/auth/auth.slice';
+import { logout } from '../../../redux/auth/auth.slice';
 import { Apps } from '@material-ui/icons';
-import { selectProjects } from '../../redux/project/project.slice';
+import { selectProjects } from '../../../redux/project/project.slice';
 
 const Sidebar = (props: { open: any; onClose: any }) => {
   const { open, onClose } = props;

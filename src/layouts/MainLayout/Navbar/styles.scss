@@ -1,26 +1,26 @@
-@use '../../assets/styles/colors';
-@use '../../assets/styles/constants';
+@use '../../../assets/styles/colors';
+@use '../../../assets/styles/constants';
 
 $leftMargin: 10px;
 $avatarSize: 40px;
 
-.navbar-root  {
+.navbar-root {
   background-color: colors.$secondaryColor;
   @media (min-width: constants.$MediaMinWidth) {
     width: calc(100% - #{constants.$SidebarWidth});
     left: constants.$SidebarWidth;
   }
-  .top-avatar{
+  .top-avatar {
     cursor: pointer;
     height: $avatarSize;
     width: $avatarSize;
     margin-left: $leftMargin;
   }
-  .search-button{
+  .search-button {
     margin-left: $leftMargin;
   }
-  .navbar-badge{
-    .MuiBadge-badge{
+  .navbar-badge {
+    .MuiBadge-badge {
       background-color: colors.$bgColor;
     }
     color: colors.$primaryColor;
