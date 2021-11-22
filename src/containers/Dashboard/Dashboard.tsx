@@ -4,8 +4,6 @@ import './styles.scss';
 import ProjectTile from '../../components/ProjectTile/ProjectTile';
 import AddIcon from '@mui/icons-material/Add';
 import BasicSpeedDial from '../../components/BasicSpeedDial/BasicSpeedDial';
-import { useHistory } from 'react-router-dom';
-import { getAddProjectPath } from '../../core/routes';
 import AddProject from "../AddProject/AddProject";
 
 const cards = [
