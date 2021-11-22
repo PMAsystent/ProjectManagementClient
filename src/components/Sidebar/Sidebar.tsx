@@ -9,29 +9,17 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/auth/auth.slice';
 import { Apps } from '@material-ui/icons';
-import { myProjectsType } from '../../core/types/requests/project.types';
 import { selectProjects } from '../../redux/project/project.slice';
 
 const Sidebar = (props: { open: any; onClose: any }) => {
   const { open, onClose } = props;
   const lgUp = useMediaQuery('(min-width:1200px)');
-  const entities: myProjectsType = useSelector(selectProjects);
+  const projects = useSelector(selectProjects);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
   };
-
-  const projects = entities.projectsList?.map((project: any) => {
-    return {
-      id: project.id,
-      name: project.name,
-      activeTasks: 26,
-      progressBar: project.progressPercentage,
-      typeOfProject: 'Aplikacja',
-      endDate: project.dueDate,
-    };
-  });
 
   const content = (
     <div className="sidebar-root">

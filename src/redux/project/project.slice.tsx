@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { instance } from '../../api';
 import { rootReducerInterface } from '../rootReducer';
+import { myProjectsType, projectType } from '../../core/types/requests/project.types';
 
 export interface projectReducerInterface {
-  entities: Array<any>;
+  entities: Array<projectType>;
   loading: boolean;
 }
 
@@ -11,14 +12,13 @@ const INIT_STATE: projectReducerInterface = {
   entities: [],
   loading: false,
 };
-
 export const getProjects = createAsyncThunk<any, string | null, { rejectValue: string }>(
   'project/getProjects',
   async (apiToken, { rejectWithValue }) => {
     return await instance
-      .get('/MyProjects', { headers: { authorization: `Bearer ${apiToken}` } })
+      .get<myProjectsType>('/MyProjects', { headers: { authorization: `Bearer ${apiToken}` } })
       .then((response) => {
-        return response.data;
+        return response.data.projectsList ?? [];
       })
       .catch((error) => {
         rejectWithValue(error.response.data.title);
