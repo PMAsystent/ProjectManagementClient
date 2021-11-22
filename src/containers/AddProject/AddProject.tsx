@@ -1,4 +1,4 @@
-import React, {FC, useMemo} from 'react';
+import React, { FC, useMemo } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +8,7 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
 import { Modal } from '@mui/material';
+import AsyncAutocomplete from "../../components/AsyncAutocomplete/AsyncAutocomplete";
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana!'),
@@ -40,10 +41,6 @@ const AddProject: FC<any> = (props) => {
     resolver: yupResolver(validationSchema),
   });
 
-  const handlegoBack = () => {
-    history.goBack();
-  };
-
   const onSubmit = (values: any) => {
     console.log(values);
   };
@@ -64,7 +61,9 @@ const AddProject: FC<any> = (props) => {
               error={!!errors.dueDate}
             />
           </div>
-          <div className="assigns-form">Users</div>
+          <div className="assigns-form">
+            <AsyncAutocomplete label={'Dodaj użytkownika'} />
+          </div>
           <div className="buttons">
             <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
               wróć
