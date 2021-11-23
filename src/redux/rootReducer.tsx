@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { authReducer, authReducerInterface } from './auth/auth.slice';
-import { projectReducer } from './project/project.slice';
+import { projectReducer, projectReducerInterface } from './project/project.slice';
 
 export interface rootReducerInterface {
   auth: authReducerInterface;
-  projects: any;
+  projects: projectReducerInterface;
 }
 
 const rootReducer = combineReducers<rootReducerInterface>({

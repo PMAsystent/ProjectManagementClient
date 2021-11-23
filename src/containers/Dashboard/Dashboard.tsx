@@ -2,21 +2,18 @@ import React, { useEffect } from 'react';
 import './styles.scss';
 import ProjectTile from '../../components/ProjectTile/ProjectTile';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjects, selectLoadingProjects, selectProjects } from 'redux/project/project.slice';
+import { getProjects, selectProjects } from 'redux/project/project.slice';
 import { selectAccessToken } from '../../redux/auth/auth.slice';
 import { projectType } from 'core/types/requests/project.types';
 
 const MainLayout = () => {
   const apiToken = useSelector(selectAccessToken);
   const projects = useSelector(selectProjects);
-  const loading = useSelector(selectLoadingProjects);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getProjects(apiToken));
   }, [apiToken, dispatch]);
-
-  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="container">
