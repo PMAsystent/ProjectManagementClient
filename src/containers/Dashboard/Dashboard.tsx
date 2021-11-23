@@ -1,50 +1,40 @@
-import React from 'react';
-import Box from '@mui/material/Box';
+import React, { useEffect } from 'react';
 import './styles.scss';
 import ProjectTile from '../../components/ProjectTile/ProjectTile';
-
-const cards = [
-  {
-    id: 1,
-    name: 'Aplikacja mobilna mbank',
-    activeTasks: 26,
-    progressBar: 76,
-    typeOfProject: 'Aplikacja',
-    endDate: '26.01.2022',
-  },
-  {
-    id: 2,
-    name: 'Aplikacja mobilna mbank',
-    activeTasks: 26,
-    progressBar: 76,
-    typeOfProject: 'Aplikacja',
-    endDate: '26.01.2022',
-  },
-  {
-    id: 3,
-    name: 'Aplikacja mobilna mbank',
-    activeTasks: 26,
-    progressBar: 76,
-    typeOfProject: 'Aplikacja',
-    endDate: '26.01.2022',
-  },
-  {
-    id: 4,
-    name: 'Aplikacja mobilna mbank',
-    activeTasks: 26,
-    progressBar: 76,
-    typeOfProject: 'Aplikacja',
-    endDate: '26.01.2022',
-  },
-];
+import { useDispatch, useSelector } from 'react-redux';
+import { getProjects, selectProjects } from 'redux/project/project.slice';
+import { selectAccessToken } from '../../redux/auth/auth.slice';
+import { projectType } from 'core/types/requests/project.types';
 
 const MainLayout = () => {
+  const apiToken = useSelector(selectAccessToken);
+  const projects = useSelector(selectProjects);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProjects(apiToken));
+  }, [apiToken, dispatch]);
+
   return (
-    <Box className="container">
-      {cards.map((card, i) => {
-        return <ProjectTile {...card} key={i} />;
-      })}
-    </Box>
+    <div className="container">
+      {projects?.length ? (
+        <>
+          {projects.map((project: projectType) => {
+            const card = {
+              id: project.id,
+              name: project.name,
+              activeTasks: 26,
+              progressBar: project.progressPercentage,
+              typeOfProject: 'Aplikacja',
+              endDate: project.dueDate,
+            };
+            return <ProjectTile {...card} key={project.id} />;
+          })}
+        </>
+      ) : (
+        <h1> No projects </h1>
+      )}
+    </div>
   );
 };
 
