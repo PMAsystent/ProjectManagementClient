@@ -1,20 +1,15 @@
 import { Drawer, Theme, useMediaQuery } from '@mui/material';
-import TreeView from '@mui/lab/TreeView';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import TreeItem from '@mui/lab/TreeItem';
 import './styles.scss';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/auth/auth.slice';
 import { Apps } from '@material-ui/icons';
-import { selectProjects } from '../../../redux/project/project.slice';
+import TreeProjectView from '../../../components/TreeProjectView/TreeProjectView';
 
 const Sidebar = (props: { open: any; onClose: any }) => {
   const { open, onClose } = props;
   const lgUp = useMediaQuery('(min-width:1200px)');
-  const projects = useSelector(selectProjects);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -32,20 +27,7 @@ const Sidebar = (props: { open: any; onClose: any }) => {
           <h3>Projekty</h3>
         </div>
       </div>
-      <TreeView
-        aria-label="Apps navigator"
-        className="sidebar-tree"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      >
-        {projects.map((project: any) => {
-          return (
-            <TreeItem nodeId={project.id} label={project.name}>
-              <TreeItem nodeId={project.id + '_1'} label={`Tasks_${project.name}`} className="tree-item-task" />
-            </TreeItem>
-          );
-        })}
-      </TreeView>
+      <TreeProjectView />
       <div className="logout-button-wrapper">
         <CustomButton onClick={handleLogout} className="btn-secondary">
           <h3> Wyloguj </h3>

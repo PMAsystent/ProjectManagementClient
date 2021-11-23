@@ -8,7 +8,7 @@ import { projectType } from 'core/types/requests/project.types';
 
 const MainLayout = () => {
   const apiToken = useSelector(selectAccessToken);
-  const entities = useSelector(selectProjects);
+  const projects = useSelector(selectProjects);
   const loading = useSelector(selectLoadingProjects);
   const dispatch = useDispatch();
 
@@ -20,9 +20,9 @@ const MainLayout = () => {
 
   return (
     <div className="container">
-      {entities.length ? (
+      {projects?.length ? (
         <>
-          {entities.map((project: projectType) => {
+          {projects.map((project: projectType) => {
             const card = {
               id: project.id,
               name: project.name,
