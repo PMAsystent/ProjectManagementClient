@@ -27,7 +27,6 @@ const AddProject: FC<any> = (props) => {
     }),
     []
   );
-  const history = useHistory();
 
   const {
     register,
@@ -46,7 +45,7 @@ const AddProject: FC<any> = (props) => {
   };
 
   return (
-    <Modal open={props.open} onClose={props.handleClose} aria-labelledby="modal-app-project" aria-describedby="modal-modal-description">
+    <Modal open={props.open} onClose={props.handleClose} aria-labelledby="modal-app-project" aria-describedby="modal-modal-description" sx={{overflowY: 'scroll', overflowX: 'hidden', marginBottom: '15px'}}>
       <form onSubmit={handleSubmit(onSubmit)} key={'addProject'}>
         <div className="add-project-container">
           <h1>Nowy projekt</h1>
@@ -63,6 +62,9 @@ const AddProject: FC<any> = (props) => {
           </div>
           <div className="assigns-form">
             <AsyncAutocomplete label={'Dodaj użytkownika'} />
+            <div className="label">
+              Użytkownicy
+            </div>
           </div>
           <div className="buttons">
             <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>

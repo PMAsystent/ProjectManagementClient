@@ -13,7 +13,7 @@ const TreeProjectView: FC<any> = () => {
     <TreeView aria-label="Apps navigator" className="sidebar-tree" defaultCollapseIcon={<ExpandMoreIcon />} defaultExpandIcon={<ChevronRightIcon />}>
       {projects?.map((project: any) => {
         return (
-          <TreeItem nodeId={project.id} label={project.name}>
+          <TreeItem key={project.id + '_0'} nodeId={project.id + '_0'} label={project.name}>
             {/*Steps here*/}
             <TreeItem nodeId={project.id + '_1'} label={`Tasks_${project.name}`} className="tree-item-task" />
           </TreeItem>

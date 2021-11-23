@@ -1,9 +1,9 @@
 import { instance } from 'api';
 import SnackbarUtils from '../core/utils/SnackbarUtils';
 
-export const checkUserExist = async (query: string) => {
+export const findUsers = async (query: string) => {
   return await instance
-    .get(`/Users/ifExists/${query}`)
+    .get(`/Users/findUsers?term=${query}`)
     .then((response) => {
       return response.data;
     })
