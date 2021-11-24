@@ -1,34 +1,25 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import './styles.scss';
 import { Autocomplete, CircularProgress, TextField } from '@mui/material';
-import { findUsers } from '../../api/utils';
-import { debounce } from 'lodash';
+import AddIcon from '@mui/icons-material/Add';
 
 const AsyncAutocomplete: FC<any> = ({ label, ...props }) => {
   const [openAutocomplete, setOpenAutocomplete] = useState(false);
-  const [options, setOptions] = useState<any[]>([]);
   const [value, setValue] = useState('');
-  const [loading, setLoading] = useState(false);
-
+  const [selected, setSelected] = useState(null);
   useEffect(() => {
     if (!openAutocomplete) {
-      setOptions([]);
+      props.setOptions([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openAutocomplete]);
 
-  const checkUserExistDebounced = useCallback(
-    debounce(async (query) => {
-      setLoading(true);
-      const response: any = await findUsers(query);
-      if (response?.count > 0) {
-        setOptions(response.users);
-      } else {
-        setOptions([]);
-      }
-      setLoading(false);
-    }, 800),
-    []
-  );
+  useEffect(() => {
+    if (!value) {
+      props.setOptions([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.loading]);
 
   return (
     <div className={'custom-autocomplete'}>
@@ -41,14 +32,27 @@ const AsyncAutocomplete: FC<any> = ({ label, ...props }) => {
         }}
         onClose={() => {
           setOpenAutocomplete(false);
+          if (props.clearOnClose) {
+            setSelected(null);
+            setValue('');
+          }
         }}
-        isOptionEqualToValue={(option, value) => option.email === value.email}
-        getOptionLabel={(option) => option.email}
-        options={options}
-        loading={loading}
-        multiple
-        noOptionsText={value ? `Nie znaleziono: ${value}` : 'Znajdź użytkownika'}
+        isOptionEqualToValue={(option, value) => option[props.nameOptionLabel] === value[props.nameOptionLabel]}
+        getOptionLabel={(option: any) => option[props.nameOptionLabel]}
+        renderOption={(p, option) => {
+          return (
+            <li {...p} key={option.id}>
+              <AddIcon /> {option[props.nameOptionLabel]}
+            </li>
+          );
+        }}
+        options={props.options}
+        loading={props.loading}
+        noOptionsText={value ? `Nie znaleziono: ${value}` : 'Szukaj'}
         loadingText={'Szukanie...'}
+        value={selected}
+        onChange={props.onSelect}
+        blurOnSelect
         renderInput={(params) => (
           <TextField
             {...params}
@@ -56,16 +60,16 @@ const AsyncAutocomplete: FC<any> = ({ label, ...props }) => {
               ...params.InputProps,
               onChange: (e) => {
                 if (e.target.value) {
-                  checkUserExistDebounced(e.target.value);
+                  props.onChange(e.target.value);
                 } else {
-                  setOptions([]);
+                  props.setOptions([]);
                 }
                 setValue(e.target.value);
               },
               value,
               endAdornment: (
                 <React.Fragment>
-                  {loading ? <CircularProgress sx={{ color: '#7b7a7a', marginRight: '10px' }} size={20} /> : null}
+                  {props.loading ? <CircularProgress sx={{ color: '#7b7a7a', marginRight: '10px' }} size={20} /> : null}
                   {params.InputProps.endAdornment}
                 </React.Fragment>
               ),

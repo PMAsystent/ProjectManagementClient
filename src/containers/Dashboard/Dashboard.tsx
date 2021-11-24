@@ -50,7 +50,7 @@ const MainLayout = () => {
         <h1> No projects </h1>
       )}
       <BasicSpeedDial actions={actions} />
-      <AddProject open={addProjectModal} handleClose={() => setAddProjectModal(false)} />
+      {addProjectModal && <AddProject open={addProjectModal} handleClose={() => setAddProjectModal(false)} />}
     </div>
   );
 };
