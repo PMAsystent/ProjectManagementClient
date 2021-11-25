@@ -41,7 +41,9 @@ export const routes = [
     state: 'userDetails',
     component: () => (
       <MainLayout>
-        <UserDetails />
+        <Suspense fallback={<AuthSpinner />}>
+          <UserDetails />
+        </Suspense>
       </MainLayout>
     ),
   },

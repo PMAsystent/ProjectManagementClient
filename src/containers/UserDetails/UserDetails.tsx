@@ -32,7 +32,7 @@ const validationSchemaEmail = yup.object({
     .oneOf([yup.ref('newEmail')], 'Emaile muszą być takie same!')
     .required('Potwierdzenie email jest wymagane!'),
 });
-export const UserDetails = () => {
+const UserDetails = () => {
   const defaultValueBasicInfo = useMemo(
     () => ({
       firstName: 'Imię',
@@ -257,3 +257,5 @@ export const UserDetails = () => {
     </div>
   );
 };
+
+export default UserDetails;
