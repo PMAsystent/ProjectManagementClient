@@ -11,12 +11,14 @@ export const getLoginPath = '/auth/login';
 export const getRegisterPath = '/auth/register';
 export const getForgotPasswordPath = '/auth/forgotpassword';
 export const getDashboardPath = '/dashboard/overview';
+export const getUserDetailsPath = '/user/details';
 
 // containers
 const Login = lazy(() => import('containers/Login/Login'));
 const Register = lazy(() => import('containers/Register/Register'));
 const ForgotPassword = lazy(() => import('containers/ForgotPassword/ForgotPassword'));
 const Dashboard = lazy(() => import('containers/Dashboard/Dashboard'));
+const UserDetails = lazy(() => import('containers/UserDetails/UserDetails'));
 
 export const routes = [
   {
@@ -28,6 +30,19 @@ export const routes = [
       <MainLayout>
         <Suspense fallback={<AuthSpinner />}>
           <Dashboard />
+        </Suspense>
+      </MainLayout>
+    ),
+  },
+  {
+    path: `${getUserDetailsPath}`,
+    exact: true,
+    name: 'UserDetails',
+    state: 'userDetails',
+    component: () => (
+      <MainLayout>
+        <Suspense fallback={<AuthSpinner />}>
+          <UserDetails />
         </Suspense>
       </MainLayout>
     ),

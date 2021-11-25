@@ -1,5 +1,11 @@
 @use '../../assets/styles/colors';
 .custom-input {
+  .dark {
+    input {
+      background-color: colors.$inputcolorDark !important;
+      color: colors.$textColorLight !important;
+    }
+  }
   label {
     display: block;
     margin-bottom: 10px;

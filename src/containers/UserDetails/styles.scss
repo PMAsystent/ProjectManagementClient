@@ -1,0 +1,76 @@
+@use '../../assets/styles/colors';
+
+.user-details-container {
+  margin-top: 2%;
+  margin-bottom: 1%;
+  margin-left: 2%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+  gap: 40px;
+
+  .buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    row-gap: 30px;
+    flex-basis: 100%;
+    margin-top: 1%;
+
+    button {
+      font-weight: 1000;
+      padding: 1% 4% 1% 4%;
+      transition: opacity 300ms;
+      opacity: 0.85;
+      border-radius: 2px;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+  .segment {
+    width: 600px;
+    max-width: 55%;
+    .segment-content {
+      padding: 5%;
+      padding-right: 10%;
+      background-color: colors.$secondaryColor;
+
+      .input-field {
+        h3 {
+          margin-bottom: 1%;
+        }
+        input {
+          border-radius: 5px;
+        }
+      }
+    }
+    .segment-headline {
+      margin-left: 1%;
+      margin-bottom: 2%;
+      min-height: 20px;
+    }
+  }
+  h1,
+  h2,
+  h3 {
+    padding: 0;
+    margin: 0;
+    color: #fff;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  h3 {
+    font-weight: 200;
+    font-size: 22px;
+  }
+  .headline {
+    text-align: center;
+    margin-bottom: 2%;
+  }
+}
