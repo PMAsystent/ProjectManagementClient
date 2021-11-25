@@ -1,11 +1,11 @@
 import './styles.scss';
 import CustomInput from 'components/CustomInput/CustomInput';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import * as yup from 'yup';
 import { useForm, useFormState } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButton from 'components/CustomButton/CustomButton';
-import { RiArrowGoBackLine } from 'react-icons/ri';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const validationSchemaBasicInfo = yup.object({
   firstName: yup.string().required('Imię jest wymagane!'),
@@ -113,8 +113,6 @@ const UserDetails = () => {
     resetBasicInfo();
   };
 
-  const [email, setEmail] = useState('przykladowyemail@gmail.com');
-
   return (
     <div className="user-details-container">
       <div className="headline">
@@ -155,7 +153,7 @@ const UserDetails = () => {
               </CustomButton>
               <CustomButton
                 type="submit"
-                icon={<RiArrowGoBackLine />}
+                icon={<ArrowBackIcon />}
                 className="btn btn-go-back"
                 disabled={!isDirtyBasicInfo}
                 onClick={onResetClickBasicInfo}
@@ -224,7 +222,7 @@ const UserDetails = () => {
           <form onSubmit={handleSubmitEmail(onSubmitChangeEmail)} key={'change-email'}>
             <div className="input-field">
               <h3>Obecny email</h3>
-              <CustomInput value={email} className="dark" disabled="true" />
+              <CustomInput className="dark" disabled={true} />
             </div>
             <div className="input-field">
               <h3>Nowy email</h3>

@@ -1,7 +1,7 @@
 import { render, screen } from '../../test-utils';
 import React from 'react';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import { RiArrowGoBackLine } from 'react-icons/ri';
+import AddIcon from "@mui/icons-material/Add";
 
 describe('Custom Button Tests', () => {
   it('Should render the component', () => {
@@ -15,7 +15,7 @@ describe('Custom Button Tests', () => {
   });
 
   it('Should render icon', () => {
-    render(<CustomButton icon={<RiArrowGoBackLine role="img" />} />);
-    screen.getByRole('img');
+    render(<CustomButton icon={<AddIcon />} />);
+    screen.getByTestId('AddIcon');
   });
 });
