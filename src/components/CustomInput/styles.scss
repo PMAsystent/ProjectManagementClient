@@ -1,5 +1,11 @@
 @use '../../assets/styles/colors';
 
+.dark {
+  input {
+    background-color: colors.$inputcolorDark !important; //colors.$bgColor !important;
+    color: colors.$textColorLight !important;
+  }
+}
 .MuiTextField-root {
   height: 77px;
   width: 100%;
@@ -8,6 +14,7 @@
       border: 2px solid rgba(colors.$errorColor, 0.25);
     }
   }
+
   .MuiInputBase-input.MuiInput-input {
     color: colors.$textColor;
     background-color: colors.$secondaryColor;
@@ -19,7 +26,9 @@
     margin-bottom: 2px;
   }
   .MuiInput-underline {
-    &::after, &::before, &:hover:not(.Mui-disabled):before {
+    &::after,
+    &::before,
+    &:hover:not(.Mui-disabled):before {
       border: 0;
     }
   }

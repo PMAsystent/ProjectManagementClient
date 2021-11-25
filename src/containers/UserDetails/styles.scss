@@ -34,11 +34,11 @@
     width: 600px;
     max-width: 55%;
     .segment-content {
-      border: 1px groove grey;
-      border-radius: 5px;
+      //border: 1px groove grey;
+      //border-radius: 5px;
       padding: 5%;
       padding-right: 10%;
-      background-color: rgba(55, 55, 55, 255);
+      background-color: colors.$secondaryColor;
 
       .input-field {
         h3 {

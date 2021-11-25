@@ -1,44 +1,96 @@
 @use '../../assets/styles/colors';
 .container {
-  margin-top: 5%;
-  margin-bottom: 5%;
-}
-
-.container .input-container {
+  margin-top: 2%;
+  margin-bottom: 1%;
+  margin-left: 2%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  -webkit-box-orient: horizontal;
+  -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  width: 100%;
-  height: 100%;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  gap: 40px;
 }
 
 .container .buttons-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: end;
-  gap: 3%;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 30px;
+  row-gap: 30px;
+  -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+  margin-top: 1%;
 }
 
 .container .buttons-container button {
-  font-weight: 1100;
+  font-weight: 1000;
+  padding: 1% 4% 1% 4%;
   -webkit-transition: opacity 300ms;
   transition: opacity 300ms;
   opacity: 0.85;
+  border-radius: 2px;
 }
 
 .container .buttons-container button:hover {
   opacity: 1;
+}
+
+.container .segment {
+  width: 600px;
+  max-width: 55%;
+}
+
+.container .segment .segment-content {
+  padding: 5%;
+  padding-right: 10%;
+  background-color: green;
+}
+
+.container .segment .segment-content .input-field h3 {
+  margin-bottom: 1%;
+}
+
+.container .segment .segment-content .input-field input {
+  border-radius: 5px;
+}
+
+.container .segment .segment-headline {
+  margin-left: 1%;
+  margin-bottom: 2%;
+  min-height: 20px;
+}
+
+.container h1,
+.container h2,
+.container h3 {
+  padding: 0;
+  margin: 0;
+  color: #fff;
+}
+
+.container h1 {
+  font-size: 32px;
+}
+
+.container h3 {
+  font-weight: 200;
+  font-size: 22px;
+}
+
+.container .headline {
+  text-align: center;
+  margin-bottom: 2%;
 }
 /*# sourceMappingURL=styles.css.map */

@@ -19,10 +19,18 @@ const validationSchemaPassword = yup.object({
     .required('Hasło jest wymagane!')
     .min(8, 'Hasło musi być dłuższe niż 8 znaków!')
     .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Hasło musi zawierać dużą literę, cyfrę oraz znak specjalny!'),
+  newPasswordConfirm: yup
+    .string()
+    .oneOf([yup.ref('newPassword')], 'Hasła muszą być takie same!')
+    .required('Potwierdzenie hasła jest wymagane!'),
 });
 
 const validationSchemaEmail = yup.object({
   newEmail: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
+  newEmailConfirm: yup
+    .string()
+    .oneOf([yup.ref('newEmail')], 'Emaile muszą być takie same!')
+    .required('Potwierdzenie email jest wymagane!'),
 });
 export const UserDetails = () => {
   const defaultValueBasicInfo = useMemo(
@@ -36,12 +44,14 @@ export const UserDetails = () => {
     () => ({
       password: '',
       newPassword: '',
+      newPasswordConfirm: '',
     }),
     []
   );
   const defaultValueEmail = useMemo(
     () => ({
       newEmail: '',
+      newEmailConfirm: '',
     }),
     []
   );
@@ -121,6 +131,7 @@ export const UserDetails = () => {
               <CustomInput
                 {...registerBasicInfo('firstName')}
                 placeholder="Imię"
+                className="dark"
                 type="text"
                 helperText={errorsBasicInfo.firstName?.message}
                 error={!!errorsBasicInfo.firstName}
@@ -132,6 +143,7 @@ export const UserDetails = () => {
                 {...registerBasicInfo('lastName')}
                 placeholder="Nazwisko"
                 type="text"
+                className="dark"
                 helperText={errorsBasicInfo.lastName?.message}
                 error={!!errorsBasicInfo.lastName}
               />
@@ -165,6 +177,7 @@ export const UserDetails = () => {
               <CustomInput
                 {...registerPassword('password')}
                 type="password"
+                className="dark"
                 placeholder="Obecne hasło"
                 helperText={errorsPassword.password?.message}
                 error={!!errorsPassword.password}
@@ -175,9 +188,18 @@ export const UserDetails = () => {
               <CustomInput
                 {...registerPassword('newPassword')}
                 type="password"
+                className="dark"
                 placeholder="Nowe hasło"
                 helperText={errorsPassword.newPassword?.message}
                 error={!!errorsPassword.newPassword}
+              />
+              <CustomInput
+                {...registerPassword('newPasswordConfirm')}
+                type="password"
+                className="dark"
+                placeholder="Potwierdź nowe hasło"
+                helperText={errorsPassword.newPasswordConfirm?.message}
+                error={!!errorsPassword.newPasswordConfirm}
               />
             </div>
 
@@ -202,7 +224,7 @@ export const UserDetails = () => {
           <form onSubmit={handleSubmitEmail(onSubmitChangeEmail)} key={'change-email'}>
             <div className="input-field">
               <h3>Obecny email</h3>
-              <CustomInput value={email} disabled="true" />
+              <CustomInput value={email} className="dark" disabled="true" />
             </div>
             <div className="input-field">
               <h3>Nowy email</h3>
@@ -210,8 +232,17 @@ export const UserDetails = () => {
                 {...registerEmail('newEmail')}
                 placeholder="Nowy email"
                 type="email"
+                className="dark"
                 helperText={errorsEmail.newEmail?.message}
                 error={!!errorsEmail.newEmail}
+              />
+              <CustomInput
+                {...registerEmail('newEmailConfirm')}
+                placeholder="Potwierdź nowy email"
+                type="email"
+                className="dark"
+                helperText={errorsEmail.newEmailConfirm?.message}
+                error={!!errorsEmail.newEmailConfirm}
               />
             </div>
 
