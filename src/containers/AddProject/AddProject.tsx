@@ -18,7 +18,8 @@ import { projectRoleEnum } from '../../core/enums/project.role';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearProjectPostFetchStatus, postProject, selectProjectPostFetchStatus } from '../../redux/project/project.slice';
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
-import { isValid, isAfter } from 'date-fns';
+import { isValid } from 'date-fns';
+import CustomReactDatePicker from '../../components/CustomReactDatePicker/CustomReactDatePicker';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana!').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
@@ -52,6 +53,7 @@ const AddProject: FC<any> = (props) => {
     handleSubmit,
     getValues,
     setValue,
+    control,
 
     formState: { errors },
   } = useForm({
@@ -139,13 +141,13 @@ const AddProject: FC<any> = (props) => {
           <div className="project-form">
             <CustomInput label={'Nazwa'} {...register('name')} type="text" helperText={errors.name?.message} error={!!errors.name} />
             <CustomTextArea label={'Opis'} {...register('description')} helperText={errors.description?.message} error={!!errors.description} />
-            <CustomInput
-              label={'Data zakończenia'}
-              {...register('dueDate', { min: '2021-01-01' })}
-              type="date"
+            <CustomReactDatePicker
+              min={new Date()}
+              name={'dueDate'}
+              control={control}
+              label={'Deadline'}
               helperText={errors.dueDate?.message}
               error={!!errors.dueDate}
-              InputProps={{min: '2021-01-01'}}
             />
           </div>
           <div className="assigns-form">

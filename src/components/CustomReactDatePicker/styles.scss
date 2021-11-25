@@ -1,23 +1,24 @@
 @use '../../assets/styles/colors';
-
-.custom-textarea {
+.custom-date-picker {
   position: relative;
   label {
     display: block;
     margin-bottom: 10px;
   }
-  textarea {
+  .date-picker {
+    width: 100%;
     color: colors.$textColor;
     background-color: colors.$secondaryColor;
-    padding: 10px;
-    width: 100%;
-    resize: none;
-    min-height: 200px;
+    &:focus-visible {
+      outline: -webkit-focus-ring-color auto 1px;
+    }
     border: none;
+    padding: 0 0 0 20px;
+    height: 52px;
     font-size: 1rem;
-  }
-  .error {
-    border: 2px solid rgba(colors.$errorColor, 0.25);
+    &-error {
+      border: 2px solid rgba(colors.$errorColor, 0.25);
+    }
   }
   .helperText {
     position: absolute;
@@ -25,8 +26,7 @@
     font-size: .75rem;
     text-align: center;
     font-weight: 400;
-    bottom: -15px;
+    bottom: -20px;
+    left: 2px;
   }
-
-  margin-bottom: 25px;
 }
