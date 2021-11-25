@@ -116,7 +116,7 @@ export const UserDetails = () => {
   const [email, setEmail] = useState('przykladowyemail@gmail.com');
 
   return (
-    <div className="container">
+    <div className="user-details-container">
       <div className="headline">
         <h1>Profil użytkownika</h1>
       </div>

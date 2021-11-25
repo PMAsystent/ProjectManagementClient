@@ -1,6 +1,6 @@
 @use '../../assets/styles/colors';
 
-.container {
+.user-details-container {
   margin-top: 2%;
   margin-bottom: 1%;
   margin-left: 2%;
@@ -34,8 +34,6 @@
     width: 600px;
     max-width: 55%;
     .segment-content {
-      //border: 1px groove grey;
-      //border-radius: 5px;
       padding: 5%;
       padding-right: 10%;
       background-color: colors.$secondaryColor;
