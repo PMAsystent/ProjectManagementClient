@@ -1,9 +1,10 @@
 import React, { lazy, Suspense } from 'react';
-import AuthLayout from 'layouts/AuthLayout/AuthLayout';
 import AuthSpinner from 'components/AuthSpinner/AuthSpinner';
 import { Redirect } from 'react-router-dom';
-import { UserDetails } from 'containers/UserDetails/UserDetails';
-import DashboardLayout from '../../layouts/DashboardLayout';
+
+// Layouts
+import AuthLayout from 'layouts/AuthLayout/AuthLayout';
+import MainLayout from '../../layouts/MainLayout/MainLayout';
 
 // paths
 export const getLoginPath = '/auth/login';
@@ -17,6 +18,7 @@ const Login = lazy(() => import('containers/Login/Login'));
 const Register = lazy(() => import('containers/Register/Register'));
 const ForgotPassword = lazy(() => import('containers/ForgotPassword/ForgotPassword'));
 const Dashboard = lazy(() => import('containers/Dashboard/Dashboard'));
+const UserDetails = lazy(() => import('containers/UserDetails/UserDetails'));
 
 export const routes = [
   {
@@ -25,11 +27,11 @@ export const routes = [
     name: 'Dashboard',
     state: 'dashboard',
     component: () => (
-      <DashboardLayout>
+      <MainLayout>
         <Suspense fallback={<AuthSpinner />}>
           <Dashboard />
         </Suspense>
-      </DashboardLayout>
+      </MainLayout>
     ),
   },
   {
@@ -38,9 +40,9 @@ export const routes = [
     name: 'UserDetails',
     state: 'userDetails',
     component: () => (
-      <DashboardLayout>
+      <MainLayout>
         <UserDetails />
-      </DashboardLayout>
+      </MainLayout>
     ),
   },
   {

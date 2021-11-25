@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react';
 import { Box } from '@mui/material';
 import './styles.scss';
-import Navbar from '../../components/Navbar';
-import Sidebar from '../../components/Sidebar';
+import Navbar from './Navbar/Navbar';
+import Sidebar from './Sidebar/Sidebar';
 
 const DashboardLayout: FC<any> = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <>

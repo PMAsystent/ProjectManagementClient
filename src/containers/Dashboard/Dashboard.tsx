@@ -1,37 +1,41 @@
-import React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import React, { useEffect } from 'react';
 import './styles.scss';
+import ProjectTile from '../../components/ProjectTile/ProjectTile';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProjects, selectProjects } from 'redux/project/project.slice';
+import { selectAccessToken } from '../../redux/auth/auth.slice';
+import { projectType } from 'core/types/requests/project.types';
 
-const cards = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+const MainLayout = () => {
+  const apiToken = useSelector(selectAccessToken);
+  const projects = useSelector(selectProjects);
+  const dispatch = useDispatch();
 
-const Dashboard = () => {
+  useEffect(() => {
+    dispatch(getProjects(apiToken));
+  }, [apiToken, dispatch]);
+
   return (
-    <Box className="container">
-      {cards.map((card) => {
-        return (
-          <Card variant="outlined" className="card-item">
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                App {card.id}
-              </Typography>
-              <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                Description {card.id}
-              </Typography>
-              <Typography variant="body2">...</Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Click</Button>
-            </CardActions>
-          </Card>
-        );
-      })}
-    </Box>
+    <div className="container">
+      {projects?.length ? (
+        <>
+          {projects.map((project: projectType) => {
+            const card = {
+              id: project.id,
+              name: project.name,
+              activeTasks: 26,
+              progressBar: project.progressPercentage,
+              typeOfProject: 'Aplikacja',
+              endDate: project.dueDate,
+            };
+            return <ProjectTile {...card} key={project.id} />;
+          })}
+        </>
+      ) : (
+        <h1> No projects </h1>
+      )}
+    </div>
   );
 };
 
-export default Dashboard;
+export default MainLayout;
