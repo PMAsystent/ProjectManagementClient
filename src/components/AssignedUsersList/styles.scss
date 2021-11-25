@@ -22,6 +22,7 @@
       align-items: center;
       span {
         margin-left: 15px;
+        overflow-wrap: anywhere;
       }
     }
     .actions {
@@ -53,6 +54,8 @@
         .MuiInputBase-root {
           margin-bottom: 10px;
           flex-basis:  100%;
+          margin-left: 0;
+          min-width: 0;
         }
       }
     }

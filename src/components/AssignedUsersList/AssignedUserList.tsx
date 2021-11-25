@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import './styles.scss';
 import { Avatar } from '@mui/material';
 
-const UserList: FC<{ users: any[]; addtionalActions: any }> = ({ users, addtionalActions }) => {
+const AssignedUserList: FC<{ users: any[]; addtionalActions: any }> = ({ users, addtionalActions }) => {
   return (
     <div className="users-list-container">
       <div className="users-list-item">
@@ -27,4 +27,4 @@ const UserList: FC<{ users: any[]; addtionalActions: any }> = ({ users, addtiona
   );
 };
 
-export default UserList;
+export default AssignedUserList;

@@ -11,29 +11,38 @@ import AsyncAutocomplete from '../../components/AsyncAutocomplete/AsyncAutocompl
 import { debounce } from 'lodash';
 import { findUsers } from '../../api/utils';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
-import UserList from '../../components/UsersList/UserList';
+import AssignedUserList from '../../components/AssignedUsersList/AssignedUserList';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { projectMemberEnum } from '../../core/enums/project.member';
 import { projectRoleEnum } from '../../core/enums/project.role';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearProjectPostFetchStatus, postProject, selectProjectPostFetchStatus } from '../../redux/project/project.slice';
+import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
+import { isValid, isAfter } from 'date-fns';
 
 const validationSchema = yup.object({
-  name: yup.string().required('Nazwa jest wymagana!'),
-  description: yup.string().required('Opis jest wymagany!'),
-  dueDate: yup.date().required('Data zakończenia jest wymagana!'),
-  assigns: yup.array(),
+  name: yup.string().required('Nazwa jest wymagana!').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
+  description: yup.string().required('Opis jest wymagany!').min(20, 'Opis musi mieć conajmniej 20 znaków'),
+  dueDate: yup
+    .mixed()
+    .test('is-date', 'Data zakończenia jest wymagana', (value) => isValid(value))
+    .required('Data zakończenia jest wymagana'),
+  assignedUsers: yup.array(),
 });
 
 const AddProject: FC<any> = (props) => {
+  const dispatch = useDispatch();
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
+  const projectPostFetchStatus = useSelector(selectProjectPostFetchStatus);
 
   const defaultValue: any = useMemo(
     () => ({
       name: '',
       description: '',
       dueDate: '',
-      assigns: [],
+      assignedUsers: [],
     }),
     []
   );
@@ -68,10 +77,10 @@ const AddProject: FC<any> = (props) => {
   );
 
   const handleUserSelect = (e: any, value: any) => {
-    const assignsArray: any[] = getValues('assigns');
+    const assignsArray: any[] = getValues('assignedUsers');
     if (!assignsArray.find((assign) => assign.id === value.id)) {
       SnackbarUtils.success('Dodano użytkownika');
-      assignsArray.push({ ...value, projectRole: projectRoleEnum.DEVELOPER, projectMember: projectMemberEnum.MEMBER });
+      assignsArray.push({ ...value, projectRole: projectRoleEnum.DEVELOPER, memberType: projectMemberEnum.MEMBER });
     } else {
       SnackbarUtils.warning('Użytkownik jest już dodany');
     }
@@ -85,7 +94,7 @@ const AddProject: FC<any> = (props) => {
   const handleOnChangeMember = (id: number, value: string) => {
     setUsers((users) =>
       users.map((user) => {
-        if (user.id === id) user.projectMember = value;
+        if (user.id === id) user.memberType = value;
         return user;
       })
     );
@@ -101,13 +110,20 @@ const AddProject: FC<any> = (props) => {
   };
 
   const onSubmit = (values: any) => {
-    console.log(values);
+    values.assignedUsers = values.assignedUsers.map((users: any) => ({
+      userId: users.id,
+      projectRole: users.projectRole,
+      memberType: users.memberType,
+    }));
+    dispatch(postProject(values));
   };
 
   useEffect(() => {
-    setValue('assigns', users);
+    setValue('assignedUsers', users);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
+
+  useCloseModalOnDoneFetchStatus({ status: projectPostFetchStatus, clearFunction: clearProjectPostFetchStatus, handleClose: props.handleClose });
 
   return (
     <Modal
@@ -125,10 +141,11 @@ const AddProject: FC<any> = (props) => {
             <CustomTextArea label={'Opis'} {...register('description')} helperText={errors.description?.message} error={!!errors.description} />
             <CustomInput
               label={'Data zakończenia'}
-              {...register('dueDate')}
+              {...register('dueDate', { min: '2021-01-01' })}
               type="date"
               helperText={errors.dueDate?.message}
               error={!!errors.dueDate}
+              InputProps={{min: '2021-01-01'}}
             />
           </div>
           <div className="assigns-form">
@@ -144,12 +161,12 @@ const AddProject: FC<any> = (props) => {
               clearOnClose
             />
             <div className="label">Użytkownicy</div>
-            <UserList
+            <AssignedUserList
               users={users}
               addtionalActions={(user: any) => {
                 return (
                   <>
-                    <Select value={user.projectMember} onChange={(e) => handleOnChangeMember(user.id, e.target.value)}>
+                    <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user.id, e.target.value)}>
                       {Object.values(projectMemberEnum).map((value: string) => (
                         <MenuItem key={value} value={value}>
                           {value}
@@ -169,7 +186,7 @@ const AddProject: FC<any> = (props) => {
               }}
             />
           </div>
-          <CustomInput {...register('assigns')} type="hidden" />
+          <CustomInput {...register('assignedUsers')} type="hidden" />
           <div className="buttons">
             <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
               wróć
