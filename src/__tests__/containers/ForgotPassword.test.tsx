@@ -2,6 +2,7 @@ import {fireEvent, render, screen, waitFor} from '../../test-utils';
 import React from 'react';
 import ForgotPassword from 'containers/ForgotPassword/ForgotPassword';
 
+
 describe('ForgotPassword Unit Tests', () => {
   it('Should render the component', () => {
     render(<ForgotPassword />);
