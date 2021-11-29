@@ -1,0 +1,32 @@
+@use '../../assets/styles/colors';
+
+.custom-textarea {
+  position: relative;
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  textarea {
+    color: colors.$textColor;
+    background-color: colors.$secondaryColor;
+    padding: 10px;
+    width: 100%;
+    resize: none;
+    min-height: 200px;
+    border: none;
+    font-size: 1rem;
+  }
+  .error {
+    border: 2px solid rgba(colors.$errorColor, 0.25);
+  }
+  .helperText {
+    position: absolute;
+    color: colors.$errorColor;
+    font-size: .75rem;
+    text-align: center;
+    font-weight: 400;
+    bottom: -15px;
+  }
+
+  margin-bottom: 25px;
+}

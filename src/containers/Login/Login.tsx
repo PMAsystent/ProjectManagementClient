@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useHistory } from 'react-router-dom';
 import { getDashboardPath, getForgotPasswordPath, getRegisterPath } from 'core/routes';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUserType } from 'core/types/requests/auth.types';
+import { loginUserType } from 'core/types/api/auth.types';
 import { clearLoginFetchStatus, postLogin, selectLoginFetchStatus } from 'redux/auth/auth.slice';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
 

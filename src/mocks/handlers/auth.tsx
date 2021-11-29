@@ -1,6 +1,6 @@
 import { rest, RestRequest } from 'msw';
 import { db } from '../db';
-import { loginUserType, registerUserType } from '../../core/types/requests/auth.types';
+import { loginUserType, registerUserType } from '../../core/types/api/auth.types';
 
 export const auth = [
   rest.post(`/Auth/LoginUser`, (req: RestRequest<loginUserType>, res, ctx) => {

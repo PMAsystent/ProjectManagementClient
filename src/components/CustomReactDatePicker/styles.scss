@@ -1,0 +1,32 @@
+@use '../../assets/styles/colors';
+.custom-date-picker {
+  position: relative;
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .date-picker {
+    width: 100%;
+    color: colors.$textColor;
+    background-color: colors.$secondaryColor;
+    &:focus-visible {
+      outline: -webkit-focus-ring-color auto 1px;
+    }
+    border: none;
+    padding: 0 0 0 20px;
+    height: 52px;
+    font-size: 1rem;
+    &-error {
+      border: 2px solid rgba(colors.$errorColor, 0.25);
+    }
+  }
+  .helperText {
+    position: absolute;
+    color: colors.$errorColor;
+    font-size: .75rem;
+    text-align: center;
+    font-weight: 400;
+    bottom: -20px;
+    left: 2px;
+  }
+}

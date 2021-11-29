@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 // Layouts
 import AuthLayout from 'layouts/AuthLayout/AuthLayout';
-import MainLayout from '../../layouts/MainLayout/MainLayout';
+import MainLayout from 'layouts/MainLayout/MainLayout';
 
 // paths
 export const getLoginPath = '/auth/login';

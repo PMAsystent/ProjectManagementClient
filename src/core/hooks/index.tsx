@@ -1,3 +1,4 @@
 import useAuth from './useAuth';
 import useRedirectOnDoneFetchStatus from './useRedirectOnDoneFetchStatus';
-export { useAuth, useRedirectOnDoneFetchStatus };
+import useCloseModalOnDoneFetchStatus from './useCloseModalOnDoneFetchStatus';
+export { useAuth, useRedirectOnDoneFetchStatus, useCloseModalOnDoneFetchStatus };

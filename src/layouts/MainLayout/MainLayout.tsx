@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import { Box } from '@mui/material';
 import './styles.scss';
 import Navbar from './Navbar/Navbar';
 import Sidebar from './Sidebar/Sidebar';
@@ -9,9 +8,7 @@ const DashboardLayout: FC<any> = ({ children }) => {
 
   return (
     <>
-      <div className="dashboard-layout-root">
-        <Box className="dashboard-layout-content">{children}</Box>
-      </div>
+      <div className="main-layout-root">{children}</div>
       <Navbar onSidebarOpen={() => setSidebarOpen(true)} />
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
     </>

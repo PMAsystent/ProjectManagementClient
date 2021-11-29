@@ -19,7 +19,9 @@ const Sidebar = (props: { open: any; onClose: any }) => {
   const content = (
     <div className="sidebar-root">
       <div className="top-logo">
-        <b>LOGO</b>
+        <a href="/">
+          <b>LOGO</b>
+        </a>
       </div>
       <div className="project-wrapper">
         <div className="project-block">

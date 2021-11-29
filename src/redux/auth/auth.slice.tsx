@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { instance } from 'api';
-import { loginUserType, registerUserType } from 'core/types/requests/auth.types';
+import { loginUserType, registerUserType } from 'core/types/api/auth.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { rootReducerInterface } from '../rootReducer';
 

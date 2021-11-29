@@ -1,19 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import './styles.scss';
-import ProjectTile from '../../components/ProjectTile/ProjectTile';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProjects, selectProjects } from 'redux/project/project.slice';
-import { selectAccessToken } from '../../redux/auth/auth.slice';
-import { projectType } from 'core/types/requests/project.types';
+import { projectType } from 'core/types/api/project.requests.types';
+// components
+import AddProject from 'containers/AddProject/AddProject';
+import BasicSpeedDial from 'components/BasicSpeedDial/BasicSpeedDial';
+import AddIcon from '@mui/icons-material/Add';
+import ProjectTile from '../../components/ProjectTile/ProjectTile';
 
 const MainLayout = () => {
-  const apiToken = useSelector(selectAccessToken);
-  const projects = useSelector(selectProjects);
   const dispatch = useDispatch();
+  const projects = useSelector(selectProjects);
+  const [addProjectModal, setAddProjectModal] = React.useState(false);
+  const actions = useMemo(
+    () => [
+      {
+        icon: <AddIcon />,
+        name: 'Dodaj nowy projekt',
+        handleOnClick: () => setAddProjectModal(true),
+      },
+    ],
+    []
+  );
 
   useEffect(() => {
-    dispatch(getProjects(apiToken));
-  }, [apiToken, dispatch]);
+    dispatch(getProjects());
+  }, [dispatch]);
 
   return (
     <div className="container">
@@ -34,6 +47,8 @@ const MainLayout = () => {
       ) : (
         <h1> No projects </h1>
       )}
+      <BasicSpeedDial actions={actions} />
+      {addProjectModal && <AddProject open={addProjectModal} handleClose={() => setAddProjectModal(false)} />}
     </div>
   );
 };

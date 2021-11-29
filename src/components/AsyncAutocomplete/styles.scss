@@ -1,0 +1,29 @@
+@use '../../assets/styles/colors';
+
+.custom-autocomplete {
+  label {
+    margin-bottom: 10px;
+    display: block;
+  }
+  .MuiSvgIcon-root {
+    color: colors.$textColor;
+  }
+  .MuiAutocomplete-root {
+    .MuiOutlinedInput-root {
+      background-color: colors.$secondaryColor;
+      border: none;
+      input {
+        color: colors.$textColor;
+      }
+      fieldset {
+        border: none;
+      }
+    }
+    .Mui-focused {
+      outline: -webkit-focus-ring-color auto 1px;
+    }
+  }
+  .MuiAutocomplete-option {
+    background-color: red;
+  }
+}
