@@ -1,18 +1,22 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { instance } from '../../api';
 import { rootReducerInterface } from '../rootReducer';
-import { myProjectsType, postProjectType, projectType } from '../../core/types/api/project.requests.types';
+import { myProjectsType, postProjectType, projectDetails, projectType } from '../../core/types/api/project.requests.types';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 
 export interface projectReducerInterface {
   projectList: Array<projectType>;
+  projectDetails: null | projectDetails;
   projectListFetchStatus: null | string;
+  projectDetailsFetchStatus: null | string;
   projectPostFetchStatus: null | string;
 }
 
 const INIT_STATE: projectReducerInterface = {
   projectList: [],
+  projectDetails: null,
   projectListFetchStatus: null,
+  projectDetailsFetchStatus: null,
   projectPostFetchStatus: null,
 };
 
@@ -26,6 +30,23 @@ export const getProjects = createAsyncThunk<any, void, { state: rootReducerInter
       .get<myProjectsType>('/MyProjects', { headers: { authorization: `Bearer ${accessToken}` } })
       .then((response) => {
         return response.data.projectsList ?? [];
+      })
+      .catch((error) => {
+        return rejectWithValue(error.response.data.title);
+      });
+  }
+);
+
+export const getProject = createAsyncThunk<any, number, { state: rootReducerInterface; rejectValue: string }>(
+  'project/getProject',
+  async (id, { rejectWithValue, getState }) => {
+    const {
+      auth: { accessToken },
+    } = getState();
+    return await instance
+      .get<myProjectsType>(`/MyProjects/${id}`, { headers: { authorization: `Bearer ${accessToken}` } })
+      .then((response) => {
+        return response.data;
       })
       .catch((error) => {
         return rejectWithValue(error.response.data.title);
@@ -61,6 +82,17 @@ export const projectReducer = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getProject.pending, (state, action) => {
+        state.projectDetailsFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(getProject.fulfilled, (state, action) => {
+        state.projectDetailsFetchStatus = action.meta.requestStatus;
+        state.projectDetails = action.payload;
+      })
+      .addCase(getProject.rejected, (state, action) => {
+        state.projectDetailsFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error('Pobranie projektu nie powiodło się');
+      })
       .addCase(getProjects.pending, (state, action) => {
         state.projectListFetchStatus = action.meta.requestStatus;
       })
@@ -70,6 +102,7 @@ export const projectReducer = createSlice({
       })
       .addCase(getProjects.rejected, (state, action) => {
         state.projectListFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error('Pobranie projektów nie powiodło się');
       })
       .addCase(postProject.pending, (state, action) => {
         state.projectPostFetchStatus = action.meta.requestStatus;
@@ -90,3 +123,5 @@ export const { clearProjectPostFetchStatus } = projectReducer.actions;
 export const selectProjects = (state: rootReducerInterface) => state.projects.projectList;
 export const selectLoadingProjects = (state: rootReducerInterface) => state.projects.projectListFetchStatus;
 export const selectProjectPostFetchStatus = (state: rootReducerInterface) => state.projects.projectPostFetchStatus;
+export const selectProjectDetails = (state: rootReducerInterface) => state.projects.projectDetails;
+export const selectProjectDetailsFetchStatus = (state: rootReducerInterface) => state.projects.projectDetailsFetchStatus;
