@@ -31,7 +31,7 @@ const validationSchema = yup.object({
   assignedUsers: yup.array(),
 });
 
-const AddProject: FC<any> = (props) => {
+const AddProjectModal: FC<any> = (props) => {
   const dispatch = useDispatch();
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
@@ -203,4 +203,4 @@ const AddProject: FC<any> = (props) => {
   );
 };
 
-export default AddProject;
+export default AddProjectModal;
