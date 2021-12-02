@@ -23,6 +23,7 @@ export interface postProjectType {
 }
 export interface projectDetails extends Omit<projectType, 'isActive'> {
   description: string;
+  created: string;
   projectSteps: Array<projectStep>;
   projectTasks: Array<projectTask>;
   projectAssignedUsers: Array<projectAssignments>;

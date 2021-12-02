@@ -75,7 +75,7 @@ const ProjectDetails = () => {
               </div>
               <div className="info-item">
                 <p>Data Rozpoczęcia</p>
-                <h3>{format(Date.now(), 'dd.MM.yyyy')}</h3>
+                <h3>{format(new Date(projectDetails?.created || Date.now()), 'dd.MM.yyyy')}</h3>
               </div>
               <div className="info-item">
                 <p>Deadline</p>
