@@ -10,6 +10,14 @@
   justify-content: flex-start;
   align-items: flex-start;
   gap: 40px;
+  .segments-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
 
   .buttons-container {
     display: flex;
@@ -33,6 +41,7 @@
   .segment {
     width: 600px;
     max-width: 55%;
+
     .segment-content {
       padding: 5%;
       padding-right: 10%;
