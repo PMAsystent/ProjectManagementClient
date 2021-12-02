@@ -135,6 +135,125 @@
         border-radius: 10px;
         padding: 20px 0;
         background-color: colors.$bgColor;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        .task {
+          background-color: colors.$secondaryColor;
+          flex-basis: 95%;
+          border-radius: 10px;
+          position: relative;
+          padding: 10px 100px 10px 20px;
+          height: 105px;
+          margin-bottom: 15px;
+          display: flex;
+          flex-wrap: wrap;
+          &-circle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 65px;
+            height: 65px;
+          }
+
+          h2, h4, p {
+            padding: 0;
+            margin: 0;
+          }
+
+          h4 {
+            font-weight: lighter;
+          }
+          p {
+            color: colors.$textColor;
+          }
+
+          &-title {
+            flex-basis: 100%;
+            font-weight: 900;
+            font-style: oblique;
+          }
+
+          &-priority {
+            flex-basis: 50%;
+            span {
+              display: flex;
+            }
+          }
+
+          &-dueDate {
+            flex-basis: 50%;
+            p {
+              margin-bottom: 3px;
+            }
+          }
+          @media (max-width: 1700px) {
+            padding-right: 70px;
+            &-priority {
+              svg {
+                width: 20px;
+                height: 20px;
+              }
+            }
+
+            &-circle {
+              position: absolute;
+              top: 25px;
+              right: 15px;
+              width: 50px;
+              height: 50px;
+            }
+          }
+          @media (max-width: 1410px) {
+            height: 140px;
+            &-priority, &-dueDate {
+              flex-basis: 100%;
+            }
+            &-circle {
+              position: absolute;
+              width: 80px;
+              height: 80px;
+            }
+          }
+          @media (max-width: 1024px) {
+            padding: 10px 100px 10px 20px;
+            height: 105px;
+            &-circle {
+              position: absolute;
+              top: 20px;
+              right: 20px;
+              width: 65px;
+              height: 65px;
+            }
+            &-priority {
+              flex-basis: auto;
+              padding-right: 15px;
+            }
+            &-dueDate {
+              flex-basis: auto;
+            }
+          }
+          @media (max-width: 1024px) {
+            height: 140px;
+            &-circle {
+              position: absolute;
+              top: 25px;
+              right: 15px;
+              width: 80px;
+              height: 80px;
+            }
+            &-priority {
+              flex-basis: auto;
+              padding-right: 15px;
+            }
+            &-dueDate {
+              flex-basis: auto;
+            }
+          }
+        }
+      }
+      @media (max-width: 1024px) {
+        flex-basis: 100%;
       }
     }
   }

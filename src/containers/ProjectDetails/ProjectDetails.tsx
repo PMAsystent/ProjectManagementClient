@@ -3,6 +3,7 @@ import './styles.scss';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import BasicSpeedDial from '../../components/BasicSpeedDial/BasicSpeedDial';
 import AddTaskIcon from '@mui/icons-material/AddTask';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory, useParams } from 'react-router-dom';
 import { getDashboardPath } from '../../core/routes';
@@ -101,7 +102,7 @@ const ProjectDetails = () => {
                   backgroundColor: '#292929',
                 })}
                 background
-                backgroundPadding={projectDetails?.progressPercentage}
+                backgroundPadding={3}
                 value={projectDetails?.progressPercentage || 0}
                 text={`${projectDetails?.progressPercentage}%`}
               />
@@ -110,15 +111,130 @@ const ProjectDetails = () => {
           <div className="project-tasks">
             <div className="tasks-container">
               <h1>Nierozpoczęte</h1>
-              <div className="tasks-drop"></div>
+              <div className="tasks-drop">
+                <div className="task">
+                  <h2 className="task-title">Task 1</h2>
+                  <div className="task-priority">
+                    <p>Priorytet</p>
+                    <span>
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                    </span>
+                  </div>
+                  <div className="task-dueDate">
+                    <p>Deadline</p>
+                    <h4>{format(new Date(Date.now()), 'dd.MM.yyyy')}</h4>
+                  </div>
+                  <div className="task-circle">
+                    <CircularProgressbar
+                      styles={buildStyles({
+                        backgroundColor: '#292929',
+                      })}
+                      background
+                      backgroundPadding={3}
+                      value={50}
+                      text={`${50}%`}
+                    />
+                  </div>
+                </div>
+                <div className="task">
+                  <h2 className="task-title">Task 2</h2>
+                  <div className="task-priority">
+                    <p>Priorytet</p>
+                    <span>
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                    </span>
+                  </div>
+                  <div className="task-dueDate">
+                    <p>Deadline</p>
+                    <h4>{format(new Date(Date.now()), 'dd.MM.yyyy')}</h4>
+                  </div>
+                  <div className="task-circle">
+                    <CircularProgressbar
+                      styles={buildStyles({
+                        backgroundColor: '#292929',
+                      })}
+                      background
+                      backgroundPadding={3}
+                      value={50}
+                      text={`${50}%`}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="tasks-container">
               <h1>W Trakcie</h1>
-              <div className="tasks-drop"></div>
+              <div className="tasks-drop">
+                <div className="task">
+                  <h2 className="task-title">Task 1</h2>
+                  <div className="task-priority">
+                    <p>Priorytet</p>
+                    <span>
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                    </span>
+                  </div>
+                  <div className="task-dueDate">
+                    <p>Deadline</p>
+                    <h4>{format(new Date(Date.now()), 'dd.MM.yyyy')}</h4>
+                  </div>
+                  <div className="task-circle">
+                    <CircularProgressbar
+                      styles={buildStyles({
+                        backgroundColor: '#292929',
+                      })}
+                      background
+                      backgroundPadding={3}
+                      value={50}
+                      text={`${50}%`}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="tasks-container">
               <h1>Ukończone</h1>
-              <div className="tasks-drop"></div>
+              <div className="tasks-drop">
+                <div className="task">
+                  <h2 className="task-title">Task 1</h2>
+                  <div className="task-priority">
+                    <p>Priorytet</p>
+                    <span>
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                      <FiberManualRecordIcon />
+                    </span>
+                  </div>
+                  <div className="task-dueDate">
+                    <p>Deadline</p>
+                    <h4>{format(new Date(Date.now()), 'dd.MM.yyyy')}</h4>
+                  </div>
+                  <div className="task-circle">
+                    <CircularProgressbar
+                      styles={buildStyles({
+                        backgroundColor: '#292929',
+                      })}
+                      background
+                      backgroundPadding={3}
+                      value={50}
+                      text={`${50}%`}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </>
