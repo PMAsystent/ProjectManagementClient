@@ -118,138 +118,145 @@ const UserDetails = () => {
       <div className="headline">
         <h1>Profil użytkownika</h1>
       </div>
-      <div className="segment">
-        <div className="segment-headline">
-          <h2>Dane użytkownika</h2>
-        </div>
-        <div className="segment-content">
-          <form onSubmit={handleSubmitBasicInfo(onSubmitBasicInfo)} key={'register'}>
-            <div className="input-field">
-              <h3>Imię</h3>
-              <CustomInput
-                {...registerBasicInfo('firstName')}
-                placeholder="Imię"
-                className="dark"
-                type="text"
-                helperText={errorsBasicInfo.firstName?.message}
-                error={!!errorsBasicInfo.firstName}
-              />
-            </div>
-            <div className="input-field">
-              <h3>Nazwisko</h3>
-              <CustomInput
-                {...registerBasicInfo('lastName')}
-                placeholder="Nazwisko"
-                type="text"
-                className="dark"
-                helperText={errorsBasicInfo.lastName?.message}
-                error={!!errorsBasicInfo.lastName}
-              />
-            </div>
+      <div className="segments-container">
+        <div className="segment">
+          <div className="segment-headline">
+            <h2>Dane użytkownika</h2>
+          </div>
+          <div className="segment-content">
+            <form onSubmit={handleSubmitBasicInfo(onSubmitBasicInfo)} key={'register'}>
+              <div className="input-field">
+                <h3>Imię</h3>
+                <CustomInput
+                  {...registerBasicInfo('firstName')}
+                  placeholder="Imię"
+                  className="dark"
+                  type="text"
+                  helperText={errorsBasicInfo.firstName?.message}
+                  error={!!errorsBasicInfo.firstName}
+                />
+              </div>
+              <div className="input-field">
+                <h3>Nazwisko</h3>
+                <CustomInput
+                  {...registerBasicInfo('lastName')}
+                  placeholder="Nazwisko"
+                  type="text"
+                  className="dark"
+                  helperText={errorsBasicInfo.lastName?.message}
+                  error={!!errorsBasicInfo.lastName}
+                />
+              </div>
 
-            <div className="buttons-container">
-              <CustomButton type="submit" className="btn btn-success" disabled={!(isDirtyBasicInfo && isValidBasicInfo)} onClick={onSubmitBasicInfo}>
-                Zapisz zmiany
-              </CustomButton>
-              <CustomButton
-                type="submit"
-                icon={<ArrowBackIcon />}
-                className="btn btn-go-back"
-                disabled={!isDirtyBasicInfo}
-                onClick={onResetClickBasicInfo}
-              >
-                Cofnij zmiany
-              </CustomButton>
-            </div>
-          </form>
+              <div className="buttons-container">
+                <CustomButton
+                  type="submit"
+                  className="btn btn-success"
+                  disabled={!(isDirtyBasicInfo && isValidBasicInfo)}
+                  onClick={onSubmitBasicInfo}
+                >
+                  Zapisz zmiany
+                </CustomButton>
+                <CustomButton
+                  type="submit"
+                  icon={<ArrowBackIcon />}
+                  className="btn btn-go-back"
+                  disabled={!isDirtyBasicInfo}
+                  onClick={onResetClickBasicInfo}
+                >
+                  Cofnij zmiany
+                </CustomButton>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-      <div className="segment">
-        <div className="segment-headline">
-          <h2>Bezpieczeństwo</h2>
-        </div>
-        <div className="segment-content">
-          <form onSubmit={handleSubmitPassword(onSubmitChangePassword)} key={'change-password'}>
-            <div className="input-field">
-              <h3>Obecne hasło</h3>
-              <CustomInput
-                {...registerPassword('password')}
-                type="password"
-                className="dark"
-                placeholder="Obecne hasło"
-                helperText={errorsPassword.password?.message}
-                error={!!errorsPassword.password}
-              />
-            </div>
-            <div className="input-field">
-              <h3>Nowe hasło</h3>
-              <CustomInput
-                {...registerPassword('newPassword')}
-                type="password"
-                className="dark"
-                placeholder="Nowe hasło"
-                helperText={errorsPassword.newPassword?.message}
-                error={!!errorsPassword.newPassword}
-              />
-              <CustomInput
-                {...registerPassword('newPasswordConfirm')}
-                type="password"
-                className="dark"
-                placeholder="Potwierdź nowe hasło"
-                helperText={errorsPassword.newPasswordConfirm?.message}
-                error={!!errorsPassword.newPasswordConfirm}
-              />
-            </div>
+        <div className="segment">
+          <div className="segment-headline">
+            <h2>Bezpieczeństwo</h2>
+          </div>
+          <div className="segment-content">
+            <form onSubmit={handleSubmitPassword(onSubmitChangePassword)} key={'change-password'}>
+              <div className="input-field">
+                <h3>Obecne hasło</h3>
+                <CustomInput
+                  {...registerPassword('password')}
+                  type="password"
+                  className="dark"
+                  placeholder="Obecne hasło"
+                  helperText={errorsPassword.password?.message}
+                  error={!!errorsPassword.password}
+                />
+              </div>
+              <div className="input-field">
+                <h3>Nowe hasło</h3>
+                <CustomInput
+                  {...registerPassword('newPassword')}
+                  type="password"
+                  className="dark"
+                  placeholder="Nowe hasło"
+                  helperText={errorsPassword.newPassword?.message}
+                  error={!!errorsPassword.newPassword}
+                />
+                <CustomInput
+                  {...registerPassword('newPasswordConfirm')}
+                  type="password"
+                  className="dark"
+                  placeholder="Potwierdź nowe hasło"
+                  helperText={errorsPassword.newPasswordConfirm?.message}
+                  error={!!errorsPassword.newPasswordConfirm}
+                />
+              </div>
 
-            <div className="buttons-container">
-              <CustomButton
-                type="submit"
-                className="btn btn-success"
-                disabled={!(isValidPassword && isDirtyPassword)}
-                onClick={onSubmitChangePassword}
-              >
-                Zmień hasło
-              </CustomButton>
-            </div>
-          </form>
+              <div className="buttons-container">
+                <CustomButton
+                  type="submit"
+                  className="btn btn-success"
+                  disabled={!(isValidPassword && isDirtyPassword)}
+                  onClick={onSubmitChangePassword}
+                >
+                  Zmień hasło
+                </CustomButton>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-      <div className="segment">
-        <div className="segment-headline">
-          <h2>Email</h2>
-        </div>
-        <div className="segment-content">
-          <form onSubmit={handleSubmitEmail(onSubmitChangeEmail)} key={'change-email'}>
-            <div className="input-field">
-              <h3>Obecny email</h3>
-              <CustomInput className="dark" disabled={true} />
-            </div>
-            <div className="input-field">
-              <h3>Nowy email</h3>
-              <CustomInput
-                {...registerEmail('newEmail')}
-                placeholder="Nowy email"
-                type="email"
-                className="dark"
-                helperText={errorsEmail.newEmail?.message}
-                error={!!errorsEmail.newEmail}
-              />
-              <CustomInput
-                {...registerEmail('newEmailConfirm')}
-                placeholder="Potwierdź nowy email"
-                type="email"
-                className="dark"
-                helperText={errorsEmail.newEmailConfirm?.message}
-                error={!!errorsEmail.newEmailConfirm}
-              />
-            </div>
+        <div className="segment">
+          <div className="segment-headline">
+            <h2>Email</h2>
+          </div>
+          <div className="segment-content">
+            <form onSubmit={handleSubmitEmail(onSubmitChangeEmail)} key={'change-email'}>
+              <div className="input-field">
+                <h3>Obecny email</h3>
+                <CustomInput className="dark" disabled={true} />
+              </div>
+              <div className="input-field">
+                <h3>Nowy email</h3>
+                <CustomInput
+                  {...registerEmail('newEmail')}
+                  placeholder="Nowy email"
+                  type="email"
+                  className="dark"
+                  helperText={errorsEmail.newEmail?.message}
+                  error={!!errorsEmail.newEmail}
+                />
+                <CustomInput
+                  {...registerEmail('newEmailConfirm')}
+                  placeholder="Potwierdź nowy email"
+                  type="email"
+                  className="dark"
+                  helperText={errorsEmail.newEmailConfirm?.message}
+                  error={!!errorsEmail.newEmailConfirm}
+                />
+              </div>
 
-            <div className="buttons-container">
-              <CustomButton type="submit" className="btn btn-success" disabled={!(isValidEmail && isDirtyEmail)} onClick={onSubmitChangeEmail}>
-                Zmień email
-              </CustomButton>
-            </div>
-          </form>
+              <div className="buttons-container">
+                <CustomButton type="submit" className="btn btn-success" disabled={!(isValidEmail && isDirtyEmail)} onClick={onSubmitChangeEmail}>
+                  Zmień email
+                </CustomButton>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
