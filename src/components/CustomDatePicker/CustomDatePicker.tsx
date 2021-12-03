@@ -4,7 +4,7 @@ import './styles.scss';
 import { Controller } from 'react-hook-form';
 import ReactDatePicker from 'react-datepicker';
 
-const CustomReactDatePicker: FC<any> = ({ label, control, min, name, error, helperText, ...props }) => {
+const CustomDatePicker: FC<any> = ({ label, control, min, name, error, helperText, ...props }) => {
   return (
     <div className="custom-date-picker">
       {label && <label htmlFor={props.name}>{label}</label>}
@@ -26,4 +26,4 @@ const CustomReactDatePicker: FC<any> = ({ label, control, min, name, error, help
   );
 };
 
-export default CustomReactDatePicker;
+export default CustomDatePicker;

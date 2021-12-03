@@ -2,8 +2,15 @@ import React, { FC } from 'react';
 import './styles.scss';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import CustomButton from '../CustomButton/CustomButton';
+import { format } from 'date-fns';
 
-const ProjectTile: FC<any> = ({ name, activeTasks, progressBar, typeOfProject, endDate }) => {
+const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; typeOfProject: string; endDate: string }> = ({
+  name,
+  activeTasks,
+  progressBar,
+  typeOfProject,
+  endDate,
+}) => {
   return (
     <section className="tile-container">
       <div>
@@ -28,7 +35,7 @@ const ProjectTile: FC<any> = ({ name, activeTasks, progressBar, typeOfProject, e
       </div>
       <div>
         <p>Deadline</p>
-        <h4>{endDate}</h4>
+        <h4>{format(new Date(endDate || Date.now()), 'dd.MM.yyyy')}</h4>
       </div>
       <CustomButton className="btn-project">Rozwiń &#10095;</CustomButton>
     </section>

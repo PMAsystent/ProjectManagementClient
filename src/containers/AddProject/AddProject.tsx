@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearProjectPostFetchStatus, postProject, selectProjectPostFetchStatus } from '../../redux/project/project.slice';
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
-import CustomReactDatePicker from '../../components/CustomReactDatePicker/CustomReactDatePicker';
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana!').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
@@ -141,7 +141,7 @@ const AddProject: FC<any> = (props) => {
           <div className="project-form">
             <CustomInput label={'Nazwa'} {...register('name')} type="text" helperText={errors.name?.message} error={!!errors.name} />
             <CustomTextArea label={'Opis'} {...register('description')} helperText={errors.description?.message} error={!!errors.description} />
-            <CustomReactDatePicker
+            <CustomDatePicker
               min={new Date()}
               name={'dueDate'}
               control={control}
