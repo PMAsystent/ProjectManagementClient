@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import './styles.scss';
 import { Avatar } from '@mui/material';
 
-const AssignedUserList: FC<{ users: any[]; addtionalActions: any }> = ({ users, addtionalActions }) => {
+const AssignedUserList: FC<{ users: any[]; addtionalActions?: any }> = ({ users, addtionalActions }) => {
   return (
     <div className="users-list-container">
       <div className="users-list-item">
@@ -19,7 +19,7 @@ const AssignedUserList: FC<{ users: any[]; addtionalActions: any }> = ({ users, 
                 <Avatar sx={{ width: 25, height: 25 }} src="https://cdn-icons-png.flaticon.com/512/194/194938.png" />
                 <span>{user.email}</span>
               </div>
-              <div className="actions">{addtionalActions(user)}</div>
+              {addtionalActions && <div className="actions">{addtionalActions(user)}</div>}
             </div>
           );
         })}
