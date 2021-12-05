@@ -3,15 +3,16 @@ import './styles.scss';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import CustomButton from '../CustomButton/CustomButton';
 import { format } from 'date-fns';
+import { useHistory } from 'react-router-dom';
 
-const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; typeOfProject: string; endDate: string }> = ({
+const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; typeOfProject: string; endDate: string; id: number }> = ({
   name,
   activeTasks,
   progressBar,
   typeOfProject,
   endDate,
+  id,
 }) => {
-
   const history = useHistory();
   const handleOnClickMore = () => {
     history.push(`/project/${id}`);

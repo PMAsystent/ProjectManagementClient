@@ -4,12 +4,13 @@ import './styles.scss';
 import { Controller, useFormContext } from 'react-hook-form';
 import ReactDatePicker from 'react-datepicker';
 
-const CustomDatePicker: FC<{ label: string; min: any; name: string; error: boolean; helperText: string }> = ({
+const CustomDatePicker: FC<{ label: string; min: any; name: string; error: boolean; helperText: string, placeholder: string }> = ({
   label,
   min,
   name,
   error,
   helperText,
+  placeholder,
 }) => {
   const { control } = useFormContext();
 
@@ -23,7 +24,7 @@ const CustomDatePicker: FC<{ label: string; min: any; name: string; error: boole
           <ReactDatePicker
             className={`date-picker ${error ? 'date-picker-error' : ''}`}
             minDate={min}
-            // placeholderText="Select date"
+            placeholderText={placeholder}
             onChange={(e) => field.onChange(e)}
             selected={field.value}
           />

@@ -69,6 +69,7 @@ const AsyncAutocomplete: FC<{
             {...params}
             InputProps={{
               ...params.InputProps,
+              placeholder: 'Szukaj',
               onChange: (e) => {
                 if (e.target.value) {
                   props.onChange(e.target.value);

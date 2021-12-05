@@ -8,13 +8,20 @@ describe('Dashboard Modal Tests', () => {
     render(<Dashboard />);
   });
 
-  it('should render without project Tile', () => {
+  it('should render the component - pending', () => {
     render(<Dashboard />);
-    screen.getByText(/No projects/i);
+    screen.getByRole(/progressbar/i);
   });
 
-  it('should render with project Tile', async () => {
+  it('should render with project Tile - success', async () => {
     render(<Dashboard />);
-    await waitFor(() => screen.getByText(/test/i));
+    await waitFor(() => {
+      screen.getByText('Project');
+      screen.getByText('50%');
+    });
+  });
+
+  it('should render with project Tile - success goto details', async () => {
+    // TODO: tests
   });
 });

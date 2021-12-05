@@ -32,7 +32,7 @@ describe('Custom Data Picker Tests', () => {
 
       return (
         <FormProvider {...methods}>
-          <CustomDatePicker min={new Date()} name={'dueDate'} label={'Deadline'} helperText={helperText} error={error} />
+          <CustomDatePicker placeholder={''} min={new Date()} name={'dueDate'} label={'Deadline'} helperText={helperText} error={error} />
         </FormProvider>
       );
     };
@@ -47,7 +47,7 @@ describe('Custom Data Picker Tests', () => {
     screen.getByText(/error/i);
   });
 
-  it('Should render the component select date', async() => {
+  it('Should render the component select date', async () => {
     const component = render(<Component helperText={''} error={false} />);
     const input = component.container.querySelector('.date-picker');
     if (input) {

@@ -22,8 +22,8 @@ import { isValid } from 'date-fns';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 const validationSchema = yup.object({
-  name: yup.string().required('Nazwa jest wymagana!').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
-  description: yup.string().required('Opis jest wymagany!').min(20, 'Opis musi mieć conajmniej 20 znaków'),
+  name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
+  description: yup.string().required('Opis jest wymagany').min(20, 'Opis musi mieć conajmniej 20 znaków'),
   dueDate: yup
     .mixed()
     .test('is-date', 'Data zakończenia jest wymagana', (value) => isValid(value))
@@ -134,6 +134,7 @@ const AddProjectModal: FC<any> = (props) => {
               <h1>Nowy projekt</h1>
               <div className="project-form">
                 <CustomInput
+                  placeholder={'Wpisz nazwę'}
                   label={'Nazwa'}
                   {...methods.register('name')}
                   type="text"
@@ -141,12 +142,14 @@ const AddProjectModal: FC<any> = (props) => {
                   error={!!methods.formState.errors.name}
                 />
                 <CustomTextArea
+                  placeholder={'Wpisz opis'}
                   label={'Opis'}
                   {...methods.register('description')}
                   helperText={methods.formState.errors.description?.message}
                   error={!!methods.formState.errors.description}
                 />
                 <CustomDatePicker
+                  placeholder={'mm/dd/yyyy'}
                   min={new Date()}
                   name={'dueDate'}
                   label={'Deadline'}
