@@ -11,6 +11,12 @@ const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; 
   typeOfProject,
   endDate,
 }) => {
+
+  const history = useHistory();
+  const handleOnClickMore = () => {
+    history.push(`/project/${id}`);
+  };
+
   return (
     <section className="tile-container">
       <div>
@@ -37,7 +43,9 @@ const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; 
         <p>Deadline</p>
         <h4>{format(new Date(endDate || Date.now()), 'dd.MM.yyyy')}</h4>
       </div>
-      <CustomButton className="btn-project">Rozwiń &#10095;</CustomButton>
+      <CustomButton className="btn-project" onClick={handleOnClickMore}>
+        Rozwiń &#10095;
+      </CustomButton>
     </section>
   );
 };
