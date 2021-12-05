@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -48,15 +48,7 @@ const AddProject: FC<any> = (props) => {
     []
   );
 
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    setValue,
-    control,
-
-    formState: { errors },
-  } = useForm({
+  const methods = useForm({
     defaultValues: useMemo(() => {
       return defaultValue;
     }, [defaultValue]),
@@ -79,7 +71,7 @@ const AddProject: FC<any> = (props) => {
   );
 
   const handleUserSelect = (e: any, value: any) => {
-    const assignsArray: any[] = getValues('assignedUsers');
+    const assignsArray: any[] = methods.getValues('assignedUsers');
     if (!assignsArray.find((assign) => assign.id === value.id)) {
       SnackbarUtils.success('Dodano użytkownika');
       assignsArray.push({ ...value, projectRole: projectRoleEnum.DEVELOPER, memberType: projectMemberEnum.MEMBER });
@@ -121,7 +113,7 @@ const AddProject: FC<any> = (props) => {
   };
 
   useEffect(() => {
-    setValue('assignedUsers', users);
+    methods.setValue('assignedUsers', users);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
 
@@ -135,70 +127,84 @@ const AddProject: FC<any> = (props) => {
       aria-describedby="modal-modal-description"
       sx={{ overflowY: 'scroll', overflowX: 'hidden', marginBottom: '15px' }}
     >
-      <form onSubmit={handleSubmit(onSubmit)} key={'addProject'}>
-        <div className="add-project-container">
-          <h1>Nowy projekt</h1>
-          <div className="project-form">
-            <CustomInput label={'Nazwa'} {...register('name')} type="text" helperText={errors.name?.message} error={!!errors.name} />
-            <CustomTextArea label={'Opis'} {...register('description')} helperText={errors.description?.message} error={!!errors.description} />
-            <CustomDatePicker
-              min={new Date()}
-              name={'dueDate'}
-              control={control}
-              label={'Deadline'}
-              helperText={errors.dueDate?.message}
-              error={!!errors.dueDate}
-            />
-          </div>
-          <div className="assigns-form">
-            <AsyncAutocomplete
-              name={'findUsers'}
-              label={'Dodaj użytkownika'}
-              nameOptionLabel={'email'}
-              onChange={handleOnChangeUsersDebounced}
-              onSelect={handleUserSelect}
-              options={usersOptions}
-              setOptions={setUsersOptions}
-              loading={usersOptionsLoading}
-              clearOnClose
-            />
-            <div className="label">Użytkownicy</div>
-            <AssignedUserList
-              users={users}
-              addtionalActions={(user: any) => {
-                return (
-                  <>
-                    <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user.id, e.target.value)}>
-                      {Object.values(projectMemberEnum).map((value: string) => (
-                        <MenuItem key={value} value={value}>
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <Select value={user.projectRole} onChange={(e) => handleOnChangeRole(user.id, e.target.value)}>
-                      {Object.values(projectRoleEnum).map((value: string) => (
-                        <MenuItem key={value} value={value}>
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />
-                  </>
-                );
-              }}
-            />
-          </div>
-          <CustomInput {...register('assignedUsers')} type="hidden" />
-          <div className="buttons">
-            <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
-              wróć
-            </CustomButton>
-            <CustomButton type="submit" className="btn-success">
-              Zapisz
-            </CustomButton>
-          </div>
-        </div>
-      </form>
+      <div>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} key={'addProject'}>
+            <div className="add-project-container">
+              <h1>Nowy projekt</h1>
+              <div className="project-form">
+                <CustomInput
+                  label={'Nazwa'}
+                  {...methods.register('name')}
+                  type="text"
+                  helperText={methods.formState.errors.name?.message}
+                  error={!!methods.formState.errors.name}
+                />
+                <CustomTextArea
+                  label={'Opis'}
+                  {...methods.register('description')}
+                  helperText={methods.formState.errors.description?.message}
+                  error={!!methods.formState.errors.description}
+                />
+                <CustomDatePicker
+                  min={new Date()}
+                  name={'dueDate'}
+                  label={'Deadline'}
+                  helperText={methods.formState.errors.dueDate?.message}
+                  error={!!methods.formState.errors.dueDate}
+                />
+              </div>
+              <div className="assigns-form">
+                <AsyncAutocomplete
+                  name={'findUsers'}
+                  label={'Dodaj użytkownika'}
+                  nameOptionLabel={'email'}
+                  onChange={handleOnChangeUsersDebounced}
+                  onSelect={handleUserSelect}
+                  options={usersOptions}
+                  setOptions={setUsersOptions}
+                  loading={usersOptionsLoading}
+                  clearOnClose
+                />
+                <div className="label">Użytkownicy</div>
+                <AssignedUserList
+                  users={users}
+                  addtionalActions={(user: any) => {
+                    return (
+                      <>
+                        <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user.id, e.target.value)}>
+                          {Object.values(projectMemberEnum).map((value: string) => (
+                            <MenuItem key={value} value={value}>
+                              {value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <Select value={user.projectRole} onChange={(e) => handleOnChangeRole(user.id, e.target.value)}>
+                          {Object.values(projectRoleEnum).map((value: string) => (
+                            <MenuItem key={value} value={value}>
+                              {value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />
+                      </>
+                    );
+                  }}
+                />
+              </div>
+              <CustomInput {...methods.register('assignedUsers')} type="hidden" />
+              <div className="buttons">
+                <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
+                  wróć
+                </CustomButton>
+                <CustomButton type="submit" className="btn-success">
+                  Zapisz
+                </CustomButton>
+              </div>
+            </div>
+          </form>
+        </FormProvider>
+      </div>
     </Modal>
   );
 };

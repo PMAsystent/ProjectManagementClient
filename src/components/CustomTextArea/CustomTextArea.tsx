@@ -5,7 +5,7 @@ const CustomTextArea = forwardRef(({ label, helperText, error, ...props }: any, 
   return (
     <div className={`custom-textarea`}>
       {label && <label htmlFor={props.name}>{label}</label>}
-      <textarea className={`${error ? 'error' : ''}`} ref={ref} {...props} />
+      <textarea className={`textarea ${error ? 'error' : ''}`} ref={ref} {...props} />
       {helperText && <div className="helperText">{helperText}</div>}
     </div>
   );
