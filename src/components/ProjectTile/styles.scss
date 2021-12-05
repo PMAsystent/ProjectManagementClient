@@ -11,7 +11,7 @@
   display: flex;
   flex-wrap: wrap;
   margin: 50px;
-  box-shadow: 0 0 1em #181818;
+  box-shadow: 0 0 1em colors.$secondaryColor;
   transition-duration: 300ms;
 
   &:hover {
@@ -47,28 +47,6 @@
       margin: 2px;
       padding: 0;
     }
-  }
-  //Circular Progress bar
-  .CircularProgressbar .CircularProgressbar-path {
-    stroke: #d38825;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 0.5s ease 0s;
-    stroke-width: 12px;
-  }
-
-  .CircularProgressbar .CircularProgressbar-trail {
-    stroke: #181818;
-    stroke-linecap: round;
-    stroke-width: 12px;
-  }
-
-  .CircularProgressbar .CircularProgressbar-text {
-    fill: White;
-    font-size: 25px;
-    font-style: oblique;
-    font-weight: 900;
-    dominant-baseline: middle;
-    text-anchor: middle;
   }
 }
 

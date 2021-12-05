@@ -12,6 +12,7 @@ export const getRegisterPath = '/auth/register';
 export const getForgotPasswordPath = '/auth/forgotpassword';
 export const getDashboardPath = '/dashboard/overview';
 export const getUserDetailsPath = '/user/details';
+export const getProjectDetailsPath = '/project/:projectid';
 
 // containers
 const Login = lazy(() => import('containers/Login/Login'));
@@ -19,6 +20,7 @@ const Register = lazy(() => import('containers/Register/Register'));
 const ForgotPassword = lazy(() => import('containers/ForgotPassword/ForgotPassword'));
 const Dashboard = lazy(() => import('containers/Dashboard/Dashboard'));
 const UserDetails = lazy(() => import('containers/UserDetails/UserDetails'));
+const ProjectDetails = lazy(() => import('containers/ProjectDetails/ProjectDetails'));
 
 export const routes = [
   {
@@ -43,6 +45,19 @@ export const routes = [
       <MainLayout>
         <Suspense fallback={<AuthSpinner />}>
           <UserDetails />
+        </Suspense>
+      </MainLayout>
+    ),
+  },
+  {
+    path: `${getProjectDetailsPath}`,
+    exact: true,
+    name: 'ProjectDetails',
+    state: 'ProjectDetails',
+    component: () => (
+      <MainLayout>
+        <Suspense fallback={<AuthSpinner />}>
+          <ProjectDetails />
         </Suspense>
       </MainLayout>
     ),

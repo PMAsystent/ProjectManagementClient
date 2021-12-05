@@ -1,3 +1,7 @@
+import { projectAssignments } from './assigned.request.types';
+import { projectTask } from './task.request.types';
+import { projectStep } from './step.request.types';
+
 export interface projectType {
   id: number;
   name: string;
@@ -15,5 +19,16 @@ export interface postProjectType {
   name: string;
   description: string;
   dueDate: string;
-  assignedUsers: Array<{ userId: number; projectRole: string; memberType: string }>;
+  assignedUsers: Array<Omit<projectAssignments, 'userName'>>;
+}
+export interface projectDetails extends Omit<projectType, 'isActive'> {
+  description: string;
+  created: string;
+  projectSteps: Array<projectStep>;
+  projectTasks: Array<projectTask>;
+  projectAssignedUsers: Array<projectAssignments>;
+  currentUserInfoInProject: {
+    memberType: string;
+    projectRole: string;
+  };
 }
