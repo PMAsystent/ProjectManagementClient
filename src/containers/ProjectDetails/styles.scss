@@ -1,0 +1,260 @@
+@use '../../assets/styles/colors';
+
+.project-container {
+  width: 100%;
+  height: 100%;
+  padding-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  .project-header {
+    box-shadow: 0 0 1em colors.$secondaryColor;
+    margin-top: 40px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background-color: colors.$secondaryColor;
+    flex-basis: 95%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    flex-wrap: wrap;
+    .info {
+      flex-basis: 90%;
+      display: flex;
+      flex-wrap: wrap;
+      h1, h3, p {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        flex-basis: 100%;
+        font-weight: 900;
+        font-style: oblique;
+        margin-bottom: 15px;
+      }
+      p {
+        color: colors.$textColor;
+        font-size: 14px;
+        margin-bottom: 7px;
+      }
+      h3 {
+        font-weight: lighter;
+      }
+      .info-item {
+        flex-basis: 15%;
+        min-width: 140px;
+        margin-bottom: 15px;
+      }
+      .info-item:last-of-type {
+        flex-basis: 25%;
+      }
+    }
+    .circle {
+      flex-basis: 10%;
+      max-width: 75px;
+      max-height: 75px;
+      margin: auto 0;
+    }
+    @media screen and (max-width: 768px) {
+      .info {
+        flex-basis: 85%;
+      }
+      .circle {
+        flex-basis: 15%;
+      }
+    }
+    @media screen and (max-width: 600px) {
+      padding: 20px;
+      .info {
+        flex-basis: 100%;
+        h1 {
+          margin-right: 50px;
+        }
+        .info-item {
+          min-width: 0;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: flex-end;
+          p {
+            flex-basis: 100%;
+          }
+        }
+        .info-item:nth-of-type(1),
+        .info-item:nth-of-type(2),
+        .info-item:nth-of-type(4),
+        .info-item:nth-of-type(5)
+        {
+          flex-basis: 45%;
+          padding-right: 15px;
+        }
+        .info-item:nth-of-type(3),
+        .info-item:nth-of-type(6)
+        {
+          flex-basis: 100%;
+        }
+      }
+      position: relative;
+      .circle {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+
+  .project-tasks {
+    box-shadow: 0 0 1em colors.$secondaryColor;
+    padding: 15px 15px 50px 15px;
+    background-color: colors.$secondaryColor;
+    flex-basis: 95%;
+    border-radius: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    .tasks-container {
+      color: #fff;
+      flex-basis: 30%;
+      h1 {
+        box-shadow: 0 0 .5em colors.$bgColor;
+        border-radius: 10px;
+        text-align: center;
+        padding: 20px 0;
+        background-color: colors.$bgColor;
+        text-transform: uppercase;
+        font-weight: 900;
+        font-style: oblique;
+        font-size: 2rem;
+      }
+      .tasks-drop {
+        min-height: 100px;
+        box-shadow: 0 0 .5em colors.$bgColor;
+        border-radius: 10px;
+        padding: 20px 0;
+        background-color: colors.$bgColor;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        .task {
+          background-color: colors.$secondaryColor;
+          flex-basis: 95%;
+          border-radius: 10px;
+          position: relative;
+          padding: 10px 100px 10px 20px;
+          height: 105px;
+          margin-bottom: 15px;
+          display: flex;
+          flex-wrap: wrap;
+          &-circle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 65px;
+            height: 65px;
+          }
+
+          h2, h4, p {
+            padding: 0;
+            margin: 0;
+          }
+
+          h4 {
+            font-weight: lighter;
+          }
+          p {
+            color: colors.$textColor;
+          }
+
+          &-title {
+            flex-basis: 100%;
+            font-weight: 900;
+            font-style: oblique;
+          }
+
+          &-priority {
+            flex-basis: 50%;
+            span {
+              display: flex;
+            }
+          }
+
+          &-dueDate {
+            flex-basis: 50%;
+            p {
+              margin-bottom: 3px;
+            }
+          }
+          @media (max-width: 1700px) {
+            padding-right: 70px;
+            &-priority {
+              svg {
+                width: 20px;
+                height: 20px;
+              }
+            }
+
+            &-circle {
+              position: absolute;
+              top: 25px;
+              right: 15px;
+              width: 50px;
+              height: 50px;
+            }
+          }
+          @media (max-width: 1410px) {
+            height: 140px;
+            &-priority, &-dueDate {
+              flex-basis: 100%;
+            }
+            &-circle {
+              position: absolute;
+              width: 80px;
+              height: 80px;
+            }
+          }
+          @media (max-width: 1024px) {
+            padding: 10px 100px 10px 20px;
+            height: 105px;
+            &-circle {
+              position: absolute;
+              top: 20px;
+              right: 20px;
+              width: 65px;
+              height: 65px;
+            }
+            &-priority {
+              flex-basis: auto;
+              padding-right: 15px;
+            }
+            &-dueDate {
+              flex-basis: auto;
+            }
+          }
+          @media (max-width: 1024px) {
+            height: 140px;
+            &-circle {
+              position: absolute;
+              top: 25px;
+              right: 15px;
+              width: 80px;
+              height: 80px;
+            }
+            &-priority {
+              flex-basis: auto;
+              padding-right: 15px;
+            }
+            &-dueDate {
+              flex-basis: auto;
+            }
+          }
+        }
+      }
+      @media (max-width: 1024px) {
+        flex-basis: 100%;
+      }
+    }
+  }
+}

@@ -1,21 +1,37 @@
 @use '../../assets/styles/colors';
-
-.MuiTextField-root {
-  height: 80px;
-  width: 100%;
-  .MuiInputBase-input.MuiInput-input {
-    color: colors.$textColor;
-    background-color: colors.$secondaryColor;
-    height: 52px;
-    padding: 0 0 0 20px;
-    &:focus-visible {
-      outline: -webkit-focus-ring-color auto 1px;
+.custom-input {
+  .dark {
+    input {
+      background-color: colors.$inputcolorDark !important;
+      color: colors.$textColorLight !important;
     }
-    margin-bottom: 2px;
   }
-  .MuiInput-underline {
-    &::after, &::before, &:hover:not(.Mui-disabled):before {
-      border: 0;
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .MuiTextField-root {
+    height: 77px;
+    width: 100%;
+    .Mui-error {
+      input {
+        border: 2px solid rgba(colors.$errorColor, 0.25);
+      }
+    }
+    .MuiInputBase-input.MuiInput-input {
+      color: colors.$textColor;
+      background-color: colors.$secondaryColor;
+      height: 52px;
+      padding: 0 0 0 20px;
+      &:focus-visible {
+        outline: -webkit-focus-ring-color auto 1px;
+      }
+      margin-bottom: 2px;
+    }
+    .MuiInput-underline {
+      &::after, &::before, &:hover:not(.Mui-disabled):before {
+        border: 0;
+      }
     }
   }
 }

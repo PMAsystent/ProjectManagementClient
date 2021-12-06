@@ -1,15 +1,19 @@
 @use './assets/styles/colors';
 
-*, *::after, *::before {
+*,
+*::after,
+*::before {
   box-sizing: border-box;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Montserrat', 'Roboto', sans-serif;
   background-color: colors.$bgColor;
 }
 
@@ -17,11 +21,52 @@ html, body, #root {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active
-{
+input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 40px colors.$secondaryColor inset !important;
 }
-input:-webkit-autofill
-{
+input:-webkit-autofill {
   -webkit-text-fill-color: colors.$textColor !important;
+}
+
+// scrollbar
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: colors.$textColorLight;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(colors.$primaryColor, 0.5);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(colors.$primaryColor, 0.7);
+}
+
+.CircularProgressbar .CircularProgressbar-path {
+  stroke: #d38825;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease 0s;
+  stroke-width: 12px;
+}
+
+.CircularProgressbar .CircularProgressbar-trail {
+  stroke: #181818;
+  stroke-linecap: round;
+  stroke-width: 12px;
+}
+
+.CircularProgressbar .CircularProgressbar-text {
+  fill: White;
+  font-size: 25px;
+  font-style: oblique;
+  font-weight: 900;
+  dominant-baseline: middle;
+  text-anchor: middle;
 }

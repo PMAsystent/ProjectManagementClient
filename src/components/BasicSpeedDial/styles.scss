@@ -1,0 +1,7 @@
+@use "/src/assets/styles/colors";
+
+.MuiSpeedDial-root {
+  .MuiButtonBase-root {
+    background-color: colors.$primaryColor;
+  }
+}

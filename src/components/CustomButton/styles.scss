@@ -3,10 +3,90 @@
 .btn-primary {
   padding: 0;
   margin: 0;
-  background-color: rgb(255, 153, 0);
+  background-color: colors.$primaryColor;
   height: 56px;
   border: 0;
-  color: #fff;
+  color: colors.$primaryTextColor;
   font-weight: bold;
   cursor: pointer;
+}
+
+.btn {
+  svg {
+    vertical-align: middle;
+    height: 1.3rem;
+    width: 1.3rem;
+    margin-right: 0.3rem;
+    margin-left: 0.1rem;
+  }
+
+  &.disabled {
+    opacity: 0.4 !important;
+    cursor: default;
+    pointer-events: none;
+  }
+}
+.btn-secondary {
+  padding: 0;
+  margin: 0;
+  background-color: colors.$bgColor;
+  height: 56px;
+  border: 0;
+  color: colors.$primaryTextColor;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-project {
+  font-weight: bold;
+  background-color: colors.$primaryColor;
+  border-radius: 15px;
+  padding: 7px 10px;
+  margin: 10px 0;
+  border: none;
+  color: white;
+  transition-duration: 300ms;
+  cursor: pointer;
+
+  :active {
+    border: none;
+  }
+
+  &:hover {
+    background-color: colors.$primaryColor;
+  }
+}
+
+.btn-success {
+  border: 0;
+  color: #fff;
+  padding: 5px;
+  margin: 0;
+  cursor: pointer;
+  font-weight: 900;
+  height: 56px;
+  min-width: 100px;
+  background-color: colors.$primaryColor;
+  transition: opacity 300ms;
+  opacity: 0.85;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.btn-go-back {
+  border: 0;
+  color: #fff;
+  padding: 5px;
+  margin: 0;
+  cursor: pointer;
+  font-weight: 900;
+  height: 56px;
+  min-width: 100px;
+  background-color: colors.$red;
+  transition: opacity 300ms;
+  opacity: 0.85;
+  &:hover {
+    opacity: 1;
+  }
 }

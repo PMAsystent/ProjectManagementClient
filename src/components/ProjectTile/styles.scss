@@ -1,0 +1,52 @@
+@use '../../assets/styles/colors';
+
+.tile-container {
+  position: relative;
+  opacity: 0.8;
+  background-color: colors.$secondaryColor;
+  padding: 0 20px 5px 25px;
+  max-width: 350px;
+  color: white;
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 50px;
+  box-shadow: 0 0 1em colors.$secondaryColor;
+  transition-duration: 300ms;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  div:first-of-type {
+    position: absolute;
+    width: 60px;
+    right: -30px;
+    top: -30px;
+  }
+
+  h3 {
+    flex-basis: 100%;
+    font-style: oblique;
+    font-weight: 900;
+  }
+
+  p {
+    color: colors.$textColor;
+  }
+
+  h4 {
+    font-weight: lighter;
+  }
+
+  div {
+    flex-basis: 50%;
+    margin-bottom: 5px;
+
+    * {
+      margin: 2px;
+      padding: 0;
+    }
+  }
+}
+

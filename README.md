@@ -1,46 +1,107 @@
-# Getting Started with Create React App
+# Project Management - Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Table of contents
 
-## Available Scripts
+- [General info](#general-info)
 
-In the project directory, you can run:
+- [Screenshots](#Screenshots)
 
-### `yarn start`
+- [Technologies and libraries](#technologies-and-libraries)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [Getting Started](#getting-started)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- [Prerequisites](#prerequisites)
 
-### `yarn test`
+- [Installation](#installation)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [Features](#features)
 
-### `yarn build`
+- [Status](#status)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [License](#license)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- [Contact](#contact)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## General info
 
-### `yarn eject`
+#### [Live demo](#)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Project Management is application created under university science club - "Referencja".
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Project Management is an application that will help you manage IT projects. This repository contains a frontend application implementation using React. The project was initialized with `create-react-app`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- [API github](https://github.com/GoToWinThat/ProjectManagementApi)
+- [APP github](https://github.com/RobertJaskolski/ProjectManagementClient)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Screenshots - Design of application
 
-## Learn More
+<img  src="./screenshots/Login.png"  alt="First screenshot"> 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<img  src="./screenshots/Projects.png"  alt="Second screenshot">
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+<img  src="./screenshots/Task.png"  alt="Thirdscreenshot">
+
+## Technologies and libraries
+
+- react
+- redux
+- react-router-dom
+- axios
+- bootstrap
+- scss (Styling)
+- jest + enzyme (Tests)
+
+## Getting Started
+
+### Prerequisites
+
+- Node
+- Yarn
+
+### Installation
+
+1. After cloning or extracting the .zip files of this repository:
+
+   `cd ProjectManagementClient\projectManagmentClient`
+
+2. Install dependencies:
+
+   `yarn` or `yarn install`
+
+3. After installation of dependencies, you must create .env files, I've already created sample file in the repository, you need to rename them and provide your environment variables:
+
+   `.envClient` to `.env`
+
+4. Start the project:
+
+   `yarn start`
+
+## Features
+
+Section in progress
+
+## Status
+
+Project is in progress. We are curently working on our first version of server side. Currently brake due to other university
+
+## License
+
+Distributed under the MIT License.
+
+## Contact
+
+Created by:
+
+- [@mazela](https://www.linkedin.com/in/artur-mazela-203568146/)
+
+- [@lubera](https://www.linkedin.com/in/konrad-lubera-859247207/)
+
+- [@kajstura](https://www.linkedin.com/in/wojciech-kajstura-b13b701a8/)
+
+- [@sobieszczyk](https://www.linkedin.com/in/piotr-sobieszczyk/)
+
+- [@nawrot](https://www.linkedin.com/in/karol-nawrot-5896601a7/)
+
+- [@jaskolski](https://www.linkedin.com/in/robertjaskolski/)
+
+Feel free to contact us!
