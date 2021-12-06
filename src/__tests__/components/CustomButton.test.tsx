@@ -1,7 +1,7 @@
 import { render, screen } from '../../test-utils';
 import React from 'react';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import AddIcon from "@mui/icons-material/Add";
+import AddIcon from '@mui/icons-material/Add';
 
 describe('Custom Button Tests', () => {
   it('Should render the component', () => {

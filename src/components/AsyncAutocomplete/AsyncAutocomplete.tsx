@@ -3,7 +3,17 @@ import './styles.scss';
 import { Autocomplete, CircularProgress, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-const AsyncAutocomplete: FC<any> = ({ label, ...props }) => {
+const AsyncAutocomplete: FC<{
+  label: string;
+  setOptions: any;
+  loading: boolean;
+  name: string;
+  nameOptionLabel: string;
+  options: any[];
+  clearOnClose: boolean;
+  onSelect: any;
+  onChange: any;
+}> = ({ label, ...props }) => {
   const [openAutocomplete, setOpenAutocomplete] = useState(false);
   const [value, setValue] = useState('');
   const [selected, setSelected] = useState(null);
@@ -55,9 +65,11 @@ const AsyncAutocomplete: FC<any> = ({ label, ...props }) => {
         blurOnSelect
         renderInput={(params) => (
           <TextField
+            data-testid={'input-autocomplete'}
             {...params}
             InputProps={{
               ...params.InputProps,
+              placeholder: 'Szukaj',
               onChange: (e) => {
                 if (e.target.value) {
                   props.onChange(e.target.value);

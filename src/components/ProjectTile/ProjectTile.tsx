@@ -2,12 +2,18 @@ import React, { FC } from 'react';
 import './styles.scss';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import CustomButton from '../CustomButton/CustomButton';
-import { useHistory } from 'react-router-dom';
 import { format } from 'date-fns';
+import { useHistory } from 'react-router-dom';
 
-const ProjectTile: FC<any> = ({ name, activeTasks, progressBar, typeOfProject, endDate, id }) => {
+const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; typeOfProject: string; endDate: string; id: number }> = ({
+  name,
+  activeTasks,
+  progressBar,
+  typeOfProject,
+  endDate,
+  id,
+}) => {
   const history = useHistory();
-
   const handleOnClickMore = () => {
     history.push(`/project/${id}`);
   };
@@ -36,7 +42,7 @@ const ProjectTile: FC<any> = ({ name, activeTasks, progressBar, typeOfProject, e
       </div>
       <div>
         <p>Deadline</p>
-        <h4>{format(new Date(endDate), 'dd.MM.yyyy')}</h4>
+        <h4>{format(new Date(endDate || Date.now()), 'dd.MM.yyyy')}</h4>
       </div>
       <CustomButton className="btn-project" onClick={handleOnClickMore}>
         Rozwiń &#10095;
