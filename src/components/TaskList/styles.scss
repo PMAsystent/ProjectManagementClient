@@ -1,0 +1,30 @@
+@use '../../assets/styles/colors';
+
+.tasks-container {
+  color: #fff;
+  flex-basis: 30%;
+  h1 {
+    box-shadow: 0 0 .5em colors.$bgColor;
+    border-radius: 10px;
+    text-align: center;
+    padding: 20px 0;
+    background-color: colors.$bgColor;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-style: oblique;
+    font-size: 2rem;
+  }
+  .tasks-drop {
+    min-height: 100px;
+    box-shadow: 0 0 .5em colors.$bgColor;
+    border-radius: 10px;
+    padding: 20px 0;
+    background-color: colors.$bgColor;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 1024px) {
+    flex-basis: 100%;
+  }
+}

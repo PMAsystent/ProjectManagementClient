@@ -3,7 +3,6 @@ import './styles.scss';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import BasicSpeedDial from '../../components/BasicSpeedDial/BasicSpeedDial';
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory, useParams } from 'react-router-dom';
 import { getDashboardPath } from '../../core/routes';
@@ -14,10 +13,26 @@ import { getProject, selectProjectDetails, selectProjectDetailsFetchStatus } fro
 import { fetchStatues } from '../../core/enums/redux.statues';
 import { Avatar, Stack } from '@mui/material';
 import { stringToColor } from '../../core/utils';
+import { DragDropContext } from 'react-beautiful-dnd';
+import TaskList from '../../components/TaskList/TaskList';
+import { taskType } from '../../core/enums/task.type';
+import { v4 as uuid } from 'uuid';
 
 const ProjectDetails = () => {
-  const [activeTasks, setActiveTasks] = useState(0);
-  const [completedTasks, setCompletedTasks] = useState(0);
+  const [columns, setColumns] = useState<any>({
+    [uuid()]: {
+      name: taskType.IN_PROGRESS,
+      items: [],
+    },
+    [uuid()]: {
+      name: taskType.TODO,
+      items: [],
+    },
+    [uuid()]: {
+      name: taskType.COMPLETED,
+      items: [],
+    },
+  });
   const { projectid } = useParams<{ projectid: string }>();
   const projectDetails = useSelector(selectProjectDetails);
   const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
@@ -44,16 +59,65 @@ const ProjectDetails = () => {
     [history]
   );
 
+  const onDragEnd = (result: any, columns: any, setColumns: any) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColumn = columns[source.droppableId];
+      const destColumn = columns[destination.droppableId];
+      const sourceItems = [...sourceColumn.items];
+      const destItems = [...destColumn.items];
+      const [removed] = sourceItems.splice(source.index, 1);
+      destItems.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          items: sourceItems,
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          items: destItems,
+        },
+      });
+    } else {
+      const column = columns[source.droppableId];
+      const copiedItems = [...column.items];
+      const [removed] = copiedItems.splice(source.index, 1);
+      copiedItems.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...column,
+          items: copiedItems,
+        },
+      });
+    }
+  };
+
   useEffect(() => {
     dispatch(getProject(+projectid));
   }, [dispatch, projectid]);
 
   useEffect(() => {
     if (projectDetailsFetchStatus === fetchStatues.FULFILLED) {
-      setActiveTasks(1);
-      setCompletedTasks(1);
+      setColumns({
+        [uuid()]: {
+          name: taskType.IN_PROGRESS,
+          items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.IN_PROGRESS) || [],
+        },
+        [uuid()]: {
+          name: taskType.TODO,
+          items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.TODO) || [],
+        },
+        [uuid()]: {
+          name: taskType.COMPLETED,
+          items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.COMPLETED) || [],
+        },
+      });
     }
-  }, [projectDetailsFetchStatus]);
+  }, [projectDetails?.projectTasks, projectDetailsFetchStatus]);
 
   return (
     <section className="project-container">
@@ -64,11 +128,11 @@ const ProjectDetails = () => {
               <h1>{projectDetails?.name}</h1>
               <div className="info-item">
                 <p>Aktywne Zadania</p>
-                <h3>{activeTasks}</h3>
+                <h3>0</h3>
               </div>
               <div className="info-item">
                 <p>Ukończone Zadania</p>
-                <h3>{completedTasks}</h3>
+                <h3>0</h3>
               </div>
               <div className="info-item">
                 <p>Typ Projektu</p>
@@ -108,135 +172,22 @@ const ProjectDetails = () => {
               />
             </div>
           </div>
-          <div className="project-tasks">
-            <div className="tasks-container">
-              <h1>Nierozpoczęte</h1>
-              <div className="tasks-drop">
-                <div className="task">
-                  <h2 className="task-title">Task 1</h2>
-                  <div className="task-priority">
-                    <p>Priorytet</p>
-                    <span>
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                    </span>
-                  </div>
-                  <div className="task-dueDate">
-                    <p>Deadline</p>
-                    <h4>{format(new Date(Date.now()), 'dd.MM.yyyy')}</h4>
-                  </div>
-                  <div className="task-circle">
-                    <CircularProgressbar
-                      styles={buildStyles({
-                        backgroundColor: '#292929',
-                      })}
-                      background
-                      backgroundPadding={3}
-                      value={50}
-                      text={`${50}%`}
-                    />
-                  </div>
-                </div>
-                <div className="task">
-                  <h2 className="task-title">Task 2</h2>
-                  <div className="task-priority">
-                    <p>Priorytet</p>
-                    <span>
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                    </span>
-                  </div>
-                  <div className="task-dueDate">
-                    <p>Deadline</p>
-                    <h4>{format(new Date(Date.now()), 'dd.MM.yyyy')}</h4>
-                  </div>
-                  <div className="task-circle">
-                    <CircularProgressbar
-                      styles={buildStyles({
-                        backgroundColor: '#292929',
-                      })}
-                      background
-                      backgroundPadding={3}
-                      value={50}
-                      text={`${50}%`}
-                    />
-                  </div>
-                </div>
-              </div>
+          <DragDropContext onDragEnd={(result) => onDragEnd(result, columns, setColumns)}>
+            <div className="project-tasks">
+              {/*{lists.map((list) =>*/}
+              {/*  list.prefix === taskType.IN_PROGRESS ? (*/}
+              {/*    <TaskList tasks={activeTasks} key={list.id} name={list.name} prefix={list.prefix} />*/}
+              {/*  ) : list.prefix === taskType.COMPLETED ? (*/}
+              {/*    <TaskList tasks={completedTasks} key={list.id} name={list.name} prefix={list.prefix} />*/}
+              {/*  ) : (*/}
+              {/*    <TaskList tasks={todoTasks} key={list.id} name={list.name} prefix={list.prefix} />*/}
+              {/*  )*/}
+              {/*)}*/}
+              {Object.entries(columns).map(([columnId, column]: any) => (
+                <TaskList tasks={column?.items || []} key={columnId} name={column?.name || ''} prefix={columnId} />
+              ))}
             </div>
-            <div className="tasks-container">
-              <h1>W Trakcie</h1>
-              <div className="tasks-drop">
-                <div className="task">
-                  <h2 className="task-title">Task 1</h2>
-                  <div className="task-priority">
-                    <p>Priorytet</p>
-                    <span>
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                    </span>
-                  </div>
-                  <div className="task-dueDate">
-                    <p>Deadline</p>
-                    <h4>{format(new Date(Date.now()), 'dd.MM.yyyy')}</h4>
-                  </div>
-                  <div className="task-circle">
-                    <CircularProgressbar
-                      styles={buildStyles({
-                        backgroundColor: '#292929',
-                      })}
-                      background
-                      backgroundPadding={3}
-                      value={50}
-                      text={`${50}%`}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="tasks-container">
-              <h1>Ukończone</h1>
-              <div className="tasks-drop">
-                <div className="task">
-                  <h2 className="task-title">Task 1</h2>
-                  <div className="task-priority">
-                    <p>Priorytet</p>
-                    <span>
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                      <FiberManualRecordIcon />
-                    </span>
-                  </div>
-                  <div className="task-dueDate">
-                    <p>Deadline</p>
-                    <h4>{format(new Date(Date.now()), 'dd.MM.yyyy')}</h4>
-                  </div>
-                  <div className="task-circle">
-                    <CircularProgressbar
-                      styles={buildStyles({
-                        backgroundColor: '#292929',
-                      })}
-                      background
-                      backgroundPadding={3}
-                      value={50}
-                      text={`${50}%`}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          </DragDropContext>
         </>
       )}
       <BasicSpeedDial actions={actions} />
