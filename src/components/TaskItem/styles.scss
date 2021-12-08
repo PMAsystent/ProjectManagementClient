@@ -38,6 +38,9 @@
 
   &-priority {
     flex-basis: 50%;
+    .circle-orange {
+      color: colors.$primaryColor;
+    }
     span {
       display: flex;
     }
