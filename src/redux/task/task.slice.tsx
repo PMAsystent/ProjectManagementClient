@@ -1,8 +1,8 @@
 import { rootReducerInterface } from '../rootReducer';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { projectTask } from 'core/types/api/task.request.types';
-import { instance } from 'api';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
+import { putTaskApi } from '../../api/utils';
 
 export interface taskReducerInterface {
   taskPutFetchStatus: null | string;
@@ -18,8 +18,7 @@ export const putTask = createAsyncThunk<any, projectTask, { state: rootReducerIn
     const {
       auth: { accessToken },
     } = getState();
-    return await instance
-      .put('/Tasks', data, { headers: { authorization: `Bearer ${accessToken}` } })
+    putTaskApi(data, accessToken || '')
       .then((response) => {
         return response.data;
       })

@@ -17,7 +17,9 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from '../../components/TaskList/TaskList';
 import { taskType } from '../../core/enums/task.type';
 import { v4 as uuid } from 'uuid';
-import { putTask } from '../../redux/task/task.slice';
+import { putTaskApi } from '../../api/utils';
+import SnackbarUtils from '../../core/utils/SnackbarUtils';
+import { selectAccessToken } from '../../redux/auth/auth.slice';
 
 const ProjectDetails = () => {
   const [columns, setColumns] = useState<any>({
@@ -40,6 +42,7 @@ const ProjectDetails = () => {
   const { projectid } = useParams<{ projectid: string }>();
   const projectDetails = useSelector(selectProjectDetails);
   const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
+  const accessToken = useSelector(selectAccessToken);
   const dispatch = useDispatch();
   const history = useHistory();
   const actions = useMemo(
@@ -63,7 +66,7 @@ const ProjectDetails = () => {
     [history]
   );
 
-  const onDragEnd = (result: any, columns: any, setColumns: any) => {
+  const onDragEnd = async (result: any, columns: any, setColumns: any) => {
     const task = projectDetails?.projectTasks.find((task) => task.id === +result.draggableId);
 
     if (!result.destination) return;
@@ -75,9 +78,6 @@ const ProjectDetails = () => {
       const sourceItems = [...sourceColumn.items];
       const destItems = [...destColumn.items];
       const [removed] = sourceItems.splice(source.index, 1);
-      if (task) {
-        dispatch(putTask({ ...task, description: 'test desc', taskStatus: destColumn.name }));
-      }
       destItems.splice(destination.index, 0, removed);
       setColumns({
         ...columns,
@@ -90,6 +90,15 @@ const ProjectDetails = () => {
           items: destItems,
         },
       });
+      if (task) {
+        await putTaskApi({ ...task, description: 'test desc', taskStatus: destColumn.name }, accessToken || '').catch((error) => {
+          destItems.splice(destination.index, 0, removed);
+          setColumns({
+            ...columns,
+          });
+          SnackbarUtils.error('Wsytąpił problem z aktualizacją');
+        });
+      }
     } else {
       const column = columns[source.droppableId];
       const copiedItems = [...column.items];
