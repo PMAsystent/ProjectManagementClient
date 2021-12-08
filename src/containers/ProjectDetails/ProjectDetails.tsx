@@ -17,19 +17,23 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from '../../components/TaskList/TaskList';
 import { taskType } from '../../core/enums/task.type';
 import { v4 as uuid } from 'uuid';
+import { putTask } from '../../redux/task/task.slice';
 
 const ProjectDetails = () => {
   const [columns, setColumns] = useState<any>({
     [uuid()]: {
-      name: taskType.IN_PROGRESS,
+      name: taskType.TODO,
+      title: 'Do zrobienia',
       items: [],
     },
     [uuid()]: {
-      name: taskType.TODO,
+      name: taskType.IN_PROGRESS,
+      title: 'W trakcie',
       items: [],
     },
     [uuid()]: {
       name: taskType.COMPLETED,
+      title: 'Ukończone',
       items: [],
     },
   });
@@ -60,6 +64,8 @@ const ProjectDetails = () => {
   );
 
   const onDragEnd = (result: any, columns: any, setColumns: any) => {
+    const task = projectDetails?.projectTasks.find((task) => task.id === +result.draggableId);
+
     if (!result.destination) return;
     const { source, destination } = result;
 
@@ -69,6 +75,9 @@ const ProjectDetails = () => {
       const sourceItems = [...sourceColumn.items];
       const destItems = [...destColumn.items];
       const [removed] = sourceItems.splice(source.index, 1);
+      if (task) {
+        dispatch(putTask({ ...task, description: 'test desc', taskStatus: destColumn.name }));
+      }
       destItems.splice(destination.index, 0, removed);
       setColumns({
         ...columns,
@@ -105,14 +114,17 @@ const ProjectDetails = () => {
       setColumns({
         [uuid()]: {
           name: taskType.IN_PROGRESS,
+          title: 'W trakcie',
           items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.IN_PROGRESS) || [],
         },
         [uuid()]: {
           name: taskType.TODO,
+          title: 'Do zrobienia',
           items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.TODO) || [],
         },
         [uuid()]: {
           name: taskType.COMPLETED,
+          title: 'Ukończone',
           items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.COMPLETED) || [],
         },
       });
@@ -174,17 +186,8 @@ const ProjectDetails = () => {
           </div>
           <DragDropContext onDragEnd={(result) => onDragEnd(result, columns, setColumns)}>
             <div className="project-tasks">
-              {/*{lists.map((list) =>*/}
-              {/*  list.prefix === taskType.IN_PROGRESS ? (*/}
-              {/*    <TaskList tasks={activeTasks} key={list.id} name={list.name} prefix={list.prefix} />*/}
-              {/*  ) : list.prefix === taskType.COMPLETED ? (*/}
-              {/*    <TaskList tasks={completedTasks} key={list.id} name={list.name} prefix={list.prefix} />*/}
-              {/*  ) : (*/}
-              {/*    <TaskList tasks={todoTasks} key={list.id} name={list.name} prefix={list.prefix} />*/}
-              {/*  )*/}
-              {/*)}*/}
               {Object.entries(columns).map(([columnId, column]: any) => (
-                <TaskList tasks={column?.items || []} key={columnId} name={column?.name || ''} prefix={columnId} />
+                <TaskList tasks={column?.items || []} key={columnId} name={column?.name || ''} title={column?.title || ''} prefix={columnId} />
               ))}
             </div>
           </DragDropContext>

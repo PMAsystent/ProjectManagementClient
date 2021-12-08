@@ -3,10 +3,10 @@ import './styles.scss';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import TaskItem from '../TaskItem/TaskItem';
 
-const TaskList: FC<{ name: string; prefix: string; tasks: any[] }> = ({ name, prefix, tasks }) => {
+const TaskList: FC<{ title: string; name: string; prefix: string; tasks: any[] }> = ({ title, name, prefix, tasks }) => {
   return (
     <div className="tasks-container">
-      <h1>{name}</h1>
+      <h1>{title}</h1>
       <Droppable droppableId={prefix}>
         {(provided, snapshot) => (
           <div className="tasks-drop" {...provided.droppableProps} ref={provided.innerRef}>
