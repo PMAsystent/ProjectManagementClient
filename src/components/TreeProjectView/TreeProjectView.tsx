@@ -5,6 +5,7 @@ import TreeItem from '@mui/lab/TreeItem';
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { selectProjects } from '../../redux/project/project.slice';
+import './styles.scss';
 
 const TreeProjectView: FC<any> = () => {
   const projects = useSelector(selectProjects);
@@ -13,9 +14,18 @@ const TreeProjectView: FC<any> = () => {
     <TreeView aria-label="Apps navigator" className="sidebar-tree" defaultCollapseIcon={<ExpandMoreIcon />} defaultExpandIcon={<ChevronRightIcon />}>
       {projects?.map((project: any) => {
         return (
-          <TreeItem key={project.id + '_0'} nodeId={project.id + '_0'} label={project.name}>
-            {/*Steps here*/}
-            <TreeItem nodeId={project.id + '_1'} label={`Tasks_${project.name}`} className="tree-item-task" />
+          <TreeItem key={project.id} nodeId={project.id} label={project.name} className="tree-item tree-item__project">
+            {project.steps?.map((step: any) => {
+              return <TreeItem key={step.id} nodeId={`${project.id}_${step.id}`} label={`${step.name}`} className="tree-item tree-item__task" />;
+            })}
+            <TreeItem
+              nodeId={`${project.id}_Add`}
+              label="Dodaj step"
+              className="tree-item tree-item__step-add"
+              onClick={() => {
+                // Action
+              }}
+            />
           </TreeItem>
         );
       })}

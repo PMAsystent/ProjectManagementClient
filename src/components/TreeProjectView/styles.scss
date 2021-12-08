@@ -1,0 +1,62 @@
+@use '../../assets/styles/colors';
+
+.sidebar-tree {
+  color: colors.$primaryTextColor;
+  height: 500px;
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  li {
+    margin: 0.5px;
+    border-radius: 5px;
+  }
+
+  .tree-item {
+    padding-bottom: 10px;
+  }
+
+  .tree-item__project {
+    background-color: colors.$bgColor;
+
+    .Mui-expanded {
+      color: colors.$textColorSecondaryLight;
+    }
+
+    .Mui-selected {
+      color: colors.$primaryColor;
+      background-color: rgba(0, 0, 0, 0.11) !important;
+    }
+
+    .tree-item__task {
+      color: colors.$secondaryTextColor;
+    }
+
+    &[aria-selected='true'] {
+      .MuiCollapse-root {
+        .MuiCollapse-wrapper {
+          .MuiCollapse-wrapperInner {
+            .tree-item__step-add {
+              color: colors.$primaryColor;
+
+              &:hover{
+                background-color: colors.$textColorSecondaryLight;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .MuiCollapse-root {
+      .MuiCollapse-wrapper {
+        .MuiCollapse-wrapperInner {
+          .tree-item__step-add {
+            color: colors.$textColorSecondaryLight;
+          }
+        }
+      }
+    }
+  }
+}
