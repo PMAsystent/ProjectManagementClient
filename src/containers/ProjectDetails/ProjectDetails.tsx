@@ -193,6 +193,10 @@ const ProjectDetails = () => {
               <CustomButton icon={<AddTaskIcon />} className="btn-project">
                 Nowy Task
               </CustomButton>
+              <div className="description">
+                <p>Opis</p>
+                <h3>{projectDetails?.description}</h3>
+              </div>
             </div>
             <div className="circle">
               <CircularProgressbar
