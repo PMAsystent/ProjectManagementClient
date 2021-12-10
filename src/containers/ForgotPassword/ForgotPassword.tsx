@@ -51,7 +51,7 @@ const ForgotPassword = () => {
   return (
     <div className="container">
       <div className="text">
-        <h1>LOGO</h1>
+        <h1>PM ASYSTENT</h1>
         <h3>Przypomnij sobie hasło</h3>
       </div>
       <div className="form">
