@@ -23,6 +23,11 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    .tasks-empty {
+      margin: auto 0;
+      font-size: 32px;
+      cursor: default;
+    }
   }
   @media (max-width: 1024px) {
     flex-basis: 100%;

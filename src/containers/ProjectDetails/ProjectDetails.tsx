@@ -16,29 +16,31 @@ import { stringToColor } from '../../core/utils';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from '../../components/TaskList/TaskList';
 import { taskType } from '../../core/enums/task.type';
-import { v4 as uuid } from 'uuid';
 import { putTaskApi } from '../../api/utils';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { selectAccessToken } from '../../redux/auth/auth.slice';
+import CustomButton from '../../components/CustomButton/CustomButton';
 
 const ProjectDetails = () => {
   const [columns, setColumns] = useState<any>({
-    [uuid()]: {
+    1: {
       name: taskType.TODO,
       title: 'Do zrobienia',
       items: [],
     },
-    [uuid()]: {
+    2: {
       name: taskType.IN_PROGRESS,
       title: 'W trakcie',
       items: [],
     },
-    [uuid()]: {
+    3: {
       name: taskType.COMPLETED,
       title: 'Ukończone',
       items: [],
     },
   });
+  const [activeTasks, setActiveTasks] = useState(0);
+  const [completedTasks, setCompletedTasks] = useState(0);
   const { projectid } = useParams<{ projectid: string }>();
   const projectDetails = useSelector(selectProjectDetails);
   const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
@@ -115,23 +117,28 @@ const ProjectDetails = () => {
   };
 
   useEffect(() => {
+    setActiveTasks(columns[`${1}`].items.length + columns[`${2}`].items.length);
+    setCompletedTasks(columns[`${3}`].items.length);
+  }, [columns]);
+
+  useEffect(() => {
     dispatch(getProject(+projectid));
   }, [dispatch, projectid]);
 
   useEffect(() => {
     if (projectDetailsFetchStatus === fetchStatues.FULFILLED) {
       setColumns({
-        [uuid()]: {
+        1: {
           name: taskType.IN_PROGRESS,
           title: 'W trakcie',
           items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.IN_PROGRESS) || [],
         },
-        [uuid()]: {
+        2: {
           name: taskType.TODO,
           title: 'Do zrobienia',
           items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.TODO) || [],
         },
-        [uuid()]: {
+        3: {
           name: taskType.COMPLETED,
           title: 'Ukończone',
           items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.COMPLETED) || [],
@@ -149,11 +156,11 @@ const ProjectDetails = () => {
               <h1>{projectDetails?.name}</h1>
               <div className="info-item">
                 <p>Aktywne Zadania</p>
-                <h3>0</h3>
+                <h3>{activeTasks}</h3>
               </div>
               <div className="info-item">
                 <p>Ukończone Zadania</p>
-                <h3>0</h3>
+                <h3>{completedTasks}</h3>
               </div>
               <div className="info-item">
                 <p>Typ Projektu</p>
@@ -180,6 +187,12 @@ const ProjectDetails = () => {
                   })}
                 </Stack>
               </div>
+              <CustomButton icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>
+                Nowy Step
+              </CustomButton>
+              <CustomButton icon={<AddTaskIcon />} className="btn-project">
+                Nowy Task
+              </CustomButton>
             </div>
             <div className="circle">
               <CircularProgressbar

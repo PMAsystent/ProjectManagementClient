@@ -27,6 +27,7 @@ const TaskList: FC<{ title: string; name: string; prefix: string; tasks: any[] }
                 )}
               </Draggable>
             ))}
+            {tasks.length === 0 && <div className={'tasks-empty'}>Brak tasków</div>}
             {provided.placeholder}
           </div>
         )}

@@ -11,7 +11,7 @@
   .project-header {
     box-shadow: 0 0 1em colors.$secondaryColor;
     margin-top: 40px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     padding: 20px;
     background-color: colors.$secondaryColor;
     flex-basis: 95%;
@@ -20,6 +20,15 @@
     justify-content: space-between;
     color: #fff;
     flex-wrap: wrap;
+    .btn-project {
+      min-width: 100px;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      svg {
+        margin-right: 5px;
+      }
+    }
     .info {
       flex-basis: 90%;
       display: flex;
