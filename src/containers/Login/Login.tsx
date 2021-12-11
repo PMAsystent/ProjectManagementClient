@@ -62,7 +62,7 @@ const Login = () => {
   return (
     <div className="container">
       <div className="text">
-        <h1>LOGO</h1>
+        <h1>PM ASYSTENT</h1>
         <h3>Wspieramy Twój Projekt</h3>
       </div>
       <div className="form">

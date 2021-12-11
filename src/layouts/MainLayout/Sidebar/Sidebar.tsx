@@ -20,7 +20,7 @@ const Sidebar = (props: { open: any; onClose: any }) => {
     <div className="sidebar-root">
       <div className="top-logo">
         <a href="/">
-          <b>LOGO</b>
+          <b>PM ASYSTENT</b>
         </a>
       </div>
       <div className="project-wrapper">
