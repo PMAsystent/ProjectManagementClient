@@ -21,11 +21,6 @@ export interface postProjectType {
   dueDate: string;
   assignedUsers: Array<Omit<projectAssignments, 'userName'>>;
 }
-
-export interface putProjectType extends Omit<postProjectType, 'assignedUsers'> {
-  id: number;
-}
-
 export interface projectDetails extends Omit<projectType, 'isActive'> {
   description: string;
   created: string;
