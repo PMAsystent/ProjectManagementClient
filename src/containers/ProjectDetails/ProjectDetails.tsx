@@ -20,6 +20,7 @@ import { putTaskApi } from '../../api/utils';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { selectAccessToken } from '../../redux/auth/auth.slice';
 import CustomButton from '../../components/CustomButton/CustomButton';
+import AddTaskModal from 'containers/AddTaskModal/AddTaskModal';
 
 const ProjectDetails = () => {
   const [columns, setColumns] = useState<any>({
@@ -41,6 +42,7 @@ const ProjectDetails = () => {
   });
   const [activeTasks, setActiveTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
+  const [addTaskModal, setAddTaskModal] = useState(false);
   const { projectid } = useParams<{ projectid: string }>();
   const projectDetails = useSelector(selectProjectDetails);
   const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
@@ -62,7 +64,9 @@ const ProjectDetails = () => {
       {
         icon: <AddTaskIcon />,
         name: 'Dodaj nowy task',
-        handleOnClick: () => {},
+        handleOnClick: () => {
+          setAddTaskModal(true);
+        },
       },
     ],
     [history]
@@ -220,6 +224,7 @@ const ProjectDetails = () => {
         </>
       )}
       <BasicSpeedDial actions={actions} />
+      {addTaskModal && <AddTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} />}
     </section>
   );
 };
