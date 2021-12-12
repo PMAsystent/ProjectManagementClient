@@ -3,6 +3,7 @@ import './styles.scss';
 import * as yup from 'yup';
 import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
@@ -35,6 +36,17 @@ const AddTaskModal: FC<any> = (props) => {
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
+  // const [priority, setPriority] = useState<{ orange: number[]; white: number[] }>({
+  //   orange: [],
+  //   white: [1, 2, 3, 4, 5],
+  // });
+  const [priority, setPriority] = useState<{ key: number; isSelected: boolean; isHovered: boolean }[]>([
+    { key: 1, isSelected: false, isHovered: false },
+    { key: 2, isSelected: false, isHovered: false },
+    { key: 3, isSelected: false, isHovered: false },
+    { key: 4, isSelected: false, isHovered: false },
+    { key: 5, isSelected: false, isHovered: false },
+  ]);
   const projectPostFetchStatus = useSelector(selectProjectPostFetchStatus);
 
   const defaultValue: any = useMemo(
@@ -102,6 +114,19 @@ const AddTaskModal: FC<any> = (props) => {
     );
   };
 
+  const handleOnPriorityHover = (key: any) => {
+    setPriority(
+      priority.map((x) => {
+        if (x.key <= key) {
+          x.isHovered = true;
+        } else {
+          x.isHovered = false;
+        }
+        return x;
+      })
+    );
+  };
+
   const onSubmit = (values: any) => {
     values.assignedUsers = values.assignedUsers.map((users: any) => ({
       userId: users.id,
@@ -155,6 +180,25 @@ const AddTaskModal: FC<any> = (props) => {
                   helperText={methods.formState.errors.dueDate?.message}
                   error={!!methods.formState.errors.dueDate}
                 />
+              </div>
+              <div className="task-priority">
+                <p>Priorytet</p>
+                <span>
+                  {/* {priority.orange.map((n) => (
+                    <FiberManualRecordIcon className="circle-orange" key={n} />
+                  ))}
+                  {priority.white.map((n) => (
+                    <FiberManualRecordIcon key={n} />
+                  ))} */}
+                  {priority.map((x) => (
+                    <FiberManualRecordIcon
+                      key={x.key}
+                      data-key={x.key}
+                      className={x.isSelected || x.isHovered ? 'circle-orange' : ''}
+                      onMouseOver={(event) => handleOnPriorityHover(event.currentTarget.getAttribute('data-key'))}
+                    />
+                  ))}
+                </span>
               </div>
               <div className="assigns-form">
                 <AsyncAutocomplete
