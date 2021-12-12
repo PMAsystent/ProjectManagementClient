@@ -19,7 +19,10 @@
     align-items: center;
     height: constants.$NavbarHeight;
     background-color: colors.$bgColor;
-
+    a {
+      text-decoration: none;
+      color: #fff;
+    }
     b {
       size: 100px;
     }

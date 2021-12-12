@@ -7,6 +7,7 @@ const BasicSpeedDial: FC<{ actions: Array<{ handleOnClick: any; name: string; ic
     <SpeedDial data-testid={'speedDial'} ariaLabel="Speed dial" icon={<SpeedDialIcon />} sx={{ position: 'fixed', bottom: 15, right: 15 }}>
       {actions.map((action: any) => (
         <SpeedDialAction
+          sx={{ color: 'white' }}
           data-testid={'speedDial-action'}
           onClick={action.handleOnClick}
           key={action.name}

@@ -6,4 +6,5 @@ export interface projectTask {
   dueDate: string;
   progressPercentage: number;
   stepId: number;
+  description?: string;
 }
