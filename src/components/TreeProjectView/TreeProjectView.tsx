@@ -2,45 +2,46 @@ import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectProjects } from '../../redux/project/project.slice';
 import './styles.scss';
+import { projectType } from 'core/types/api/project.requests.types';
 
-const getInitialProjects = (projects: any) => {
-  return projects.map((project: any) => {
-    const steps = project.steps.map((step: any) => {
-      return {
-        id: step.id,
-        name: step.name,
-      };
-    });
+interface projectTypeWithClassName extends projectType {
+  className: string;
+}
 
+const getInitialProjects = (projects: Array<projectType>): Array<projectTypeWithClassName> => {
+  return projects.map((project) => {
     return {
-      id: project.id,
-      name: project.name,
-      steps: steps,
+      ...project,
       className: 'tree-item__project',
     };
   });
 };
 
 const TreeProjectView: FC<any> = () => {
-  const projects = useSelector(selectProjects);
-  const initialProjects: Array<any> = getInitialProjects(projects);
+  const projectsRedux = useSelector(selectProjects);
+  const initialProjects: Array<projectTypeWithClassName> = getInitialProjects(projectsRedux);
 
-  const [objects, setObjects] = useState<Array<any>>(initialProjects);
+  const [projects, setProjects] = useState<Array<projectTypeWithClassName>>(initialProjects);
   const [expanded, setExpanded] = useState<Array<string>>([]);
 
-  const addSelectedClassName = (project: any) => {
-    const projectsCopy = initialProjects.map((item) => {
-      return { ...item };
+  const addSelectedClassName = (project: projectTypeWithClassName) => {
+    const projectsCopy = initialProjects.map((project) => {
+      return { ...project };
     });
 
-    projectsCopy.find((projectCopy) => projectCopy.id === project.id).className += ' selected-project';
-    setObjects(projectsCopy);
+    const selectedProject = projectsCopy.find((projectCopy: projectTypeWithClassName) => projectCopy.id === project.id);
+
+    if (typeof selectedProject !== 'undefined') {
+      selectedProject.className += ' selected-project';
+    }
+
+    setProjects(projectsCopy);
   };
-  const setExpandedList = (project: any) => {
+  const setExpandedList = (project: projectType) => {
     setExpanded([`${project.id}`]);
   };
 
@@ -52,7 +53,7 @@ const TreeProjectView: FC<any> = () => {
       defaultExpandIcon={<ChevronRightIcon />}
       expanded={expanded}
     >
-      {objects?.map((project: any) => {
+      {projects?.map((project) => {
         return (
           <TreeItem
             key={project.id}
