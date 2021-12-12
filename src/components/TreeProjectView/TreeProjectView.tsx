@@ -7,9 +7,8 @@ import { useSelector } from 'react-redux';
 import { selectProjects } from '../../redux/project/project.slice';
 import './styles.scss';
 
-const TreeProjectView: FC<any> = () => {
-  const projects = useSelector(selectProjects);
-  const initialProjects: Array<any> = projects.map((project: any) => {
+const getInitialProjects = (projects: any) => {
+  return projects.map((project: any) => {
     const steps = project.steps.map((step: any) => {
       return {
         id: step.id,
@@ -24,19 +23,24 @@ const TreeProjectView: FC<any> = () => {
       className: 'tree-item__project',
     };
   });
+};
+
+const TreeProjectView: FC<any> = () => {
+  const projects = useSelector(selectProjects);
+  const initialProjects: Array<any> = getInitialProjects(projects);
+
   const [objects, setObjects] = useState<Array<any>>(initialProjects);
   const [expanded, setExpanded] = useState<Array<string>>([]);
 
-  const handleClick = (project: any) => {
-    const projectsCopy = initialProjects.map((a) => {
-      return { ...a };
+  const addSelectedClassName = (project: any) => {
+    const projectsCopy = initialProjects.map((item) => {
+      return { ...item };
     });
 
     projectsCopy.find((projectCopy) => projectCopy.id === project.id).className += ' selected-project';
     setObjects(projectsCopy);
   };
-
-  const expandedClick = (project: any) => {
+  const setExpandedList = (project: any) => {
     setExpanded([`${project.id}`]);
   };
 
@@ -56,8 +60,8 @@ const TreeProjectView: FC<any> = () => {
             label={project.name}
             className={project.className}
             onClick={() => {
-              handleClick(project);
-              expandedClick(project);
+              addSelectedClassName(project);
+              setExpandedList(project);
             }}
           >
             {project.steps?.map((step: any) => {
