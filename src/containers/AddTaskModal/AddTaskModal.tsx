@@ -130,7 +130,7 @@ const AddTaskModal: FC<any> = (props) => {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} key={'addProject'}>
             <div className="add-project-container">
-              <h1>Nowy projekt</h1>
+              <h1>Nowy task</h1>
               <div className="project-form">
                 <CustomInput
                   placeholder={'Wpisz nazwę'}
@@ -197,7 +197,7 @@ const AddTaskModal: FC<any> = (props) => {
               <CustomInput {...methods.register('assignedUsers')} type="hidden" />
               <div className="buttons">
                 <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
-                  wróć
+                  Wróć
                 </CustomButton>
                 <CustomButton type="submit" className="btn-success">
                   Zapisz
