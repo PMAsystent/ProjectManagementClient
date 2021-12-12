@@ -1,60 +1,43 @@
 @use '../../assets/styles/colors';
 
+$hoverColor: rgba(0, 0, 0, 0.09) !important;
+
 .sidebar-tree {
   color: colors.$primaryTextColor;
-  height: 500px;
   flex-grow: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
 
   li {
-    margin: 0.5px;
-    border-radius: 5px;
-  }
-
-  .tree-item {
-    padding-bottom: 10px;
+    margin: 1px;
   }
 
   .tree-item__project {
-    background-color: colors.$bgColor;
-
-    .Mui-expanded {
-      color: colors.$textColorSecondaryLight;
-    }
-
-    .Mui-selected {
-      color: colors.$primaryColor;
-      background-color: rgba(0, 0, 0, 0.11) !important;
+    .MuiTreeItem-content:hover {
+      background-color: $hoverColor;
     }
 
     .tree-item__task {
       color: colors.$secondaryTextColor;
     }
 
-    &[aria-selected='true'] {
-      .MuiCollapse-root {
-        .MuiCollapse-wrapper {
-          .MuiCollapse-wrapperInner {
-            .tree-item__step-add {
-              color: colors.$primaryColor;
+    &.selected-project {
+      color: colors.$primaryColor;
 
-              &:hover{
-                background-color: colors.$textColorSecondaryLight;
-              }
-            }
-          }
-        }
+      .Mui-selected {
+        background-color: $hoverColor;
       }
-    }
 
-    .MuiCollapse-root {
-      .MuiCollapse-wrapper {
-        .MuiCollapse-wrapperInner {
-          .tree-item__step-add {
-            color: colors.$textColorSecondaryLight;
-          }
+      .Mui-expanded {
+        color: colors.$primaryColor;
+      }
+
+      .tree-item__step-add {
+        color: colors.$textColorSecondaryLight;
+
+        &:hover {
+          background-color: colors.$textColorSecondaryLight;
         }
       }
     }
