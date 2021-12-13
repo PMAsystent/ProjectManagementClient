@@ -29,10 +29,22 @@
   }
   .task-priority {
     flex-basis: 50%;
-    
-    .circle-orange {
-      color: colors.$primaryColor;
+
+    .circle {
+      transition: color 500ms;
+      transition: opacity 500ms;
+      &-orange {
+        transition: color 500ms;
+        transition: opacity 500ms;
+        color: colors.$primaryColor;
+        &-hover {
+          transition: color 300ms;
+          color: colors.$primaryColor;
+          opacity: 0.4;
+        }
+      }
     }
+
     span {
       display: flex;
     }

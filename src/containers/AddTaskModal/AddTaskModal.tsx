@@ -36,10 +36,6 @@ const AddTaskModal: FC<any> = (props) => {
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
-  // const [priority, setPriority] = useState<{ orange: number[]; white: number[] }>({
-  //   orange: [],
-  //   white: [1, 2, 3, 4, 5],
-  // });
   const [priority, setPriority] = useState<{ key: number; isSelected: boolean; isHovered: boolean }[]>([
     { key: 1, isSelected: false, isHovered: false },
     { key: 2, isSelected: false, isHovered: false },
@@ -126,6 +122,27 @@ const AddTaskModal: FC<any> = (props) => {
       })
     );
   };
+  const handleOnPriorityClick = (key: any) => {
+    setPriority(
+      priority.map((x) => {
+        x.isHovered = false;
+        if (x.key <= key) {
+          x.isSelected = true;
+        } else {
+          x.isSelected = false;
+        }
+        return x;
+      })
+    );
+  };
+  const handleOnPriorityHoverEnd = (key: any) => {
+    setPriority(
+      priority.map((x) => {
+        x.isHovered = false;
+        return x;
+      })
+    );
+  };
 
   const onSubmit = (values: any) => {
     values.assignedUsers = values.assignedUsers.map((users: any) => ({
@@ -184,18 +201,14 @@ const AddTaskModal: FC<any> = (props) => {
               <div className="task-priority">
                 <p>Priorytet</p>
                 <span>
-                  {/* {priority.orange.map((n) => (
-                    <FiberManualRecordIcon className="circle-orange" key={n} />
-                  ))}
-                  {priority.white.map((n) => (
-                    <FiberManualRecordIcon key={n} />
-                  ))} */}
                   {priority.map((x) => (
                     <FiberManualRecordIcon
                       key={x.key}
                       data-key={x.key}
-                      className={x.isSelected || x.isHovered ? 'circle-orange' : ''}
+                      className={x.isHovered ? 'circle-orange-hover' : x.isSelected ? 'circle-orange' : 'circle'}
                       onMouseOver={(event) => handleOnPriorityHover(event.currentTarget.getAttribute('data-key'))}
+                      onMouseLeave={(event) => handleOnPriorityHoverEnd(event.currentTarget.getAttribute('data-key'))}
+                      onClick={(event) => handleOnPriorityClick(event.currentTarget.getAttribute('data-key'))}
                     />
                   ))}
                 </span>
