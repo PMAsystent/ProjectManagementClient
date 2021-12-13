@@ -7,10 +7,12 @@
     width: constants.$SidebarWidth;
   }
 }
+
 .sidebar-root {
   display: flex;
   flex-direction: column;
   height: 100%;
+
   .top-logo {
     display: flex;
     justify-content: center;
@@ -25,13 +27,16 @@
       size: 100px;
     }
   }
+
   $paddingSize: 20px;
+
   .project-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     padding-top: $paddingSize;
     padding-bottom: $paddingSize;
+
     .project-block {
       display: flex;
       width: 80%;
@@ -42,21 +47,14 @@
       background-color: colors.$bgColor;
     }
   }
-  .sidebar-tree {
-    color: colors.$primaryTextColor;
-    height: 500px;
-    flex-grow: 1;
-    overflow-y: auto;
-    .tree-item-task {
-      color: colors.$secondaryTextColor;
-    }
-  }
+
   .logout-button-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     padding-bottom: $paddingSize;
     padding-top: $paddingSize;
+
     .btn-secondary {
       width: 80%;
     }

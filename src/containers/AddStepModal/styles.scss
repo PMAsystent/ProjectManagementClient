@@ -1,0 +1,63 @@
+@use '../../assets/styles/colors';
+
+.add-step-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 70%;
+  border-radius: 10px;
+  color: #fff;
+  background-color: colors.$bgColor;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-left: 20px;
+  h1 {
+    flex-basis: 100%;
+    font-weight: 900;
+    font-style: oblique;
+  }
+  .step-form {
+    flex-basis: 50%;
+    padding: 15px;
+    .custom-input {
+      margin-bottom: 10px;
+    }
+    .custom-textarea {
+      margin-bottom: 35px;
+    }
+  }
+  .buttons {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+    margin-bottom: 30px;
+    button {
+      margin-right: 20px;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    top: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+    width: 90%;
+    margin: 15px auto;
+    padding-left: 10px;
+    .project-form {
+      flex-basis: 100%;
+    }
+    .assigns-form {
+      flex-basis: 100%;
+    }
+    .buttons {
+      padding-right: 0;
+      flex-basis: 100%;
+      button {
+        margin-right: 10px;
+      }
+    }
+  }
+}
