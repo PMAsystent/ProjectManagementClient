@@ -15,7 +15,7 @@ const AvatarList: FC<{ users: Array<projectAssignments> }> = ({ users }) => {
           {users.slice(0, 3).map((user) => {
             const { userName } = user;
             return (
-              <Tooltip title={userName}>
+              <Tooltip key={userName} title={userName}>
                 <Avatar key={userName} sx={{ bgcolor: stringToColor(userName) }}>
                   {userName[0].toUpperCase()}
                 </Avatar>
@@ -27,7 +27,7 @@ const AvatarList: FC<{ users: Array<projectAssignments> }> = ({ users }) => {
               <>
                 {users.slice(3).map((user) => {
                   const { userName } = user;
-                  return <div>{userName}</div>;
+                  return <div key={userName}>{userName}</div>;
                 })}
               </>
             }
@@ -39,7 +39,7 @@ const AvatarList: FC<{ users: Array<projectAssignments> }> = ({ users }) => {
         users.map((user) => {
           const { userName } = user;
           return (
-            <Tooltip title={userName}>
+            <Tooltip key={userName} title={userName}>
               <Avatar key={userName} sx={{ bgcolor: stringToColor(userName) }}>
                 {userName[0].toUpperCase()}
               </Avatar>

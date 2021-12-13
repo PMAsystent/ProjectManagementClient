@@ -1,6 +1,5 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Modal } from '@mui/material';
-import './styles.scss';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import AsyncAutocomplete from '../../components/AsyncAutocomplete/AsyncAutocomplete';
 import AssignedUserList from '../../components/AssignedUsersList/AssignedUserList';

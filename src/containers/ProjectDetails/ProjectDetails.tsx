@@ -11,8 +11,6 @@ import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProject, selectProjectDetails, selectProjectDetailsFetchStatus } from '../../redux/project/project.slice';
 import { fetchStatues } from '../../core/enums/redux.statues';
-import { Avatar, Stack } from '@mui/material';
-import { stringToColor } from '../../core/utils';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from '../../components/TaskList/TaskList';
 import { taskType } from '../../core/enums/task.type';
@@ -20,8 +18,12 @@ import { putTaskApi } from '../../api/utils';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { selectAccessToken } from '../../redux/auth/auth.slice';
 import CustomButton from '../../components/CustomButton/CustomButton';
+import AvatarList from '../../components/AvatarList/AvatarList';
+import EditIcon from '@mui/icons-material/Edit';
+import FormProjectModal from '../FormProjectModal/FormProjectModal';
 
 const ProjectDetails = () => {
+  const [editProjectModal, setEditProjectModal] = useState(false);
   const [columns, setColumns] = useState<any>({
     1: {
       name: taskType.TODO,
@@ -158,7 +160,9 @@ const ProjectDetails = () => {
         <>
           <div className="project-header">
             <div className="info">
-              <h1>{projectDetails?.name}</h1>
+              <div className="header-item">
+                <h1> {projectDetails?.name}</h1> <EditIcon onClick={() => setEditProjectModal(true)} />
+              </div>
               <div className="info-item">
                 <p>Aktywne Zadania</p>
                 <h3>{activeTasks}</h3>
@@ -179,26 +183,19 @@ const ProjectDetails = () => {
                 <p>Deadline</p>
                 <h3>{format(new Date(projectDetails?.dueDate || Date.now()), 'dd.MM.yyyy')}</h3>
               </div>
-              <div className="info-item">
+              <div className="info-item team">
                 <p>Zespół</p>
-                <Stack direction="row" spacing={1}>
-                  {projectDetails?.projectAssignedUsers.map((user) => {
-                    const { userName } = user;
-                    return (
-                      <Avatar key={userName} sx={{ bgcolor: stringToColor(userName) }}>
-                        {userName[0].toUpperCase()}
-                      </Avatar>
-                    );
-                  })}
-                </Stack>
+                <AvatarList users={projectDetails?.projectAssignedUsers || []} />
               </div>
-              <CustomButton icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>
-                Nowy Step
-              </CustomButton>
-              <CustomButton icon={<AddTaskIcon />} className="btn-project">
-                Nowy Task
-              </CustomButton>
-              <div className="description">
+              <div className="info-item">
+                <CustomButton icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>
+                  Nowy Step
+                </CustomButton>
+                <CustomButton icon={<AddTaskIcon />} className="btn-project">
+                  Nowy Task
+                </CustomButton>
+              </div>
+              <div className="info-item description">
                 <p>Opis</p>
                 <h3>{projectDetails?.description}</h3>
               </div>
@@ -225,6 +222,18 @@ const ProjectDetails = () => {
         </>
       )}
       <BasicSpeedDial actions={actions} />
+      {editProjectModal && projectDetails && (
+        <FormProjectModal
+          project={{
+            id: projectDetails.id,
+            name: projectDetails.name,
+            description: projectDetails.description,
+            dueDate: projectDetails.dueDate,
+          }}
+          open={editProjectModal}
+          handleClose={() => setEditProjectModal(false)}
+        />
+      )}
     </section>
   );
 };
