@@ -12,7 +12,7 @@ export const getRegisterPath = '/auth/register';
 export const getForgotPasswordPath = '/auth/forgotpassword';
 export const getDashboardPath = '/dashboard/overview';
 export const getUserDetailsPath = '/user/details';
-export const getProjectDetailsPath = '/project/:projectid';
+export const getProjectDetailsPath = '/project/:projectid/:stepid?';
 
 // containers
 const Login = lazy(() => import('containers/Login/Login'));

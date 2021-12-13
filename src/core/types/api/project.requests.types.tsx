@@ -8,6 +8,7 @@ export interface projectType {
   dueDate: string;
   isActive: boolean;
   progressPercentage: number;
+  steps: Array<projectStep>;
 }
 
 export interface myProjectsType {

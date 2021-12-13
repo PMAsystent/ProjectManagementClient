@@ -41,8 +41,8 @@ const ProjectDetails = () => {
   });
   const [activeTasks, setActiveTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
-  const { projectid } = useParams<{ projectid: string }>();
-  const projectDetails = useSelector(selectProjectDetails);
+  const { projectid, stepid } = useParams<{ projectid: string; stepid: string }>();
+  let projectDetails = useSelector(selectProjectDetails);
   const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
   const accessToken = useSelector(selectAccessToken);
   const dispatch = useDispatch();
@@ -65,8 +65,13 @@ const ProjectDetails = () => {
         handleOnClick: () => {},
       },
     ],
+
     [history]
   );
+
+  if (stepid) {
+    // TODO: filter task with stepid from URL param
+  }
 
   const onDragEnd = async (result: any, columns: any, setColumns: any) => {
     const task = projectDetails?.projectTasks.find((task) => task.id === +result.draggableId);
