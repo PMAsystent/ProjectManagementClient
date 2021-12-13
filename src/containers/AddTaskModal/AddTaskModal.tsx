@@ -37,12 +37,13 @@ const AddTaskModal: FC<any> = (props) => {
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [priority, setPriority] = useState<{ key: number; isSelected: boolean; isHovered: boolean }[]>([
-    { key: 1, isSelected: false, isHovered: false },
+    { key: 1, isSelected: true, isHovered: false },
     { key: 2, isSelected: false, isHovered: false },
     { key: 3, isSelected: false, isHovered: false },
     { key: 4, isSelected: false, isHovered: false },
     { key: 5, isSelected: false, isHovered: false },
   ]);
+  const [priorityName, setPriorityName] = useState('NISKI');
   const projectPostFetchStatus = useSelector(selectProjectPostFetchStatus);
 
   const defaultValue: any = useMemo(
@@ -134,6 +135,13 @@ const AddTaskModal: FC<any> = (props) => {
         return x;
       })
     );
+    if (key < 3) {
+      setPriorityName('NISKI');
+    } else if (key < 5) {
+      setPriorityName('ŚREDNI');
+    } else {
+      setPriorityName('WYSOKI');
+    }
   };
   const handleOnPriorityHoverEnd = (key: any) => {
     setPriority(
@@ -211,6 +219,7 @@ const AddTaskModal: FC<any> = (props) => {
                       onClick={(event) => handleOnPriorityClick(event.currentTarget.getAttribute('data-key'))}
                     />
                   ))}
+                  <h4>{priorityName}</h4>
                 </span>
               </div>
               <div className="assigns-form">
