@@ -13,13 +13,14 @@ import { projectMemberEnum } from '../../core/enums/project.member';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { projectAssignments } from '../../core/types/api/assigned.request.types';
 
 const validationSchema = yup.object({
   assignedUsers: yup.array(),
 });
 
-const ProjectAssignedModal: FC<any> = (props) => {
-  const [users, setUsers] = useState<any[]>([]);
+const ProjectAssignedModal: FC<{ propsUsers: Array<projectAssignments>; open: boolean; handleClose: any }> = ({ propsUsers, open, handleClose }) => {
+  const [users, setUsers] = useState<any[]>(propsUsers);
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
 
@@ -69,8 +70,8 @@ const ProjectAssignedModal: FC<any> = (props) => {
 
   return (
     <Modal
-      open={props.open}
-      onClose={props.handleClose}
+      open={open}
+      onClose={handleClose}
       aria-labelledby="modal-project-assigned"
       aria-describedby="modal-project-assigned"
       sx={{ overflowY: 'scroll', overflowX: 'hidden', marginBottom: '15px' }}
@@ -118,7 +119,7 @@ const ProjectAssignedModal: FC<any> = (props) => {
               />
             </div>
             <div className="buttons">
-              <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
+              <CustomButton type="button" className="btn-go-back" onClick={handleClose}>
                 Wróć
               </CustomButton>
             </div>

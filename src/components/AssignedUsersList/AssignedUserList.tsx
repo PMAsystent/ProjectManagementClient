@@ -13,11 +13,12 @@ const AssignedUserList: FC<{ users: any[]; addtionalActions?: any }> = ({ users,
       </div>
       {users.length > 0 &&
         users.map((user) => {
+          console.log(user);
           return (
             <div className="users-list-item" key={user.id}>
               <div className="info">
                 <Avatar sx={{ width: 25, height: 25 }} src="https://cdn-icons-png.flaticon.com/512/194/194938.png" />
-                <span>{user.email}</span>
+                <span>{user?.email || user?.userName}</span>
               </div>
               {addtionalActions && <div className="actions">{addtionalActions(user)}</div>}
             </div>

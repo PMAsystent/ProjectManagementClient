@@ -1,13 +1,13 @@
-import React, {FC, useState} from 'react';
+import React, { FC, useState } from 'react';
 import { Avatar, Stack, Tooltip } from '@mui/material';
 import { stringToColor } from '../../core/utils';
 import { projectAssignments } from '../../core/types/api/assigned.request.types';
 import AddIcon from '@mui/icons-material/Add';
-import ProjectAssignedModal from "../../containers/ProjectAssignedModal/ProjectAssignedModal";
+import ProjectAssignedModal from '../../containers/ProjectAssignedModal/ProjectAssignedModal';
 
 const AvatarList: FC<{ users: Array<projectAssignments> }> = ({ users }) => {
   const [assignedUsersModalOpen, setAssignedUsersModalOpen] = useState(false);
-  
+
   return (
     <Stack direction="row" spacing={1}>
       {users.length > 3 ? (
@@ -52,7 +52,7 @@ const AvatarList: FC<{ users: Array<projectAssignments> }> = ({ users }) => {
           <AddIcon />
         </Avatar>
       </Tooltip>
-      <ProjectAssignedModal open={assignedUsersModalOpen} handleClose={() => setAssignedUsersModalOpen(false)} />
+      <ProjectAssignedModal propsUsers={users || []} open={assignedUsersModalOpen} handleClose={() => setAssignedUsersModalOpen(false)} />
     </Stack>
   );
 };
