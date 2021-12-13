@@ -16,14 +16,9 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { projectMemberEnum } from '../../core/enums/project.member';
 import { projectRoleEnum } from '../../core/enums/project.role';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  clearProjectPostFetchStatus, clearProjectPutFetchStatus,
-  postProject,
-  putProject,
-  selectProjectPostFetchStatus, selectProjectPutFetchStatus
-} from '../../redux/project/project.slice';
+import { clearProjectPostFetchStatus, postProject, selectProjectPostFetchStatus } from '../../redux/project/project.slice';
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
-import {format, isValid} from 'date-fns';
+import { isValid } from 'date-fns';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 const validationSchema = yup.object({
@@ -36,13 +31,12 @@ const validationSchema = yup.object({
   assignedUsers: yup.array(),
 });
 
-const FormProjectModal: FC<any> = (props) => {
+const AddProjectModal: FC<any> = (props) => {
   const dispatch = useDispatch();
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const projectPostFetchStatus = useSelector(selectProjectPostFetchStatus);
-  const projectPutFetchStatus = useSelector(selectProjectPutFetchStatus);
 
   const defaultValue: any = useMemo(
     () => ({
@@ -110,16 +104,12 @@ const FormProjectModal: FC<any> = (props) => {
   };
 
   const onSubmit = (values: any) => {
-    if (!props.project) {
-      values.assignedUsers = values.assignedUsers.map((users: any) => ({
-        userId: users.id,
-        projectRole: users.projectRole,
-        memberType: users.memberType,
-      }));
-      dispatch(postProject(values));
-    } else {
-      dispatch(putProject({id: props.project.id, ...values}))
-    }
+    values.assignedUsers = values.assignedUsers.map((users: any) => ({
+      userId: users.id,
+      projectRole: users.projectRole,
+      memberType: users.memberType,
+    }));
+    dispatch(postProject(values));
   };
 
   useEffect(() => {
@@ -127,32 +117,21 @@ const FormProjectModal: FC<any> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
 
-  useEffect(() => {
-    if (props.project) {
-      console.log(format(new Date(props.project.dueDate) || Date.now(), 'MM/dd/yyyy'));
-      methods.reset({
-        name: props.project.name,
-        description: props.project.description,
-        dueDate: new Date(props.project.dueDate),
-      });
-    }
-  }, [methods, props.project]);
-
   useCloseModalOnDoneFetchStatus({ status: projectPostFetchStatus, clearFunction: clearProjectPostFetchStatus, handleClose: props.handleClose });
-  useCloseModalOnDoneFetchStatus({ status: projectPutFetchStatus, clearFunction: clearProjectPutFetchStatus, handleClose: props.handleClose} )
+
   return (
     <Modal
       open={props.open}
       onClose={props.handleClose}
       aria-labelledby="modal-app-project"
-      aria-describedby="modal-app-project"
+      aria-describedby="modal-modal-description"
       sx={{ overflowY: 'scroll', overflowX: 'hidden', marginBottom: '15px' }}
     >
       <div>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} key={'addProject'}>
-            <div className={props.project ? 'edit-project-container' : 'add-project-container'}>
-              <h1>{props.project ? `${props.project.name} - Edycja` : 'Nowy projekt'}</h1>
+            <div className="add-project-container">
+              <h1>Nowy projekt</h1>
               <div className="project-form">
                 <CustomInput
                   placeholder={'Wpisz nazwę'}
@@ -178,52 +157,48 @@ const FormProjectModal: FC<any> = (props) => {
                   error={!!methods.formState.errors.dueDate}
                 />
               </div>
-              {!props.project && (
-                <>
-                  <div className="assigns-form">
-                    <AsyncAutocomplete
-                      name={'findUsers'}
-                      label={'Dodaj użytkownika'}
-                      nameOptionLabel={'email'}
-                      onChange={handleOnChangeUsersDebounced}
-                      onSelect={handleUserSelect}
-                      options={usersOptions}
-                      setOptions={setUsersOptions}
-                      loading={usersOptionsLoading}
-                      clearOnClose
-                    />
-                    <div className="label">Użytkownicy</div>
-                    <AssignedUserList
-                      users={users}
-                      addtionalActions={(user: any) => {
-                        return (
-                          <>
-                            <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user.id, e.target.value)}>
-                              {Object.values(projectMemberEnum).map((value: string) => (
-                                <MenuItem key={value} value={value}>
-                                  {value}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                            <Select value={user.projectRole} onChange={(e) => handleOnChangeRole(user.id, e.target.value)}>
-                              {Object.values(projectRoleEnum).map((value: string) => (
-                                <MenuItem key={value} value={value}>
-                                  {value}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                            <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />
-                          </>
-                        );
-                      }}
-                    />
-                  </div>
-                  <CustomInput {...methods.register('assignedUsers')} type="hidden" />
-                </>
-              )}
+              <div className="assigns-form">
+                <AsyncAutocomplete
+                  name={'findUsers'}
+                  label={'Dodaj użytkownika'}
+                  nameOptionLabel={'email'}
+                  onChange={handleOnChangeUsersDebounced}
+                  onSelect={handleUserSelect}
+                  options={usersOptions}
+                  setOptions={setUsersOptions}
+                  loading={usersOptionsLoading}
+                  clearOnClose
+                />
+                <div className="label">Użytkownicy</div>
+                <AssignedUserList
+                  users={users}
+                  addtionalActions={(user: any) => {
+                    return (
+                      <>
+                        <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user.id, e.target.value)}>
+                          {Object.values(projectMemberEnum).map((value: string) => (
+                            <MenuItem key={value} value={value}>
+                              {value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <Select value={user.projectRole} onChange={(e) => handleOnChangeRole(user.id, e.target.value)}>
+                          {Object.values(projectRoleEnum).map((value: string) => (
+                            <MenuItem key={value} value={value}>
+                              {value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />
+                      </>
+                    );
+                  }}
+                />
+              </div>
+              <CustomInput {...methods.register('assignedUsers')} type="hidden" />
               <div className="buttons">
                 <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
-                  Wróć
+                  wróć
                 </CustomButton>
                 <CustomButton type="submit" className="btn-success">
                   Zapisz
@@ -237,4 +212,4 @@ const FormProjectModal: FC<any> = (props) => {
   );
 };
 
-export default FormProjectModal;
+export default AddProjectModal;

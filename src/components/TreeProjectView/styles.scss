@@ -1,0 +1,46 @@
+@use '../../assets/styles/colors';
+
+$hoverColor: rgba(0, 0, 0, 0.09) !important;
+
+.sidebar-tree {
+  color: colors.$primaryTextColor;
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  li {
+    margin: 1px;
+  }
+
+  .tree-item__project {
+    .MuiTreeItem-content:hover {
+      background-color: $hoverColor;
+    }
+
+    .tree-item__task {
+      color: colors.$secondaryTextColor;
+    }
+
+    &.selected-project {
+      color: colors.$primaryColor;
+
+      .Mui-selected {
+        background-color: $hoverColor;
+      }
+
+      .Mui-expanded {
+        color: colors.$primaryColor;
+      }
+
+      .tree-item__step-add {
+        color: colors.$textColorSecondaryLight;
+
+        &:hover {
+          color: colors.$primaryColor;
+          background-color: colors.$textColorSecondaryLight;
+        }
+      }
+    }
+  }
+}
