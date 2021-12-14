@@ -3,6 +3,7 @@ import { instance } from '../../api';
 import { rootReducerInterface } from '../rootReducer';
 import { myProjectsType, postProjectType, projectDetails, projectType, putProjectType } from '../../core/types/api/project.requests.types';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
+import { getProjectApi } from '../../api/utils';
 
 export interface projectReducerInterface {
   projectList: Array<projectType>;
@@ -45,8 +46,7 @@ export const getProject = createAsyncThunk<any, number, { state: rootReducerInte
     const {
       auth: { accessToken },
     } = getState();
-    return await instance
-      .get<myProjectsType>(`/MyProjects/${id}`, { headers: { authorization: `Bearer ${accessToken}` } })
+    return await getProjectApi(id, accessToken)
       .then((response) => {
         return response.data;
       })

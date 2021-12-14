@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react';
 import { Avatar, Stack, Tooltip } from '@mui/material';
 import { stringToColor } from '../../core/utils';
-import { projectAssignments } from '../../core/types/api/assigned.request.types';
+import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
 import AddIcon from '@mui/icons-material/Add';
 import ProjectAssignedModal from '../../containers/ProjectAssignedModal/ProjectAssignedModal';
 
-const AvatarList: FC<{ users: Array<projectAssignments> }> = ({ users }) => {
+const AvatarList: FC<{ users: Array<projectAssignmentsType> }> = ({ users }) => {
   const [assignedUsersModalOpen, setAssignedUsersModalOpen] = useState(false);
 
   return (
@@ -52,7 +52,7 @@ const AvatarList: FC<{ users: Array<projectAssignments> }> = ({ users }) => {
           <AddIcon />
         </Avatar>
       </Tooltip>
-      <ProjectAssignedModal propsUsers={users || []} open={assignedUsersModalOpen} handleClose={() => setAssignedUsersModalOpen(false)} />
+      {assignedUsersModalOpen && <ProjectAssignedModal open={assignedUsersModalOpen} handleClose={() => setAssignedUsersModalOpen(false)} />}
     </Stack>
   );
 };

@@ -1,42 +1,37 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Modal } from '@mui/material';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import AsyncAutocomplete from '../../components/AsyncAutocomplete/AsyncAutocomplete';
 import AssignedUserList from '../../components/AssignedUsersList/AssignedUserList';
-import CustomInput from '../../components/CustomInput/CustomInput';
 import { debounce } from 'lodash';
 import { findUsers } from '../../api/utils';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  clearProjectAssignmentsDeleteFetchStatus,
+  clearProjectAssignmentsPostFetchStatus,
+  deleteProjectAssignments,
+  getProjectAssignments,
+  postProjectAssignments,
+  selectProjectAssignments,
+  selectProjectAssignmentsDeleteFetchStatus,
+  selectProjectAssignmentsPostFetchStatus,
+} from '../../redux/projectAssignments/projectAssignments.slice';
+import { useParams } from 'react-router-dom';
 import { projectRoleEnum } from '../../core/enums/project.role';
 import { projectMemberEnum } from '../../core/enums/project.member';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { projectAssignments } from '../../core/types/api/assigned.request.types';
+import { getProject } from '../../redux/project/project.slice';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 
-const validationSchema = yup.object({
-  assignedUsers: yup.array(),
-});
-
-const ProjectAssignedModal: FC<{ propsUsers: Array<projectAssignments>; open: boolean; handleClose: any }> = ({ propsUsers, open, handleClose }) => {
-  const [users, setUsers] = useState<any[]>(propsUsers);
+const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, handleClose }) => {
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
+  const dispatch = useDispatch();
+  const users = useSelector(selectProjectAssignments);
+  const projectAssignmentsPostFetchStatus = useSelector(selectProjectAssignmentsDeleteFetchStatus);
+  const projectAssignmentsDeleteFetchStatus = useSelector(selectProjectAssignmentsPostFetchStatus);
 
-  const defaultValue: any = useMemo(
-    () => ({
-      assignedUsers: [],
-    }),
-    []
-  );
-
-  const { register, getValues, handleSubmit } = useForm({
-    defaultValues: useMemo(() => {
-      return defaultValue;
-    }, [defaultValue]),
-    resolver: yupResolver(validationSchema),
-  });
-
+  const { projectid } = useParams<{ projectid: string }>();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnChangeUsersDebounced = useCallback(
     debounce(async (query) => {
@@ -53,78 +48,78 @@ const ProjectAssignedModal: FC<{ propsUsers: Array<projectAssignments>; open: bo
   );
 
   const handleUserSelect = (e: any, value: any) => {
-    const assignsArray: any[] = getValues('assignedUsers');
-    if (!assignsArray.find((assign) => assign.id === value.id)) {
-      SnackbarUtils.success('Dodano użytkownika');
-      assignsArray.push({ ...value, projectRole: projectRoleEnum.DEVELOPER, memberType: projectMemberEnum.MEMBER });
+    if (!users.find((user) => user.userId === value.id)) {
+      dispatch(
+        postProjectAssignments({
+          userId: value.id,
+          projectId: +projectid,
+          projectRole: projectRoleEnum.DEVELOPER,
+          memberType: projectMemberEnum.MEMBER,
+        })
+      );
     } else {
       SnackbarUtils.warning('Użytkownik jest już dodany');
     }
-    setUsers(assignsArray);
   };
 
-  const onSubmit = (values: any) => {
-    console.log(values);
+  const onClose = () => {
+    if (projectAssignmentsPostFetchStatus !== null || projectAssignmentsDeleteFetchStatus !== null) {
+      dispatch(getProject(+projectid));
+      dispatch(clearProjectAssignmentsPostFetchStatus());
+      dispatch(clearProjectAssignmentsDeleteFetchStatus());
+    }
+    handleClose();
   };
+
+  const handleRemoveAssignment = (user: any) => {
+    dispatch(deleteProjectAssignments({ userId: user.userId, projectId: +projectid }));
+  };
+
+  useEffect(() => {
+    dispatch(getProjectAssignments(+projectid));
+  }, [dispatch, projectid]);
 
   return (
     <Modal
       open={open}
-      onClose={handleClose}
+      onClose={onClose}
       aria-labelledby="modal-project-assigned"
       aria-describedby="modal-project-assigned"
       sx={{ overflowY: 'scroll', overflowX: 'hidden', marginBottom: '15px' }}
     >
       <div>
-        <form onSubmit={handleSubmit(onSubmit)} key={'addProject'}>
-          <div className="assigned-project-container">
-            <h1>Przypisani Użytkownicy</h1>
-            <div className="assigns-form">
-              <AsyncAutocomplete
-                name={'findUsers'}
-                label={'Dodaj użytkownika'}
-                nameOptionLabel={'email'}
-                onChange={handleOnChangeUsersDebounced}
-                onSelect={handleUserSelect}
-                options={usersOptions}
-                setOptions={setUsersOptions}
-                loading={usersOptionsLoading}
-                clearOnClose
-              />
-              <div className="label">Użytkownicy</div>
-              <AssignedUserList
-                users={users}
-                // addtionalActions={(user: any) => {
-                //   return (
-                //     <>
-                //       <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user.id, e.target.value)}>
-                //         {Object.values(projectMemberEnum).map((value: string) => (
-                //           <MenuItem key={value} value={value}>
-                //             {value}
-                //           </MenuItem>
-                //         ))}
-                //       </Select>
-                //       <Select value={user.projectRole} onChange={(e) => handleOnChangeRole(user.id, e.target.value)}>
-                //         {Object.values(projectRoleEnum).map((value: string) => (
-                //           <MenuItem key={value} value={value}>
-                //             {value}
-                //           </MenuItem>
-                //         ))}
-                //       </Select>
-                //       <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />
-                //     </>
-                //   );
-                // }}
-              />
-            </div>
-            <div className="buttons">
-              <CustomButton type="button" className="btn-go-back" onClick={handleClose}>
-                Wróć
-              </CustomButton>
-            </div>
-            <CustomInput {...register('assignedUsers')} type="hidden" />
+        <div className="assigned-project-container">
+          <h1>Przypisani Użytkownicy</h1>
+          <div className="assigns-form">
+            <AsyncAutocomplete
+              name={'findUsers'}
+              label={'Dodaj użytkownika'}
+              nameOptionLabel={'email'}
+              onChange={handleOnChangeUsersDebounced}
+              onSelect={handleUserSelect}
+              options={usersOptions}
+              setOptions={setUsersOptions}
+              loading={usersOptionsLoading}
+              clearOnClose
+            />
+            <div className="label">Użytkownicy</div>
+            <AssignedUserList
+              users={users}
+              addtionalActions={(user: any) => {
+                return (
+                  <>
+                    <PersonRemoveIcon onClick={() => handleRemoveAssignment(user)} />
+                  </>
+                );
+              }}
+            />
           </div>
-        </form>
+          <div className="buttons">
+            <CustomButton type="button" className="btn-go-back" onClick={onClose}>
+              Wróć
+            </CustomButton>
+          </div>
+        </div>
       </div>
     </Modal>
   );
