@@ -25,7 +25,7 @@ import {
   selectProjectPutFetchStatus,
 } from '../../redux/project/project.slice';
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
-import { format, isValid } from 'date-fns';
+import { isValid } from 'date-fns';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 const validationSchema = yup.object({
@@ -131,7 +131,6 @@ const FormProjectModal: FC<any> = (props) => {
 
   useEffect(() => {
     if (props.project) {
-      console.log(format(new Date(props.project.dueDate) || Date.now(), 'MM/dd/yyyy'));
       methods.reset({
         name: props.project.name,
         description: props.project.description,

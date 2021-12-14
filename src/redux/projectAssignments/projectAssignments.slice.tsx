@@ -125,5 +125,6 @@ export const projectAssignments = createSlice({
 export const { clearProjectAssignmentsPostFetchStatus, clearProjectAssignmentsDeleteFetchStatus } = projectAssignments.actions;
 
 export const selectProjectAssignments = (state: rootReducerInterface) => state.projectAssignments.projectAssignments;
-export const selectProjectAssignmentsDeleteFetchStatus = (state: rootReducerInterface) => state.projectAssignments.projectAssignmentsDeleteFetchStatus;
+export const selectProjectAssignmentsDeleteFetchStatus = (state: rootReducerInterface) =>
+  state.projectAssignments.projectAssignmentsDeleteFetchStatus;
 export const selectProjectAssignmentsPostFetchStatus = (state: rootReducerInterface) => state.projectAssignments.projectAssignmentsPostFetchStatus;
