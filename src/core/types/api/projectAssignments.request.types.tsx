@@ -4,3 +4,10 @@ export interface postProjectAssignmentsType {
   memberType: string;
   projectRole: string;
 }
+
+export interface putProjectAssignmentsType {
+  userId: number;
+  projectId: number;
+  memberType: string;
+  projectRole: string;
+}

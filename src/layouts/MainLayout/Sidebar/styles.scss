@@ -19,10 +19,8 @@
     align-items: center;
     height: constants.$NavbarHeight;
     background-color: colors.$bgColor;
-    a {
-      text-decoration: none;
-      color: #fff;
-    }
+    color: #fff;
+    cursor: pointer;
     b {
       size: 100px;
     }
@@ -38,6 +36,7 @@
     padding-bottom: $paddingSize;
 
     .project-block {
+      cursor: pointer;
       display: flex;
       width: 80%;
       height: 70%;

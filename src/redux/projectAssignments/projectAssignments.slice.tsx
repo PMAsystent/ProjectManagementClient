@@ -1,7 +1,7 @@
 import { rootReducerInterface } from '../rootReducer';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { instance } from 'api';
-import { postProjectAssignmentsType } from 'core/types/api/projectAssignments.request.types';
+import { postProjectAssignmentsType, putProjectAssignmentsType } from 'core/types/api/projectAssignments.request.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { getProjectApi } from 'api/utils';
 import { projectAssignmentsType } from 'core/types/api/assigned.request.types';
@@ -46,6 +46,24 @@ export const postProjectAssignments = createAsyncThunk<any, postProjectAssignmen
     } = getState();
     return await instance
       .post('/ProjectAssignments', data, { headers: { authorization: `Bearer ${accessToken}` } })
+      .then((response) => {
+        dispatch(getProjectAssignments(data.projectId));
+        return response.data;
+      })
+      .catch((error) => {
+        return rejectWithValue(error.response?.data || '');
+      });
+  }
+);
+
+export const putProjectAssignments = createAsyncThunk<any, putProjectAssignmentsType, { state: rootReducerInterface; rejectValue: string }>(
+  'projectAssignments/put',
+  async (data, { rejectWithValue, getState, dispatch }) => {
+    const {
+      auth: { accessToken },
+    } = getState();
+    return await instance
+      .put('/ProjectAssignments', data, { headers: { authorization: `Bearer ${accessToken}` } })
       .then((response) => {
         dispatch(getProjectAssignments(data.projectId));
         return response.data;
@@ -104,6 +122,7 @@ export const projectAssignments = createSlice({
       })
       .addCase(postProjectAssignments.fulfilled, (state, action) => {
         state.projectAssignmentsPostFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.success('Dodano użytkownika');
       })
       .addCase(postProjectAssignments.rejected, (state, action) => {
         state.projectAssignmentsPostFetchStatus = action.meta.requestStatus;
@@ -114,10 +133,21 @@ export const projectAssignments = createSlice({
       })
       .addCase(deleteProjectAssignments.fulfilled, (state, action) => {
         state.projectAssignmentsDeleteFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.success('Usunięto użytkownika');
       })
       .addCase(deleteProjectAssignments.rejected, (state, action) => {
         state.projectAssignmentsDeleteFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error('Usuwanie użytkownika nie powiodło się');
+      })
+      .addCase(putProjectAssignments.pending, (state, action) => {
+        state.projectAssignmentsPutFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(putProjectAssignments.fulfilled, (state, action) => {
+        state.projectAssignmentsPutFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(putProjectAssignments.rejected, (state, action) => {
+        state.projectAssignmentsPutFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error('Edycja użytkownika nie powiodła się');
       });
   },
 });
@@ -125,6 +155,4 @@ export const projectAssignments = createSlice({
 export const { clearProjectAssignmentsPostFetchStatus, clearProjectAssignmentsDeleteFetchStatus } = projectAssignments.actions;
 
 export const selectProjectAssignments = (state: rootReducerInterface) => state.projectAssignments.projectAssignments;
-export const selectProjectAssignmentsDeleteFetchStatus = (state: rootReducerInterface) =>
-  state.projectAssignments.projectAssignmentsDeleteFetchStatus;
-export const selectProjectAssignmentsPostFetchStatus = (state: rootReducerInterface) => state.projectAssignments.projectAssignmentsPostFetchStatus;
+export const selectProjectAssignmentsGetFetchStatus = (state: rootReducerInterface) => state.projectAssignments.projectAssignmentsGetFetchStatus;

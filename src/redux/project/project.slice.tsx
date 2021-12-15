@@ -1,9 +1,10 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { instance } from '../../api';
 import { rootReducerInterface } from '../rootReducer';
 import { myProjectsType, postProjectType, projectDetails, projectType, putProjectType } from '../../core/types/api/project.requests.types';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { getProjectApi } from '../../api/utils';
+import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
 
 export interface projectReducerInterface {
   projectList: Array<projectType>;
@@ -102,6 +103,11 @@ export const projectReducer = createSlice({
     clearProjectPutFetchStatus(state) {
       state.projectPutFetchStatus = null;
     },
+    setProjectAssignedUsers(state, action: PayloadAction<Array<projectAssignmentsType>>) {
+      if (state.projectDetails) {
+        state.projectDetails.projectAssignedUsers = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -152,7 +158,7 @@ export const projectReducer = createSlice({
   },
 });
 
-export const { clearProjectPostFetchStatus, clearProjectPutFetchStatus } = projectReducer.actions;
+export const { clearProjectPostFetchStatus, clearProjectPutFetchStatus, setProjectAssignedUsers } = projectReducer.actions;
 
 export const selectProjects = (state: rootReducerInterface) => state.projects.projectList;
 export const selectProjectsListFetchStatus = (state: rootReducerInterface) => state.projects.projectListFetchStatus;

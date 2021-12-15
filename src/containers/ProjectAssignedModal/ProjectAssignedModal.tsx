@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Modal } from '@mui/material';
+import './styles.scss';
+import { MenuItem, Modal, Select } from '@mui/material';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import AsyncAutocomplete from '../../components/AsyncAutocomplete/AsyncAutocomplete';
 import AssignedUserList from '../../components/AssignedUsersList/AssignedUserList';
@@ -13,25 +14,26 @@ import {
   deleteProjectAssignments,
   getProjectAssignments,
   postProjectAssignments,
+  putProjectAssignments,
   selectProjectAssignments,
-  selectProjectAssignmentsDeleteFetchStatus,
-  selectProjectAssignmentsPostFetchStatus,
+  selectProjectAssignmentsGetFetchStatus,
 } from '../../redux/projectAssignments/projectAssignments.slice';
 import { useParams } from 'react-router-dom';
 import { projectRoleEnum } from '../../core/enums/project.role';
 import { projectMemberEnum } from '../../core/enums/project.member';
-import { getProject } from '../../redux/project/project.slice';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import { fetchStatues } from '../../core/enums/redux.statues';
+import { setProjectAssignedUsers } from '../../redux/project/project.slice';
+import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
 
 const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, handleClose }) => {
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
   const dispatch = useDispatch();
   const users = useSelector(selectProjectAssignments);
-  const projectAssignmentsPostFetchStatus = useSelector(selectProjectAssignmentsDeleteFetchStatus);
-  const projectAssignmentsDeleteFetchStatus = useSelector(selectProjectAssignmentsPostFetchStatus);
-
+  const projectAssignmentsGetFetchStatus = useSelector(selectProjectAssignmentsGetFetchStatus);
   const { projectid } = useParams<{ projectid: string }>();
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnChangeUsersDebounced = useCallback(
     debounce(async (query) => {
@@ -53,8 +55,8 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
         postProjectAssignments({
           userId: value.id,
           projectId: +projectid,
-          projectRole: projectRoleEnum.DEVELOPER,
-          memberType: projectMemberEnum.MEMBER,
+          projectRole: projectRoleEnum.DEVELOPER.value,
+          memberType: projectMemberEnum.MEMBER.value,
         })
       );
     } else {
@@ -63,11 +65,8 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
   };
 
   const onClose = () => {
-    if (projectAssignmentsPostFetchStatus !== null || projectAssignmentsDeleteFetchStatus !== null) {
-      dispatch(getProject(+projectid));
-      dispatch(clearProjectAssignmentsPostFetchStatus());
-      dispatch(clearProjectAssignmentsDeleteFetchStatus());
-    }
+    dispatch(clearProjectAssignmentsPostFetchStatus());
+    dispatch(clearProjectAssignmentsDeleteFetchStatus());
     handleClose();
   };
 
@@ -75,9 +74,37 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
     dispatch(deleteProjectAssignments({ userId: user.userId, projectId: +projectid }));
   };
 
+  const handleOnChangeMember = (user: projectAssignmentsType, value: string) => {
+    dispatch(
+      putProjectAssignments({
+        userId: user.userId,
+        projectId: +projectid,
+        memberType: value,
+        projectRole: user.projectRole,
+      })
+    );
+  };
+
+  const handleOnChangeRole = (user: projectAssignmentsType, value: string) => {
+    dispatch(
+      putProjectAssignments({
+        userId: user.userId,
+        projectId: +projectid,
+        memberType: user.memberType,
+        projectRole: value,
+      })
+    );
+  };
+
   useEffect(() => {
     dispatch(getProjectAssignments(+projectid));
   }, [dispatch, projectid]);
+
+  useEffect(() => {
+    if (projectAssignmentsGetFetchStatus === fetchStatues.FULFILLED) {
+      dispatch(setProjectAssignedUsers(users));
+    }
+  }, [dispatch, projectAssignmentsGetFetchStatus, users]);
 
   return (
     <Modal
@@ -108,6 +135,20 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
               addtionalActions={(user: any) => {
                 return (
                   <>
+                    <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user, e.target.value)}>
+                      {Object.values(projectMemberEnum).map((member: { name: string; value: string }) => (
+                        <MenuItem key={member.value} value={member.value}>
+                          {member.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <Select value={user.projectRole} onChange={(e) => handleOnChangeRole(user, e.target.value)}>
+                      {Object.values(projectRoleEnum).map((role: { name: string; value: string }) => (
+                        <MenuItem key={role.value} value={role.value}>
+                          {role.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
                     <PersonRemoveIcon onClick={() => handleRemoveAssignment(user)} />
                   </>
                 );
@@ -116,7 +157,7 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
           </div>
           <div className="buttons">
             <CustomButton type="button" className="btn-go-back" onClick={onClose}>
-              Wróć
+              Zamknij
             </CustomButton>
           </div>
         </div>
