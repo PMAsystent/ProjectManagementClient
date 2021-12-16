@@ -1,4 +1,10 @@
 export const projectMemberEnum = {
-  MEMBER: 'Member',
-  SUPER_MEMBER: 'SuperMember',
+  MEMBER: {
+    value: 'Member',
+    name: 'Członek',
+  },
+  SUPER_MEMBER: {
+    value: 'SuperMember',
+    name: 'Administrator',
+  },
 };

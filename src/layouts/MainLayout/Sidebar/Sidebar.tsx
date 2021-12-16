@@ -6,25 +6,30 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/auth/auth.slice';
 import { Apps } from '@material-ui/icons';
 import TreeProjectView from '../../../components/TreeProjectView/TreeProjectView';
+import { getDashboardPath } from '../../../core/routes';
+import { useHistory } from 'react-router-dom';
 
 const Sidebar = (props: { open: any; onClose: any }) => {
   const { open, onClose } = props;
   const lgUp = useMediaQuery('(min-width:1200px)');
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleLogout = () => {
     dispatch(logout());
   };
 
+  const handleGotoHomepage = () => {
+    history.push(getDashboardPath);
+  };
+
   const content = (
     <div className="sidebar-root">
-      <div className="top-logo">
-        <a href="/">
-          <b>PM ASYSTENT</b>
-        </a>
+      <div className="top-logo" onClick={handleGotoHomepage}>
+        <b>PM ASYSTENT</b>
       </div>
       <div className="project-wrapper">
-        <div className="project-block">
+        <div className="project-block" onClick={handleGotoHomepage}>
           <Apps className="project-icon" />
           <h3>Projekty</h3>
         </div>

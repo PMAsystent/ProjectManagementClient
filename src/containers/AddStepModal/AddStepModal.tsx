@@ -7,9 +7,11 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
 import { Modal } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectAccessToken } from '../../redux/auth/auth.slice';
 import { postStep } from '../../api/utils';
+import SnackbarUtils from '../../core/utils/SnackbarUtils';
+import { getProjects } from '../../redux/project/project.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
@@ -19,6 +21,7 @@ const validationSchema = yup.object({
 const AddStepModal: FC<any> = (props) => {
   const accessToken = useSelector(selectAccessToken);
   const projectId = props.projectId;
+  const dispatch = useDispatch();
 
   const getProjectId = () => {
     return projectId;
@@ -47,7 +50,17 @@ const AddStepModal: FC<any> = (props) => {
     const accessToken = getAccessToken();
     const projectId = getProjectId();
 
-    await postStep({ ...values, projectId }, accessToken);
+    await postStep({ ...values, projectId }, accessToken)
+      .then((response) => {
+        if (response.data) {
+          SnackbarUtils.success('Dodano step');
+          dispatch(getProjects());
+          props.handleClose();
+        }
+      })
+      .catch((error) => {
+        SnackbarUtils.error('Nie udało się dodać stepa');
+      });
   };
 
   return (

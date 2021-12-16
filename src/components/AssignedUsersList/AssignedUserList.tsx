@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import './styles.scss';
 import { Avatar } from '@mui/material';
+import { stringToColor } from '../../core/utils';
 
 const AssignedUserList: FC<{ users: any[]; addtionalActions?: any }> = ({ users, addtionalActions }) => {
   return (
@@ -14,10 +15,12 @@ const AssignedUserList: FC<{ users: any[]; addtionalActions?: any }> = ({ users,
       {users.length > 0 &&
         users.map((user) => {
           return (
-            <div className="users-list-item" key={user.id}>
+            <div key={user.userName} className="users-list-item">
               <div className="info">
-                <Avatar sx={{ width: 25, height: 25 }} src="https://cdn-icons-png.flaticon.com/512/194/194938.png" />
-                <span>{user.email}</span>
+                <Avatar key={user.userName} sx={{ bgcolor: stringToColor(user.userName) }}>
+                  {user.userName[0].toUpperCase()}
+                </Avatar>
+                <span>{user?.userName || user?.email}</span>
               </div>
               {addtionalActions && <div className="actions">{addtionalActions(user)}</div>}
             </div>

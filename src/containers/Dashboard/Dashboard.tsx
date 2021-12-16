@@ -5,7 +5,7 @@ import { getProjects, selectProjects, selectProjectsListFetchStatus } from 'redu
 import { projectType } from 'core/types/api/project.requests.types';
 import { clearProjectDetails } from '../../redux/project/project.slice';
 // components
-import AddProjectModal from 'containers/AddProjectModal/AddProjectModal';
+import FormProjectModal from 'containers/FormProjectModal/FormProjectModal';
 import BasicSpeedDial from 'components/BasicSpeedDial/BasicSpeedDial';
 import AddIcon from '@mui/icons-material/Add';
 import ProjectTile from 'components/ProjectTile/ProjectTile';
@@ -55,7 +55,7 @@ const MainLayout = () => {
       {projectsListFetchStatus === fetchStatues.REJECTED && <div>Some error</div>}
       {projectsListFetchStatus === fetchStatues.PENDING && <AuthSpinner />}
       <BasicSpeedDial actions={actions} />
-      {addProjectModal && <AddProjectModal open={addProjectModal} handleClose={() => setAddProjectModal(false)} />}
+      {addProjectModal && <FormProjectModal open={addProjectModal} handleClose={() => setAddProjectModal(false)} />}
     </div>
   );
 };
