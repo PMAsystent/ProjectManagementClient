@@ -161,7 +161,7 @@ export const projectReducer = createSlice({
   },
 });
 
-export const { clearProjectPostFetchStatus } = projectReducer.actions;
+export const { clearProjectPostFetchStatus, clearProjectDetails, clearProjectPutFetchStatus, setProjectAssignedUsers } = projectReducer.actions;
 
 export const selectProjects = (state: rootReducerInterface) => state.projects.projectList;
 export const selectProjectsListFetchStatus = (state: rootReducerInterface) => state.projects.projectListFetchStatus;
