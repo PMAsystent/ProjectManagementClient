@@ -3,6 +3,7 @@ import './styles.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProjects, selectProjects, selectProjectsListFetchStatus } from 'redux/project/project.slice';
 import { projectType } from 'core/types/api/project.requests.types';
+import { clearProjectDetails } from '../../redux/project/project.slice';
 // components
 import AddProjectModal from 'containers/AddProjectModal/AddProjectModal';
 import BasicSpeedDial from 'components/BasicSpeedDial/BasicSpeedDial';
@@ -28,6 +29,7 @@ const MainLayout = () => {
   );
 
   useEffect(() => {
+    dispatch(clearProjectDetails());
     dispatch(getProjects());
   }, [dispatch]);
   return (
