@@ -100,6 +100,9 @@ export const projectReducer = createSlice({
     clearProjectPostFetchStatus(state) {
       state.projectPostFetchStatus = null;
     },
+    clearProjectDetails(state) {
+      state.projectDetails = INIT_STATE.projectDetails;
+    },
     clearProjectPutFetchStatus(state) {
       state.projectPutFetchStatus = null;
     },
@@ -158,7 +161,7 @@ export const projectReducer = createSlice({
   },
 });
 
-export const { clearProjectPostFetchStatus, clearProjectPutFetchStatus, setProjectAssignedUsers } = projectReducer.actions;
+export const { clearProjectPostFetchStatus } = projectReducer.actions;
 
 export const selectProjects = (state: rootReducerInterface) => state.projects.projectList;
 export const selectProjectsListFetchStatus = (state: rootReducerInterface) => state.projects.projectListFetchStatus;

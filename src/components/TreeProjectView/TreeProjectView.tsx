@@ -4,60 +4,33 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectProjects } from '../../redux/project/project.slice';
+import { selectProjectDetails, selectProjects } from '../../redux/project/project.slice';
 import './styles.scss';
 import { projectType } from 'core/types/api/project.requests.types';
 import AddStepModal from '../../containers/AddStepModal/AddStepModal';
 import { useHistory } from 'react-router-dom';
 import { projectStep } from '../../core/types/api/step.request.types';
 
-interface projectTypeWithClassName extends projectType {
-  className: string;
-}
-
-const getInitialProjects = (projects: Array<projectType>): Array<projectTypeWithClassName> => {
-  return projects.map((project) => {
-    return {
-      ...project,
-      className: 'tree-item__project',
-    };
-  });
-};
-
 const TreeProjectView: FC<any> = () => {
   const history = useHistory();
   const projectsRedux = useSelector(selectProjects);
-  const initialProjects: Array<projectTypeWithClassName> = getInitialProjects(projectsRedux);
+  const projectDetails = useSelector(selectProjectDetails);
 
-  const [projects, setProjects] = useState<Array<projectTypeWithClassName>>(initialProjects);
-  const [expanded, setExpanded] = useState<Array<string>>(['1']);
   const [addStepModal, setAddStepModal] = useState<boolean>(false);
   const [projectId, setProjectId] = useState<number>(-1);
 
-  const addSelectedClassName = (project: projectTypeWithClassName) => {
-    const projectsCopy = initialProjects.map((project) => {
-      return { ...project };
-    });
+  const goToProjectDetails = (projectId: any, stepId?: any) => {
+    history.push(`/project/${projectId}/${stepId || ''}`);
+  };
 
-    const selectedProject = projectsCopy.find((projectCopy: projectTypeWithClassName) => projectCopy.id === project.id);
+  const getClassName = (project: projectType) => {
+    let result = 'tree-item__project';
 
-    if (typeof selectedProject !== 'undefined') {
-      selectedProject.className += ' selected-project';
+    if (project.id === projectDetails?.id) {
+      result += ' selected-project';
     }
 
-    setProjects(projectsCopy);
-  };
-
-  const setExpandedList = (project: projectType) => {
-    setExpanded([`${project.id}`]);
-  };
-
-  const handleOnProjectClick = async (id: number) => {
-    history.push(`/project/${id}`);
-  };
-
-  const handleOnStepClick = (projectTd: number, stepId: number) => {
-    history.push(`/project/${projectTd}/${stepId}`);
+    return result;
   };
 
   return (
@@ -67,19 +40,17 @@ const TreeProjectView: FC<any> = () => {
         className="sidebar-tree"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
-        expanded={expanded}
+        expanded={[`${projectDetails?.id}`]}
       >
-        {projects?.map((project) => {
+        {projectsRedux?.map((project) => {
           return (
             <TreeItem
               key={project.id}
               nodeId={`${project.id}`}
               label={`${project.name}`}
-              className={project.className}
+              className={getClassName(project)}
               onClick={() => {
-                setExpandedList(project);
-                addSelectedClassName(project);
-                handleOnProjectClick(project.id).then();
+                goToProjectDetails(project.id);
               }}
             >
               {project.steps?.map((step: projectStep) => {
@@ -90,7 +61,7 @@ const TreeProjectView: FC<any> = () => {
                     label={`${step.name} (${step.progressPercentage}%)`}
                     className="tree-item__task"
                     onClick={() => {
-                      handleOnStepClick(project.id, step.id);
+                      goToProjectDetails(project.id, step.id);
                     }}
                   />
                 );
