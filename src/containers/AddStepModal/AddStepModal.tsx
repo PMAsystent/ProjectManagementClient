@@ -15,7 +15,7 @@ import { getProjects } from '../../redux/project/project.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
-  description: yup.string().required('Opis jest wymagany').min(20, 'Opis musi mieć conajmniej 20 znaków'),
+  description: yup.string().required('Opis jest wymagany').min(10, 'Opis musi mieć conajmniej 10 znaków'),
 });
 
 const AddStepModal: FC<any> = (props) => {

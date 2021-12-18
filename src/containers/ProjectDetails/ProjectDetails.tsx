@@ -1,28 +1,31 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './styles.scss';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import BasicSpeedDial from '../../components/BasicSpeedDial/BasicSpeedDial';
+import BasicSpeedDial from 'components/BasicSpeedDial/BasicSpeedDial';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory, useParams } from 'react-router-dom';
-import { getDashboardPath } from '../../core/routes';
+import { getDashboardPath } from 'core/routes';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProject, selectProjectDetails, selectProjectDetailsFetchStatus } from '../../redux/project/project.slice';
-import { fetchStatues } from '../../core/enums/redux.statues';
+import { getProject, selectProjectDetails, selectProjectDetailsFetchStatus } from 'redux/project/project.slice';
+import { fetchStatues } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
-import TaskList from '../../components/TaskList/TaskList';
-import { taskType } from '../../core/enums/task.type';
-import { putTaskApi } from '../../api/utils';
-import SnackbarUtils from '../../core/utils/SnackbarUtils';
-import { selectAccessToken } from '../../redux/auth/auth.slice';
-import CustomButton from '../../components/CustomButton/CustomButton';
-import AvatarList from '../../components/AvatarList/AvatarList';
+import TaskList from 'components/TaskList/TaskList';
+import { taskType } from 'core/enums/task.type';
+import { putTaskApi } from 'api/utils';
+import SnackbarUtils from 'core/utils/SnackbarUtils';
+import { selectAccessToken } from 'redux/auth/auth.slice';
+import CustomButton from 'components/CustomButton/CustomButton';
+import AvatarList from 'components/AvatarList/AvatarList';
 import EditIcon from '@mui/icons-material/Edit';
 import FormProjectModal from '../FormProjectModal/FormProjectModal';
+import { projectStep } from 'core/types/api/step.request.types';
+import VisibilityGuard from 'core/hoc/VisibilityGuard';
 
 const ProjectDetails = () => {
+  const [step, setStep] = useState<null | projectStep>(null);
   const [editProjectModal, setEditProjectModal] = useState(false);
   const [columns, setColumns] = useState<any>({
     1: {
@@ -70,10 +73,6 @@ const ProjectDetails = () => {
 
     [history]
   );
-
-  if (stepid) {
-    // TODO: filter task with stepid from URL param
-  }
 
   const onDragEnd = async (result: any, columns: any, setColumns: any) => {
     const task = projectDetails?.projectTasks.find((task) => task.id === +result.draggableId);
@@ -134,6 +133,11 @@ const ProjectDetails = () => {
 
   useEffect(() => {
     if (projectDetailsFetchStatus === fetchStatues.FULFILLED) {
+      if (stepid && projectDetails?.projectSteps && projectDetails.projectSteps.length > 0) {
+        setStep(projectDetails.projectSteps.find((step) => step.id === +stepid) || null);
+      }
+      if (!stepid) setStep(null);
+
       setColumns({
         1: {
           name: taskType.IN_PROGRESS,
@@ -152,7 +156,7 @@ const ProjectDetails = () => {
         },
       });
     }
-  }, [projectDetails?.projectTasks, projectDetailsFetchStatus]);
+  }, [projectDetails?.projectSteps, projectDetails?.projectTasks, projectDetailsFetchStatus, stepid]);
 
   return (
     <section className="project-container">
@@ -161,7 +165,12 @@ const ProjectDetails = () => {
           <div className="project-header">
             <div className="info">
               <div className="header-item">
-                <h1> {projectDetails?.name}</h1> <EditIcon onClick={() => setEditProjectModal(true)} />
+                <h1>
+                  {projectDetails?.name} {step?.name && `- ${step.name}`}
+                </h1>
+                <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.memberType || ''}>
+                  <EditIcon onClick={() => setEditProjectModal(true)} />
+                </VisibilityGuard>
               </div>
               <div className="info-item">
                 <p>Aktywne Zadania</p>
@@ -185,7 +194,7 @@ const ProjectDetails = () => {
               </div>
               <div className="info-item team">
                 <p>Zespół</p>
-                <AvatarList users={projectDetails?.projectAssignedUsers || []} />
+                <AvatarList member={projectDetails?.currentUserInfoInProject?.memberType || ''} users={projectDetails?.projectAssignedUsers || []} />
               </div>
               <div className="info-item">
                 <CustomButton icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>

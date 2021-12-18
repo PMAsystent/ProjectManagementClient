@@ -1,16 +1,12 @@
 import './styles.scss';
 import CustomInput from 'components/CustomInput/CustomInput';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import * as yup from 'yup';
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButton from 'components/CustomButton/CustomButton';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
-const validationSchemaBasicInfo = yup.object({
-  firstName: yup.string().required('Imię jest wymagane!'),
-  lastName: yup.string().required('Nazwisko jest wymagane!'),
-});
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentUser, postNewEmail, postNewPassword, selectUser } from 'redux/auth/auth.slice';
 
 const validationSchemaPassword = yup.object({
   password: yup.string().required('Obecne hasło jest wymagane!'),
@@ -33,13 +29,9 @@ const validationSchemaEmail = yup.object({
     .required('Potwierdzenie email jest wymagane!'),
 });
 const UserDetails = () => {
-  const defaultValueBasicInfo = useMemo(
-    () => ({
-      firstName: 'Imię',
-      lastName: 'Nazwisko',
-    }),
-    []
-  );
+  const dispatch = useDispatch();
+  const currentUser = useSelector(selectUser);
+
   const defaultValuePassword = useMemo(
     () => ({
       password: '',
@@ -57,26 +49,10 @@ const UserDetails = () => {
   );
 
   const {
-    register: registerBasicInfo,
-    handleSubmit: handleSubmitBasicInfo,
-    formState: { errors: errorsBasicInfo },
-    reset: resetBasicInfo,
-    control: controlBasicInfo,
-  } = useForm({
-    mode: 'onChange',
-    defaultValues: useMemo(() => {
-      return defaultValueBasicInfo;
-    }, [defaultValueBasicInfo]),
-    resolver: yupResolver(validationSchemaBasicInfo),
-  });
-
-  const {
     register: registerPassword,
     handleSubmit: handleSubmitPassword,
     formState: { errors: errorsPassword },
-    control: controlPassword,
   } = useForm({
-    mode: 'onChange',
     defaultValues: useMemo(() => {
       return defaultValuePassword;
     }, [defaultValuePassword]),
@@ -86,32 +62,38 @@ const UserDetails = () => {
     register: registerEmail,
     handleSubmit: handleSubmitEmail,
     formState: { errors: errorsEmail },
-    control: controlEmail,
   } = useForm({
-    mode: 'onChange',
     defaultValues: useMemo(() => {
       return defaultValueEmail;
     }, [defaultValueEmail]),
     resolver: yupResolver(validationSchemaEmail),
   });
 
-  const { isDirty: isDirtyBasicInfo, isValid: isValidBasicInfo } = useFormState({ control: controlBasicInfo });
-  const { isDirty: isDirtyEmail, isValid: isValidEmail } = useFormState({ control: controlEmail });
-  const { isDirty: isDirtyPassword, isValid: isValidPassword } = useFormState({ control: controlPassword });
+  const onSubmitChangePassword = (values: any) => {
+    if (currentUser) {
+      const payload = {
+        oldPassword: values.password,
+        newPassword: values.newPassword,
+        userName: currentUser.userName,
+        email: currentUser.email,
+      };
+      dispatch(postNewPassword(payload));
+    }
+  };
+  const onSubmitChangeEmail = (values: any) => {
+    if (currentUser) {
+      const payload = {
+        newEmail: values.newEmail,
+        userName: currentUser.userName,
+        email: currentUser.email,
+      };
+      dispatch(postNewEmail(payload));
+    }
+  };
 
-  const onSubmitBasicInfo = (data: any) => {
-    console.log('zapis: ', data);
-  };
-  const onSubmitChangePassword = (data: any) => {
-    console.log('zapis hasło: ', data);
-  };
-  const onSubmitChangeEmail = (data: any) => {
-    console.log('zapis email: ', data);
-  };
-
-  const onResetClickBasicInfo = async () => {
-    resetBasicInfo();
-  };
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
 
   return (
     <div className="user-details-container">
@@ -121,50 +103,37 @@ const UserDetails = () => {
       <div className="segments-container">
         <div className="segment">
           <div className="segment-headline">
-            <h2>Dane użytkownika</h2>
+            <h2>Email</h2>
           </div>
           <div className="segment-content">
-            <form onSubmit={handleSubmitBasicInfo(onSubmitBasicInfo)} key={'register'}>
+            <form onSubmit={handleSubmitEmail(onSubmitChangeEmail)} key={'change-email'}>
               <div className="input-field">
-                <h3>Imię</h3>
-                <CustomInput
-                  {...registerBasicInfo('firstName')}
-                  placeholder="Imię"
-                  className="dark"
-                  type="text"
-                  helperText={errorsBasicInfo.firstName?.message}
-                  error={!!errorsBasicInfo.firstName}
-                />
+                <h3>Obecny email</h3>
+                <CustomInput value={currentUser?.email || ''} className="dark" disabled={true} />
               </div>
               <div className="input-field">
-                <h3>Nazwisko</h3>
+                <h3>Nowy email</h3>
                 <CustomInput
-                  {...registerBasicInfo('lastName')}
-                  placeholder="Nazwisko"
-                  type="text"
+                  {...registerEmail('newEmail')}
+                  placeholder="Nowy email"
+                  type="email"
                   className="dark"
-                  helperText={errorsBasicInfo.lastName?.message}
-                  error={!!errorsBasicInfo.lastName}
+                  helperText={errorsEmail.newEmail?.message}
+                  error={!!errorsEmail.newEmail}
+                />
+                <CustomInput
+                  {...registerEmail('newEmailConfirm')}
+                  placeholder="Potwierdź nowy email"
+                  type="email"
+                  className="dark"
+                  helperText={errorsEmail.newEmailConfirm?.message}
+                  error={!!errorsEmail.newEmailConfirm}
                 />
               </div>
 
               <div className="buttons-container">
-                <CustomButton
-                  type="submit"
-                  className="btn btn-success"
-                  disabled={!(isDirtyBasicInfo && isValidBasicInfo)}
-                  onClick={onSubmitBasicInfo}
-                >
-                  Zapisz zmiany
-                </CustomButton>
-                <CustomButton
-                  type="submit"
-                  icon={<ArrowBackIcon />}
-                  className="btn btn-go-back"
-                  disabled={!isDirtyBasicInfo}
-                  onClick={onResetClickBasicInfo}
-                >
-                  Cofnij zmiany
+                <CustomButton type="submit" className="btn btn-success">
+                  Zmień email
                 </CustomButton>
               </div>
             </form>
@@ -172,7 +141,7 @@ const UserDetails = () => {
         </div>
         <div className="segment">
           <div className="segment-headline">
-            <h2>Bezpieczeństwo</h2>
+            <h2>Hasło</h2>
           </div>
           <div className="segment-content">
             <form onSubmit={handleSubmitPassword(onSubmitChangePassword)} key={'change-password'}>
@@ -208,51 +177,8 @@ const UserDetails = () => {
               </div>
 
               <div className="buttons-container">
-                <CustomButton
-                  type="submit"
-                  className="btn btn-success"
-                  disabled={!(isValidPassword && isDirtyPassword)}
-                  onClick={onSubmitChangePassword}
-                >
+                <CustomButton type="submit" className="btn btn-success">
                   Zmień hasło
-                </CustomButton>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="segment">
-          <div className="segment-headline">
-            <h2>Email</h2>
-          </div>
-          <div className="segment-content">
-            <form onSubmit={handleSubmitEmail(onSubmitChangeEmail)} key={'change-email'}>
-              <div className="input-field">
-                <h3>Obecny email</h3>
-                <CustomInput className="dark" disabled={true} />
-              </div>
-              <div className="input-field">
-                <h3>Nowy email</h3>
-                <CustomInput
-                  {...registerEmail('newEmail')}
-                  placeholder="Nowy email"
-                  type="email"
-                  className="dark"
-                  helperText={errorsEmail.newEmail?.message}
-                  error={!!errorsEmail.newEmail}
-                />
-                <CustomInput
-                  {...registerEmail('newEmailConfirm')}
-                  placeholder="Potwierdź nowy email"
-                  type="email"
-                  className="dark"
-                  helperText={errorsEmail.newEmailConfirm?.message}
-                  error={!!errorsEmail.newEmailConfirm}
-                />
-              </div>
-
-              <div className="buttons-container">
-                <CustomButton type="submit" className="btn btn-success" disabled={!(isValidEmail && isDirtyEmail)} onClick={onSubmitChangeEmail}>
-                  Zmień email
                 </CustomButton>
               </div>
             </form>

@@ -3,9 +3,14 @@ import { NotificationsNone, Settings, Search, Menu } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { getUserDetailsPath } from 'core/routes';
 import './styles.scss';
+import { useSelector } from 'react-redux';
+import { selectUser } from 'redux/auth/auth.slice';
+import { stringToColor } from '../../../core/utils';
+import React from 'react';
 
 const Navbar = (props: { onSidebarOpen: any }) => {
   const { onSidebarOpen } = props;
+  const currentUser = useSelector(selectUser);
 
   const history = useHistory();
 
@@ -39,8 +44,14 @@ const Navbar = (props: { onSidebarOpen: any }) => {
             <Settings className="navbar-icon" />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Profile">
-          <Avatar className="top-avatar" src="https://cdn-icons-png.flaticon.com/512/194/194938.png" onClick={onAvatarClick} />
+        <Tooltip title="Edycja profilu">
+          {currentUser ? (
+            <Avatar className="top-avatar" sx={{ bgcolor: stringToColor(currentUser.userName) }} onClick={onAvatarClick}>
+              {currentUser.userName[0].toUpperCase()}
+            </Avatar>
+          ) : (
+            <Avatar className="top-avatar" src="https://cdn-icons-png.flaticon.com/512/194/194938.png" onClick={onAvatarClick} />
+          )}
         </Tooltip>
       </Toolbar>
     </AppBar>

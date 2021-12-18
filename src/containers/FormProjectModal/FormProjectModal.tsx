@@ -197,24 +197,32 @@ const FormProjectModal: FC<any> = (props) => {
                     <div className="label">Użytkownicy</div>
                     <AssignedUserList
                       users={users}
-                      addtionalActions={(user: any) => {
+                      addtionalActions={(user: any, isCurrentUser = false) => {
                         return (
                           <>
-                            <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user.id, e.target.value)}>
+                            <Select
+                              value={isCurrentUser ? projectMemberEnum.SUPER_MEMBER.value : user.memberType}
+                              onChange={(e) => handleOnChangeMember(user.id, e.target.value)}
+                              readOnly={isCurrentUser}
+                            >
                               {Object.values(projectMemberEnum).map((member: { name: string; value: string }) => (
                                 <MenuItem key={member.value} value={member.value}>
                                   {member.name}
                                 </MenuItem>
                               ))}
                             </Select>
-                            <Select value={user.projectRole} onChange={(e) => handleOnChangeRole(user.id, e.target.value)}>
+                            <Select
+                              value={isCurrentUser ? projectRoleEnum.MANAGER.value : user.projectRole}
+                              onChange={(e) => handleOnChangeRole(user.id, e.target.value)}
+                              readOnly={isCurrentUser}
+                            >
                               {Object.values(projectRoleEnum).map((role: { name: string; value: string }) => (
                                 <MenuItem key={role.value} value={role.value}>
                                   {role.name}
                                 </MenuItem>
                               ))}
                             </Select>
-                            <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />
+                            {!isCurrentUser && <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />}
                           </>
                         );
                       }}
