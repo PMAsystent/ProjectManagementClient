@@ -12,7 +12,7 @@ import { clearTaskPostFetchStatus, postTask, selectTaskPostFetchStatus } from '.
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
-import PriorityField from 'components/PriorityField/PriorityField';
+import CustomPriorityField from 'components/CustomPriorityField/CustomPriorityField';
 import PriorityNameDisplayer from 'components/PriorityNameDisplayer/PriorityNameDisplayer';
 import { priorityNumberToString } from 'core/utils';
 
@@ -52,7 +52,7 @@ const AddTaskModal: FC<any> = (props) => {
     values.priority = priorityNumberToString(values.priority);
     console.log({ stepId: stepId, progressPercentage: 0, taskStatus: 'todo', ...values });
     dispatch(postTask({ stepId: stepId, progressPercentage: 0, taskStatus: 'todo', ...values }));
-    
+
   };
 
   useCloseModalOnDoneFetchStatus({ status: taskPostFetchStatus, clearFunction: clearTaskPostFetchStatus, handleClose: props.handleClose });
@@ -98,7 +98,7 @@ const AddTaskModal: FC<any> = (props) => {
               <div className="task-priority">
                 <p>Priorytet</p>
                 <span className="priority-span">
-                  <PriorityField name="priority" />
+                  <CustomPriorityField name="priority" />
                   <PriorityNameDisplayer priorityFieldName="priority" />
                 </span>
               </div>
