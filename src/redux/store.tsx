@@ -4,7 +4,7 @@ import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } fro
 import storage from 'redux-persist/lib/storage';
 import createFilter from 'redux-persist-transform-filter';
 
-const saveAccessTokenFilter = createFilter('auth', ['accessToken']);
+const saveAccessTokenFilter = createFilter('auth', ['accessToken', 'user']);
 
 const persistConfig = {
   key: 'auth',

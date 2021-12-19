@@ -1,4 +1,4 @@
-export interface projectAssignments {
+export interface projectAssignmentsType {
   userId: number;
   userName: string;
   projectRole: string;

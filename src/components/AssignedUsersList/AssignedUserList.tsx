@@ -1,28 +1,44 @@
 import React, { FC } from 'react';
 import './styles.scss';
 import { Avatar } from '@mui/material';
+import { stringToColor } from 'core/utils';
+import { selectUser } from 'redux/auth/auth.slice';
+import { useSelector } from 'react-redux';
 
 const AssignedUserList: FC<{ users: any[]; addtionalActions?: any }> = ({ users, addtionalActions }) => {
+  const currentUser = useSelector(selectUser);
+
   return (
     <div className="users-list-container">
-      <div className="users-list-item">
-        <div className="info">
-          <Avatar sx={{ width: 25, height: 25 }} src="https://cdn-icons-png.flaticon.com/512/194/194938.png" />
-          <span>Obecnie zalogowany</span>
+      {currentUser && (
+        <div key={currentUser.userName} className="users-list-item">
+          <div className="info">
+            <Avatar key={currentUser.userName} sx={{ bgcolor: stringToColor(currentUser.userName) }}>
+              {currentUser.userName[0].toUpperCase()}
+            </Avatar>
+            <span>{currentUser?.userName || currentUser?.email}</span>
+          </div>
+          {addtionalActions && (
+            <div className="actions">{addtionalActions(users.find((user) => user.userId === currentUser.userId) || currentUser, true)}</div>
+          )}
         </div>
-      </div>
+      )}
       {users.length > 0 &&
-        users.map((user) => {
-          return (
-            <div className="users-list-item" key={user.id}>
-              <div className="info">
-                <Avatar sx={{ width: 25, height: 25 }} src="https://cdn-icons-png.flaticon.com/512/194/194938.png" />
-                <span>{user.email}</span>
+        users
+          .filter((user) => user.userId !== currentUser?.userId)
+          .map((user) => {
+            return (
+              <div key={user.userName} className="users-list-item">
+                <div className="info">
+                  <Avatar key={user.userName} sx={{ bgcolor: stringToColor(user.userName) }}>
+                    {user.userName[0].toUpperCase()}
+                  </Avatar>
+                  <span>{user?.userName || user?.email}</span>
+                </div>
+                {addtionalActions && <div className="actions">{addtionalActions(user)}</div>}
               </div>
-              {addtionalActions && <div className="actions">{addtionalActions(user)}</div>}
-            </div>
-          );
-        })}
+            );
+          })}
     </div>
   );
 };

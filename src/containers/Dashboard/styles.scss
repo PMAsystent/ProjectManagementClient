@@ -1,3 +1,5 @@
+@use '../../assets/styles/colors';
+
 .container {
   display: flex;
   flex-direction: row;
@@ -11,5 +13,22 @@
     margin: $margin;
     height: $size;
     width: $size;
+  }
+  .no-projects {
+    color: colors.$textColor;
+    padding: 50px 15px;
+    h1 {
+      color: #fff;
+    }
+    .add-new-project {
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: dashed 3px colors.$textColor;
+      padding: 30px 0;
+      font-weight: 500;
+      font-size: 1.5rem;
+    }
   }
 }
