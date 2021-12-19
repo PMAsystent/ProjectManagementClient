@@ -1,0 +1,30 @@
+@use '../../assets/styles/colors';
+
+.circle {
+  transition: color 500ms;
+  transition: opacity 500ms;
+  &-orange {
+    transition: color 500ms;
+    transition: opacity 500ms;
+    color: colors.$primaryColor;
+    &-hover {
+      transition: color 300ms;
+      color: colors.$primaryColor;
+      opacity: 0.4;
+    }
+  }
+}
+span {
+  display: flex;
+  align-items: center;
+  h4 {
+    margin-left: 2%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .priority-picker {
+    flex-basis: auto;
+    padding-right: 15px;
+  }
+}

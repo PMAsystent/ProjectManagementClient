@@ -14,7 +14,7 @@ import { fetchStatues } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from 'components/TaskList/TaskList';
 import { taskType } from 'core/enums/task.type';
-import { putTaskApi } from 'api/utils';
+import { postTaskApi } from 'api/utils';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { selectAccessToken } from 'redux/auth/auth.slice';
 import CustomButton from 'components/CustomButton/CustomButton';
@@ -103,7 +103,7 @@ const ProjectDetails = () => {
         },
       });
       if (task) {
-        await putTaskApi({ ...task, description: 'test desc', taskStatus: destColumn.name }, accessToken || '').catch((error) => {
+        await postTaskApi({ ...task, description: 'test desc', taskStatus: destColumn.name }, accessToken || '').catch((error) => {
           destItems.splice(destination.index, 0, removed);
           setColumns({
             ...columns,
@@ -204,9 +204,11 @@ const ProjectDetails = () => {
                 <CustomButton icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>
                   Nowy Step
                 </CustomButton>
-                <CustomButton icon={<AddTaskIcon />} className="btn-project">
-                  Nowy Task
-                </CustomButton>
+                {stepid && (
+                  <CustomButton icon={<AddTaskIcon />} className="btn-project">
+                    Nowy Task
+                  </CustomButton>
+                )}
               </div>
               <div className="info-item description">
                 <p>Opis</p>
@@ -235,7 +237,7 @@ const ProjectDetails = () => {
         </>
       )}
       <BasicSpeedDial actions={actions} />
-      {addTaskModal && <AddTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} />}
+      {stepid && addTaskModal && <AddTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} stepId={stepid} />}
       {editProjectModal && projectDetails && (
         <FormProjectModal
           project={{

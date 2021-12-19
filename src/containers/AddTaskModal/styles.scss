@@ -1,6 +1,6 @@
 @use '../../assets/styles/colors';
 
-.add-project-container {
+.add-task-container {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -17,7 +17,7 @@
     font-weight: 900;
     font-style: oblique;
   }
-  .project-form {
+  .task-form {
     flex-basis: 50%;
     padding: 15px;
     .custom-input {
@@ -27,31 +27,11 @@
       margin-bottom: 35px;
     }
   }
-  .task-priority {
-    flex-basis: 50%;
 
-    .circle {
-      transition: color 500ms;
-      transition: opacity 500ms;
-      &-orange {
-        transition: color 500ms;
-        transition: opacity 500ms;
-        color: colors.$primaryColor;
-        &-hover {
-          transition: color 300ms;
-          color: colors.$primaryColor;
-          opacity: 0.4;
-        }
-      }
-    }
-
-    span {
-      display: flex;
-      align-items: center;
-      h4 {
-        margin-left: 2%;
-      }
-    }
+  .priority-span {
+    display: flex;
+    flex-direction: row;
+    max-height: 20px;
   }
   .assigns-form {
     flex-basis: 50%;
@@ -79,13 +59,10 @@
     width: 90%;
     margin: 15px auto;
     padding-left: 10px;
-    .project-form {
+    .task-form {
       flex-basis: 100%;
     }
-    .task-priority {
-      flex-basis: auto;
-      padding-right: 15px;
-    }
+
     .assigns-form {
       flex-basis: 100%;
     }
