@@ -2,23 +2,23 @@ import { rootReducerInterface } from '../rootReducer';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { projectTask } from 'core/types/api/task.request.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
-import { putTaskApi } from '../../api/utils';
+import { postTaskApi } from '../../api/utils';
 
 export interface taskReducerInterface {
-  taskPutFetchStatus: null | string;
+  taskPostFetchStatus: null | string;
 }
 
 const INIT_STATE: taskReducerInterface = {
-  taskPutFetchStatus: null,
+  taskPostFetchStatus: null,
 };
 
-export const putTask = createAsyncThunk<any, projectTask, { state: rootReducerInterface; rejectValue: string }>(
+export const postTask = createAsyncThunk<any, projectTask, { state: rootReducerInterface; rejectValue: string }>(
   'task/postTask',
   async (data, { rejectWithValue, getState }) => {
     const {
       auth: { accessToken },
     } = getState();
-    putTaskApi(data, accessToken || '')
+    postTaskApi(data, accessToken || '')
       .then((response) => {
         return response.data;
       })
@@ -32,24 +32,25 @@ export const taskReducer = createSlice({
   name: 'tasks',
   initialState: INIT_STATE,
   reducers: {
-    clearTaskPutFetchStatus(state) {
-      state.taskPutFetchStatus = null;
+    clearTaskPostFetchStatus(state) {
+      state.taskPostFetchStatus = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(putTask.pending, (state, action) => {
-        state.taskPutFetchStatus = action.meta.requestStatus;
+      .addCase(postTask.pending, (state, action) => {
+        state.taskPostFetchStatus = action.meta.requestStatus;
       })
-      .addCase(putTask.fulfilled, (state, action) => {
-        state.taskPutFetchStatus = action.meta.requestStatus;
+      .addCase(postTask.fulfilled, (state, action) => {
+        state.taskPostFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.success('Dodano taska');
       })
-      .addCase(putTask.rejected, (state, action) => {
-        state.taskPutFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.error('Wsytąpił problem z aktualizacją');
+      .addCase(postTask.rejected, (state, action) => {
+        state.taskPostFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error('Dodanie taska nie powiodło się');
       });
   },
 });
 
-export const { clearTaskPutFetchStatus } = taskReducer.actions;
-export const selectTaskPutFetchStatus = (state: rootReducerInterface) => state.tasks.taskPutFetchStatus;
+export const { clearTaskPostFetchStatus: clearTaskPostFetchStatus } = taskReducer.actions;
+export const selectTaskPostFetchStatus = (state: rootReducerInterface) => state.tasks.taskPostFetchStatus;

@@ -1,3 +1,4 @@
+import { taskPriority } from 'core/enums/task.priority';
 import { createBrowserHistory } from 'history';
 
 export const history = createBrowserHistory();
@@ -20,4 +21,14 @@ export const stringToColor = (string: string) => {
   /* eslint-enable no-bitwise */
 
   return color;
+};
+
+export const priorityNumberToString = (value: number) => {
+  if (value <= 2) {
+    return taskPriority.LOW;
+  } else if (value <= 4) {
+    return taskPriority.MEDIUM;
+  } else {
+    return taskPriority.HIGH;
+  }
 };

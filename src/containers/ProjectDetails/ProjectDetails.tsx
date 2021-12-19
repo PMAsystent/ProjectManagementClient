@@ -14,7 +14,7 @@ import { fetchStatues } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from 'components/TaskList/TaskList';
 import { taskType } from 'core/enums/task.type';
-import { putTaskApi } from 'api/utils';
+import { postTaskApi } from 'api/utils';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { selectAccessToken } from 'redux/auth/auth.slice';
 import CustomButton from 'components/CustomButton/CustomButton';
@@ -22,6 +22,7 @@ import AvatarList from 'components/AvatarList/AvatarList';
 import EditIcon from '@mui/icons-material/Edit';
 import FormProjectModal from '../FormProjectModal/FormProjectModal';
 import { projectStep } from 'core/types/api/step.request.types';
+import AddTaskModal from 'containers/AddTaskModal/AddTaskModal';
 import VisibilityGuard from 'core/hoc/VisibilityGuard';
 
 const ProjectDetails = () => {
@@ -46,8 +47,9 @@ const ProjectDetails = () => {
   });
   const [activeTasks, setActiveTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
+  const [addTaskModal, setAddTaskModal] = useState(false);
+  const projectDetails = useSelector(selectProjectDetails);
   const { projectid, stepid } = useParams<{ projectid: string; stepid: string }>();
-  let projectDetails = useSelector(selectProjectDetails);
   const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
   const accessToken = useSelector(selectAccessToken);
   const dispatch = useDispatch();
@@ -67,7 +69,9 @@ const ProjectDetails = () => {
       {
         icon: <AddTaskIcon />,
         name: 'Dodaj nowy task',
-        handleOnClick: () => {},
+        handleOnClick: () => {
+          setAddTaskModal(true);
+        },
       },
     ],
 
@@ -99,7 +103,7 @@ const ProjectDetails = () => {
         },
       });
       if (task) {
-        await putTaskApi({ ...task, description: 'test desc', taskStatus: destColumn.name }, accessToken || '').catch((error) => {
+        await postTaskApi({ ...task, description: 'test desc', taskStatus: destColumn.name }, accessToken || '').catch((error) => {
           destItems.splice(destination.index, 0, removed);
           setColumns({
             ...columns,
@@ -200,9 +204,11 @@ const ProjectDetails = () => {
                 <CustomButton icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>
                   Nowy Step
                 </CustomButton>
-                <CustomButton icon={<AddTaskIcon />} className="btn-project">
-                  Nowy Task
-                </CustomButton>
+                {stepid && (
+                  <CustomButton icon={<AddTaskIcon />} className="btn-project">
+                    Nowy Task
+                  </CustomButton>
+                )}
               </div>
               <div className="info-item description">
                 <p>Opis</p>
@@ -231,6 +237,7 @@ const ProjectDetails = () => {
         </>
       )}
       <BasicSpeedDial actions={actions} />
+      {stepid && addTaskModal && <AddTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} stepId={stepid} />}
       {editProjectModal && projectDetails && (
         <FormProjectModal
           project={{

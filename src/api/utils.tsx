@@ -19,8 +19,8 @@ export const postStep = async (data: projectStep, accessToken: string | null) =>
   return await instance.post('/Step', data, { headers: { authorization: `Bearer ${accessToken}` } });
 };
 
-export const putTaskApi = async (data: projectTask, accessToken: string) => {
-  return await instance.put('/Tasks', data, { headers: { authorization: `Bearer ${accessToken}` } });
+export const postTaskApi = async (data: projectTask, accessToken: string) => {
+  return await instance.post('/Tasks', data, { headers: { authorization: `Bearer ${accessToken}` } });
 };
 
 export const getProjectApi = async (projectId: number, accessToken: string | null) => {
