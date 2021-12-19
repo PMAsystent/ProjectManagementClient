@@ -50,7 +50,12 @@ const MainLayout = () => {
             })}
           </>
         ) : (
-          <h1> No projects </h1>
+          <div className="no-projects">
+            <h1>Nie znaleziono żadnego projektu</h1>
+            <div className="add-new-project" onClick={() => setAddProjectModal(true)}>
+              Dodaj nowy projekt <AddIcon />
+            </div>
+          </div>
         ))}
       {projectsListFetchStatus === fetchStatues.REJECTED && <div>Some error</div>}
       {projectsListFetchStatus === fetchStatues.PENDING && <AuthSpinner />}

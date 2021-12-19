@@ -4,12 +4,13 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectProjectDetails, selectProjects } from '../../redux/project/project.slice';
+import { selectProjectDetails, selectProjects } from 'redux/project/project.slice';
 import './styles.scss';
 import { projectType } from 'core/types/api/project.requests.types';
-import AddStepModal from '../../containers/AddStepModal/AddStepModal';
+import AddStepModal from 'containers/AddStepModal/AddStepModal';
 import { useHistory } from 'react-router-dom';
-import { projectStep } from '../../core/types/api/step.request.types';
+import { projectStep } from 'core/types/api/step.request.types';
+import VisibilityGuard from 'core/hoc/VisibilityGuard';
 
 const TreeProjectView: FC<any> = () => {
   const history = useHistory();
@@ -66,15 +67,17 @@ const TreeProjectView: FC<any> = () => {
                   />
                 );
               })}
-              <TreeItem
-                nodeId={`${project.id}_Add`}
-                label="Dodaj step"
-                className="tree-item__step-add"
-                onClick={() => {
-                  setProjectId(project.id);
-                  setAddStepModal(true);
-                }}
-              />
+              <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.memberType || ''}>
+                <TreeItem
+                  nodeId={`${project.id}_Add`}
+                  label="Dodaj step"
+                  className="tree-item__step-add"
+                  onClick={() => {
+                    setProjectId(project.id);
+                    setAddStepModal(true);
+                  }}
+                />
+              </VisibilityGuard>
             </TreeItem>
           );
         })}

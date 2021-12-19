@@ -1,11 +1,12 @@
 import React, { FC, useState } from 'react';
 import { Avatar, Stack, Tooltip } from '@mui/material';
-import { stringToColor } from '../../core/utils';
-import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
+import { stringToColor } from 'core/utils';
+import { projectAssignmentsType } from 'core/types/api/assigned.request.types';
 import AddIcon from '@mui/icons-material/Add';
-import ProjectAssignedModal from '../../containers/ProjectAssignedModal/ProjectAssignedModal';
+import ProjectAssignedModal from 'containers/ProjectAssignedModal/ProjectAssignedModal';
+import VisibilityGuard from 'core/hoc/VisibilityGuard';
 
-const AvatarList: FC<{ users: Array<projectAssignmentsType> }> = ({ users }) => {
+const AvatarList: FC<{ users: Array<projectAssignmentsType>; member: string }> = ({ users, member }) => {
   const [assignedUsersModalOpen, setAssignedUsersModalOpen] = useState(false);
 
   return (
@@ -47,11 +48,13 @@ const AvatarList: FC<{ users: Array<projectAssignmentsType> }> = ({ users }) => 
           );
         })
       )}
-      <Tooltip title="Edycja przypisanych użytkowników">
-        <Avatar onClick={() => setAssignedUsersModalOpen(true)} sx={{ cursor: 'pointer', bgcolor: 'rgb(255, 153, 0)' }}>
-          <AddIcon />
-        </Avatar>
-      </Tooltip>
+      <VisibilityGuard member={member}>
+        <Tooltip title="Edycja przypisanych użytkowników">
+          <Avatar onClick={() => setAssignedUsersModalOpen(true)} sx={{ cursor: 'pointer', bgcolor: 'rgb(255, 153, 0)' }}>
+            <AddIcon />
+          </Avatar>
+        </Tooltip>
+      </VisibilityGuard>
       {assignedUsersModalOpen && <ProjectAssignedModal open={assignedUsersModalOpen} handleClose={() => setAssignedUsersModalOpen(false)} />}
     </Stack>
   );

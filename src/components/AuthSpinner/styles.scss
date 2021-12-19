@@ -1,0 +1,12 @@
+@use '../../assets/styles/colors';
+
+.auth-circle-container {
+  width: 100%;
+  height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    color: colors.$primaryColor;
+  }
+}

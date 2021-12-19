@@ -132,10 +132,10 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
             <div className="label">Użytkownicy</div>
             <AssignedUserList
               users={users}
-              addtionalActions={(user: any) => {
+              addtionalActions={(user: any, isCurrentUser = false) => {
                 return (
                   <>
-                    <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user, e.target.value)}>
+                    <Select readOnly={isCurrentUser} value={user.memberType} onChange={(e) => handleOnChangeMember(user, e.target.value)}>
                       {Object.values(projectMemberEnum).map((member: { name: string; value: string }) => (
                         <MenuItem key={member.value} value={member.value}>
                           {member.name}
