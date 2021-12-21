@@ -67,7 +67,7 @@ const TreeProjectView: FC<any> = () => {
                   />
                 );
               })}
-              <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.memberType || ''}>
+              <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
                 <TreeItem
                   nodeId={`${project.id}_Add`}
                   label="Dodaj step"

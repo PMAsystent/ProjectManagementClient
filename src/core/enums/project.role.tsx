@@ -1,18 +1,10 @@
 export const projectRoleEnum = {
-  TESTER: {
-    value: 'Tester',
-    name: 'Tester',
+  MEMBER: {
+    value: 'Member',
+    name: 'Członek',
   },
-  STAKEHOLDER: {
-    value: 'Stakeholder',
-    name: 'Klient',
-  },
-  MANAGER: {
-    value: 'Manager',
-    name: 'Manager',
-  },
-  DEVELOPER: {
-    value: 'Developer',
-    name: 'Developer',
+  SUPER_MEMBER: {
+    value: 'SuperMember',
+    name: 'Administrator',
   },
 };

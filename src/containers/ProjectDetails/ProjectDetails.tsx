@@ -172,7 +172,7 @@ const ProjectDetails = () => {
                 <h1>
                   {projectDetails?.name} {step?.name && `- ${step.name}`}
                 </h1>
-                <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.memberType || ''}>
+                <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
                   <EditIcon onClick={() => setEditProjectModal(true)} />
                 </VisibilityGuard>
               </div>
@@ -198,7 +198,7 @@ const ProjectDetails = () => {
               </div>
               <div className="info-item team">
                 <p>Zespół</p>
-                <AvatarList member={projectDetails?.currentUserInfoInProject?.memberType || ''} users={projectDetails?.projectAssignedUsers || []} />
+                <AvatarList member={projectDetails?.currentUserInfoInProject?.projectRole || ''} users={projectDetails?.projectAssignedUsers || []} />
               </div>
               <div className="info-item">
                 <CustomButton icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>

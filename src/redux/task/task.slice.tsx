@@ -52,5 +52,5 @@ export const taskReducer = createSlice({
   },
 });
 
-export const { clearTaskPostFetchStatus: clearTaskPostFetchStatus } = taskReducer.actions;
+export const { clearTaskPostFetchStatus } = taskReducer.actions;
 export const selectTaskPostFetchStatus = (state: rootReducerInterface) => state.tasks.taskPostFetchStatus;

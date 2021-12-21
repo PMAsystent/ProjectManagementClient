@@ -55,8 +55,8 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
         postProjectAssignments({
           userId: value.id,
           projectId: +projectid,
-          projectRole: projectRoleEnum.DEVELOPER.value,
-          memberType: projectMemberEnum.MEMBER.value,
+          projectRole: projectRoleEnum.MEMBER.value,
+          memberType: projectMemberEnum.DEVELOPER.value,
         })
       );
     } else {
@@ -135,17 +135,17 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
               addtionalActions={(user: any, isCurrentUser = false) => {
                 return (
                   <>
-                    <Select readOnly={isCurrentUser} value={user.memberType} onChange={(e) => handleOnChangeMember(user, e.target.value)}>
-                      {Object.values(projectMemberEnum).map((member: { name: string; value: string }) => (
-                        <MenuItem key={member.value} value={member.value}>
-                          {member.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <Select value={user.projectRole} onChange={(e) => handleOnChangeRole(user, e.target.value)}>
+                    <Select readOnly={isCurrentUser} value={user.projectRole} onChange={(e) => handleOnChangeRole(user, e.target.value)}>
                       {Object.values(projectRoleEnum).map((role: { name: string; value: string }) => (
                         <MenuItem key={role.value} value={role.value}>
                           {role.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <Select value={user.memberType} onChange={(e) => handleOnChangeMember(user, e.target.value)}>
+                      {Object.values(projectMemberEnum).map((member: { name: string; value: string }) => (
+                        <MenuItem key={member.value} value={member.value}>
+                          {member.name}
                         </MenuItem>
                       ))}
                     </Select>

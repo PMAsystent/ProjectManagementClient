@@ -1,7 +1,7 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useMemo } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
-import { useForm, FormProvider, useWatch } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -38,9 +38,7 @@ const AddTaskModal: FC<any> = (props) => {
     }),
     []
   );
-  const onChangeHandler = (value: any) => {
-    console.log(value);
-  };
+
   const methods = useForm({
     defaultValues: useMemo(() => {
       return defaultValue;
@@ -52,7 +50,6 @@ const AddTaskModal: FC<any> = (props) => {
     values.priority = priorityNumberToString(values.priority);
     console.log({ stepId: stepId, progressPercentage: 0, taskStatus: 'todo', ...values });
     dispatch(postTask({ stepId: stepId, progressPercentage: 0, taskStatus: 'todo', ...values }));
-
   };
 
   useCloseModalOnDoneFetchStatus({ status: taskPostFetchStatus, clearFunction: clearTaskPostFetchStatus, handleClose: props.handleClose });
