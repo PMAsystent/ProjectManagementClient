@@ -24,10 +24,13 @@ import FormProjectModal from '../FormProjectModal/FormProjectModal';
 import { projectStep } from 'core/types/api/step.request.types';
 import AddTaskModal from 'containers/AddTaskModal/AddTaskModal';
 import VisibilityGuard from 'core/hoc/VisibilityGuard';
+import { projectRoleEnum } from '../../core/enums/project.role';
+import AddStepModal from '../AddStepModal/AddStepModal';
 
 const ProjectDetails = () => {
   const [step, setStep] = useState<null | projectStep>(null);
   const [editProjectModal, setEditProjectModal] = useState(false);
+  const [addStepModal, setAddStepModal] = useState<boolean>(false);
   const [columns, setColumns] = useState<any>({
     1: {
       name: taskType.TODO,
@@ -54,29 +57,33 @@ const ProjectDetails = () => {
   const accessToken = useSelector(selectAccessToken);
   const dispatch = useDispatch();
   const history = useHistory();
-  const actions = useMemo(
-    () => [
+  const actions = useMemo(() => {
+    const actionsArray = [
       {
         icon: <ArrowBackIcon />,
         name: 'Dashboard',
         handleOnClick: () => history.push(getDashboardPath),
       },
-      {
+    ];
+    if (projectDetails?.currentUserInfoInProject?.projectRole === projectRoleEnum.SUPER_MEMBER.value) {
+      actionsArray.push({
         icon: <PlaylistAddIcon />,
         name: 'Dodaj nowy step',
-        handleOnClick: () => {},
-      },
-      {
+        handleOnClick: () => setAddStepModal(true),
+      });
+    }
+
+    if (stepid) {
+      actionsArray.push({
         icon: <AddTaskIcon />,
         name: 'Dodaj nowy task',
         handleOnClick: () => {
           setAddTaskModal(true);
         },
-      },
-    ],
-
-    [history]
-  );
+      });
+    }
+    return actionsArray;
+  }, [history, projectDetails?.currentUserInfoInProject?.projectRole, stepid]);
 
   const onDragEnd = async (result: any, columns: any, setColumns: any) => {
     const task = projectDetails?.projectTasks.find((task) => task.id === +result.draggableId);
@@ -103,7 +110,14 @@ const ProjectDetails = () => {
         },
       });
       if (task) {
-        await postTaskApi({ ...task, description: 'test desc', taskStatus: destColumn.name }, accessToken || '').catch((error) => {
+        await postTaskApi(
+          {
+            ...task,
+            description: 'test desc',
+            taskStatus: destColumn.name,
+          },
+          accessToken || ''
+        ).catch((error) => {
           destItems.splice(destination.index, 0, removed);
           setColumns({
             ...columns,
@@ -144,14 +158,14 @@ const ProjectDetails = () => {
 
       setColumns({
         1: {
-          name: taskType.IN_PROGRESS,
-          title: 'W trakcie',
-          items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.IN_PROGRESS) || [],
-        },
-        2: {
           name: taskType.TODO,
           title: 'Do zrobienia',
           items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.TODO) || [],
+        },
+        2: {
+          name: taskType.IN_PROGRESS,
+          title: 'W trakcie',
+          items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.IN_PROGRESS) || [],
         },
         3: {
           name: taskType.COMPLETED,
@@ -201,11 +215,13 @@ const ProjectDetails = () => {
                 <AvatarList member={projectDetails?.currentUserInfoInProject?.projectRole || ''} users={projectDetails?.projectAssignedUsers || []} />
               </div>
               <div className="info-item">
-                <CustomButton icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>
-                  Nowy Step
-                </CustomButton>
+                <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
+                  <CustomButton onClick={() => setAddStepModal(true)} icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>
+                    Nowy Step
+                  </CustomButton>
+                </VisibilityGuard>
                 {stepid && (
-                  <CustomButton icon={<AddTaskIcon />} className="btn-project">
+                  <CustomButton onClick={() => setAddTaskModal(true)} icon={<AddTaskIcon />} className="btn-project">
                     Nowy Task
                   </CustomButton>
                 )}
@@ -237,7 +253,8 @@ const ProjectDetails = () => {
         </>
       )}
       <BasicSpeedDial actions={actions} />
-      {stepid && addTaskModal && <AddTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} stepId={stepid} />}
+      {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
+      {addTaskModal && <AddTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} stepId={stepid} />}
       {editProjectModal && projectDetails && (
         <FormProjectModal
           project={{
