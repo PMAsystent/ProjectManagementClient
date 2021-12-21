@@ -48,7 +48,6 @@ const AddTaskModal: FC<any> = (props) => {
 
   const onSubmit = (values: any) => {
     values.priority = priorityNumberToString(values.priority);
-    console.log({ stepId: stepId, progressPercentage: 0, taskStatus: 'todo', ...values });
     dispatch(postTask({ stepId: stepId, progressPercentage: 0, taskStatus: 'todo', ...values }));
   };
 

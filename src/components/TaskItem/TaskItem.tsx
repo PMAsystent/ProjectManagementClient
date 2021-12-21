@@ -3,10 +3,10 @@ import './styles.scss';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { format } from 'date-fns';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
-import { projectTask } from '../../core/types/api/task.request.types';
+import { projectPutTaskType } from '../../core/types/api/task.request.types';
 import { taskPriority } from '../../core/enums/task.priority';
 
-const TaskItem: FC<{ task: projectTask }> = ({ task }) => {
+const TaskItem: FC<{ task: projectPutTaskType }> = ({ task }) => {
   const [priority, setPriority] = useState<{ orange: number[]; white: number[] }>({
     orange: [],
     white: [],

@@ -13,11 +13,7 @@ const PriorityPicker: FC<{ value: number; onChange: any }> = ({ value, onChange 
   const handleOnPriorityHover = (key: any) => {
     setPriority(
       priority.map((x) => {
-        if (x.key <= key) {
-          x.isHovered = true;
-        } else {
-          x.isHovered = false;
-        }
+        x.isHovered = x.key <= key;
         return x;
       })
     );
@@ -26,11 +22,7 @@ const PriorityPicker: FC<{ value: number; onChange: any }> = ({ value, onChange 
     setPriority(
       priority.map((x) => {
         x.isHovered = false;
-        if (x.key <= key) {
-          x.isSelected = true;
-        } else {
-          x.isSelected = false;
-        }
+        x.isSelected = x.key <= key;
         return x;
       })
     );

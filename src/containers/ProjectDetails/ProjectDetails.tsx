@@ -14,7 +14,7 @@ import { fetchStatues } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from 'components/TaskList/TaskList';
 import { taskType } from 'core/enums/task.type';
-import { postTaskApi } from 'api/utils';
+import { putTaskApi } from 'api/utils';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { selectAccessToken } from 'redux/auth/auth.slice';
 import CustomButton from 'components/CustomButton/CustomButton';
@@ -110,7 +110,7 @@ const ProjectDetails = () => {
         },
       });
       if (task) {
-        await postTaskApi(
+        await putTaskApi(
           {
             ...task,
             description: 'test desc',
