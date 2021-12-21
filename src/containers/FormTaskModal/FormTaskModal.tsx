@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -8,23 +8,25 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
 import { Modal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearTaskPostFetchStatus, postTask, selectTaskPostFetchStatus } from '../../redux/task/task.slice';
+import { clearTaskPostFetchStatus, postTask, putTask, selectTaskPostFetchStatus } from '../../redux/task/task.slice';
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 import CustomPriorityField from 'components/CustomPriorityField/CustomPriorityField';
 import PriorityNameDisplayer from 'components/PriorityNameDisplayer/PriorityNameDisplayer';
-import { priorityNumberToString } from 'core/utils';
+import { priorityNumberToString, priorityStringToNumber } from 'core/utils';
+import { taskType } from '../../core/enums/task.type';
 
 const validationSchema = yup.object({
-  name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
-  description: yup.string().required('Opis jest wymagany').min(20, 'Opis musi mieć conajmniej 20 znaków'),
+  name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
+  description: yup.string().required('Opis jest wymagany').min(10, 'Opis musi mieć conajmniej 10 znaków'),
   dueDate: yup
     .mixed()
     .test('is-date', 'Data zakończenia jest wymagana', (value) => isValid(value))
     .required('Data zakończenia jest wymagana'),
 });
-const AddTaskModal: FC<any> = (props) => {
+
+const FormTaskModal: FC<any> = (props) => {
   const dispatch = useDispatch();
   const stepId = props.stepId;
   const taskPostFetchStatus = useSelector(selectTaskPostFetchStatus);
@@ -48,8 +50,23 @@ const AddTaskModal: FC<any> = (props) => {
 
   const onSubmit = (values: any) => {
     values.priority = priorityNumberToString(values.priority);
-    dispatch(postTask({ stepId: stepId, progressPercentage: 0, taskStatus: 'todo', ...values }));
+    if (props.task) {
+      dispatch(putTask({ ...props.task, ...values }));
+    } else {
+      dispatch(postTask({ stepId: stepId, progressPercentage: 0, taskStatus: taskType.TODO, ...values }));
+    }
   };
+
+  useEffect(() => {
+    if (props.task) {
+      methods.reset({
+        name: props.task.name,
+        description: props.task.description,
+        dueDate: new Date(props.task.dueDate),
+        priority: priorityStringToNumber(props.task.priority),
+      });
+    }
+  }, [methods, props.task]);
 
   useCloseModalOnDoneFetchStatus({ status: taskPostFetchStatus, clearFunction: clearTaskPostFetchStatus, handleClose: props.handleClose });
 
@@ -115,4 +132,4 @@ const AddTaskModal: FC<any> = (props) => {
   );
 };
 
-export default AddTaskModal;
+export default FormTaskModal;

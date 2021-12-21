@@ -111,6 +111,11 @@ export const projectReducer = createSlice({
         state.projectDetails.projectAssignedUsers = action.payload;
       }
     },
+    setProjectProgressPercentage(state, action: PayloadAction<number>) {
+      if (state.projectDetails) {
+        state.projectDetails.progressPercentage = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -161,7 +166,8 @@ export const projectReducer = createSlice({
   },
 });
 
-export const { clearProjectPostFetchStatus, clearProjectDetails, clearProjectPutFetchStatus, setProjectAssignedUsers } = projectReducer.actions;
+export const { clearProjectPostFetchStatus, clearProjectDetails, clearProjectPutFetchStatus, setProjectAssignedUsers, setProjectProgressPercentage } =
+  projectReducer.actions;
 
 export const selectProjects = (state: rootReducerInterface) => state.projects.projectList;
 export const selectProjectsListFetchStatus = (state: rootReducerInterface) => state.projects.projectListFetchStatus;

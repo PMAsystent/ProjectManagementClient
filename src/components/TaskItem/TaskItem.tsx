@@ -5,8 +5,10 @@ import { format } from 'date-fns';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import { projectPutTaskType } from '../../core/types/api/task.request.types';
 import { taskPriority } from '../../core/enums/task.priority';
+import FormTaskModal from '../../containers/FormTaskModal/FormTaskModal';
 
 const TaskItem: FC<{ task: projectPutTaskType }> = ({ task }) => {
+  const [editTaskModal, setEditTaskModal] = useState(false);
   const [priority, setPriority] = useState<{ orange: number[]; white: number[] }>({
     orange: [],
     white: [],
@@ -33,8 +35,16 @@ const TaskItem: FC<{ task: projectPutTaskType }> = ({ task }) => {
   }, [task]);
 
   return (
-    <>
-      <h2 className="task-title">{task.name}</h2>
+    <div className="task">
+      <span
+        className="task-title"
+        onClick={(e) => {
+          e.stopPropagation();
+          setEditTaskModal(true);
+        }}
+      >
+        <h2>{task.name}</h2>
+      </span>
       <div className="task-priority">
         <p>Priorytet</p>
         <span>
@@ -61,7 +71,8 @@ const TaskItem: FC<{ task: projectPutTaskType }> = ({ task }) => {
           text={`${task.progressPercentage}%`}
         />
       </div>
-    </>
+      {editTaskModal && task && <FormTaskModal task={task} open={editTaskModal} handleClose={() => setEditTaskModal(false)} />}
+    </div>
   );
 };
 

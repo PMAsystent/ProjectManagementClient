@@ -1,5 +1,5 @@
 export const taskType = {
-  COMPLETED: 'completed',
+  COMPLETED: 'Done',
   IN_PROGRESS: 'in progress',
   TODO: 'todo',
 };

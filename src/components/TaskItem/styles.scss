@@ -6,7 +6,7 @@
   border-radius: 10px;
   position: relative;
   padding: 10px 100px 10px 20px;
-  height: 105px;
+  min-height: 120px;
   margin-bottom: 15px;
   display: flex;
   flex-wrap: wrap;
@@ -34,6 +34,13 @@
     flex-basis: 100%;
     font-weight: 900;
     font-style: oblique;
+    display: flex;
+    flex-wrap: wrap;
+    cursor: pointer;
+    h2 {
+      padding-right: 5px;
+    }
+
   }
 
   &-priority {
@@ -70,7 +77,6 @@
     }
   }
   @media (max-width: 1410px) {
-    height: 140px;
     &-priority, &-dueDate {
       flex-basis: 100%;
     }
@@ -81,8 +87,8 @@
     }
   }
   @media (max-width: 1024px) {
+    min-height: 145px;
     padding: 10px 100px 10px 20px;
-    height: 105px;
     &-circle {
       position: absolute;
       top: 20px;
@@ -99,7 +105,6 @@
     }
   }
   @media (max-width: 1024px) {
-    height: 140px;
     &-circle {
       position: absolute;
       top: 25px;

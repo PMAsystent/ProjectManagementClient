@@ -30,12 +30,12 @@ export const postTask = createAsyncThunk<any, projectPostTaskType, { state: root
 
 export const putTask = createAsyncThunk<any, projectPutTaskType, { state: rootReducerInterface; rejectValue: string }>(
   'task/putTask',
-  async (data, { rejectWithValue, getState }) => {
+  async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
     } = getState();
     putTaskApi(data, accessToken || '')
-      .then((response) => {
+      .then(async (response) => {
         return response.data;
       })
       .catch((error) => {

@@ -32,3 +32,13 @@ export const priorityNumberToString = (value: number) => {
     return taskPriority.HIGH;
   }
 };
+
+export const priorityStringToNumber = (value: string) => {
+  if (value === taskPriority.LOW) {
+    return 1;
+  } else if (value === taskPriority.MEDIUM) {
+    return 3;
+  } else {
+    return 5;
+  }
+};

@@ -9,12 +9,12 @@ import { getDashboardPath } from 'core/routes';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProject, selectProjectDetails, selectProjectDetailsFetchStatus } from 'redux/project/project.slice';
+import { getProject, selectProjectDetails, selectProjectDetailsFetchStatus, setProjectProgressPercentage } from 'redux/project/project.slice';
 import { fetchStatues } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from 'components/TaskList/TaskList';
 import { taskType } from 'core/enums/task.type';
-import { putTaskApi } from 'api/utils';
+import { getProjectApi, putTaskApi } from 'api/utils';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { selectAccessToken } from 'redux/auth/auth.slice';
 import CustomButton from 'components/CustomButton/CustomButton';
@@ -22,15 +22,25 @@ import AvatarList from 'components/AvatarList/AvatarList';
 import EditIcon from '@mui/icons-material/Edit';
 import FormProjectModal from '../FormProjectModal/FormProjectModal';
 import { projectStep } from 'core/types/api/step.request.types';
-import AddTaskModal from 'containers/AddTaskModal/AddTaskModal';
+import FormTaskModal from 'containers/FormTaskModal/FormTaskModal';
 import VisibilityGuard from 'core/hoc/VisibilityGuard';
 import { projectRoleEnum } from '../../core/enums/project.role';
 import AddStepModal from '../AddStepModal/AddStepModal';
+import { projectPutTaskType } from '../../core/types/api/task.request.types';
 
 const ProjectDetails = () => {
   const [step, setStep] = useState<null | projectStep>(null);
   const [editProjectModal, setEditProjectModal] = useState(false);
   const [addStepModal, setAddStepModal] = useState<boolean>(false);
+  const [activeTasks, setActiveTasks] = useState(0);
+  const [completedTasks, setCompletedTasks] = useState(0);
+  const [addTaskModal, setAddTaskModal] = useState(false);
+  const projectDetails = useSelector(selectProjectDetails);
+  const { projectid, stepid } = useParams<{ projectid: string; stepid: string }>();
+  const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
+  const accessToken = useSelector(selectAccessToken);
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [columns, setColumns] = useState<any>({
     1: {
       name: taskType.TODO,
@@ -48,15 +58,6 @@ const ProjectDetails = () => {
       items: [],
     },
   });
-  const [activeTasks, setActiveTasks] = useState(0);
-  const [completedTasks, setCompletedTasks] = useState(0);
-  const [addTaskModal, setAddTaskModal] = useState(false);
-  const projectDetails = useSelector(selectProjectDetails);
-  const { projectid, stepid } = useParams<{ projectid: string; stepid: string }>();
-  const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
-  const accessToken = useSelector(selectAccessToken);
-  const dispatch = useDispatch();
-  const history = useHistory();
   const actions = useMemo(() => {
     const actionsArray = [
       {
@@ -117,13 +118,20 @@ const ProjectDetails = () => {
             taskStatus: destColumn.name,
           },
           accessToken || ''
-        ).catch((error) => {
-          destItems.splice(destination.index, 0, removed);
-          setColumns({
-            ...columns,
+        )
+          .then(async (response) => {
+            const result = await getProjectApi(+projectid, accessToken);
+            if (result.data) {
+              dispatch(setProjectProgressPercentage(result.data.progressPercentage));
+            }
+          })
+          .catch((error) => {
+            destItems.splice(destination.index, 0, removed);
+            setColumns({
+              ...columns,
+            });
+            SnackbarUtils.error('Wsytąpił problem z aktualizacją');
           });
-          SnackbarUtils.error('Wsytąpił problem z aktualizacją');
-        });
       }
     } else {
       const column = columns[source.droppableId];
@@ -151,26 +159,38 @@ const ProjectDetails = () => {
 
   useEffect(() => {
     if (projectDetailsFetchStatus === fetchStatues.FULFILLED) {
+      let todoTasks: Array<projectPutTaskType> = [];
+      let inProgressTasks: Array<projectPutTaskType> = [];
+      let completedTasks: Array<projectPutTaskType> = [];
+
       if (stepid && projectDetails?.projectSteps && projectDetails.projectSteps.length > 0) {
         setStep(projectDetails.projectSteps.find((step) => step.id === +stepid) || null);
+        todoTasks = projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.TODO && task.stepId === +stepid) || [];
+        inProgressTasks = projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.IN_PROGRESS && task.stepId === +stepid) || [];
+        completedTasks = projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.COMPLETED && task.stepId === +stepid) || [];
       }
-      if (!stepid) setStep(null);
+      if (!stepid) {
+        setStep(null);
+        todoTasks = projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.TODO) || [];
+        inProgressTasks = projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.IN_PROGRESS) || [];
+        completedTasks = projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.COMPLETED) || [];
+      }
 
       setColumns({
         1: {
           name: taskType.TODO,
           title: 'Do zrobienia',
-          items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.TODO) || [],
+          items: todoTasks,
         },
         2: {
           name: taskType.IN_PROGRESS,
           title: 'W trakcie',
-          items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.IN_PROGRESS) || [],
+          items: inProgressTasks,
         },
         3: {
           name: taskType.COMPLETED,
           title: 'Ukończone',
-          items: projectDetails?.projectTasks.filter((task) => task.taskStatus === taskType.COMPLETED) || [],
+          items: completedTasks,
         },
       });
     }
@@ -254,7 +274,7 @@ const ProjectDetails = () => {
       )}
       <BasicSpeedDial actions={actions} />
       {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
-      {addTaskModal && <AddTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} stepId={stepid} />}
+      {addTaskModal && <FormTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} stepId={stepid} />}
       {editProjectModal && projectDetails && (
         <FormProjectModal
           project={{
