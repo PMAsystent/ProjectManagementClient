@@ -1,14 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 const PriorityNameDisplayer: FC<{ priorityFieldName: string }> = ({ priorityFieldName }) => {
-  const { control } = useFormContext();
+  const { watch } = useFormContext();
   const [priorityName, setPriorityName] = useState('NISKI');
-  const priorityValue = useWatch({
-    control,
-    name: priorityFieldName,
-    defaultValue: '1',
-  });
+  const priorityValue = watch(priorityFieldName, '1');
 
   useEffect(() => {
     if (priorityValue <= 2) {
