@@ -1,6 +1,6 @@
 import { projectAssignmentsType } from './assigned.request.types';
-import { projectTask } from './task.request.types';
 import { projectStep } from './step.request.types';
+import { projectPutTaskType } from './task.request.types';
 
 export interface projectType {
   id: number;
@@ -31,7 +31,7 @@ export interface projectDetails extends Omit<projectType, 'isActive'> {
   description: string;
   created: string;
   projectSteps: Array<projectStep>;
-  projectTasks: Array<projectTask>;
+  projectTasks: Array<projectPutTaskType>;
   projectAssignedUsers: Array<projectAssignmentsType>;
   currentUserInfoInProject: {
     memberType: string;

@@ -23,6 +23,9 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    .task-container-drop {
+      flex-basis: 95%;
+    }
     .tasks-empty {
       margin: auto 0;
       font-size: 32px;

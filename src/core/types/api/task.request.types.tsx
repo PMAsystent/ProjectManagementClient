@@ -1,4 +1,13 @@
-export interface projectTask {
+export interface projectPostTaskType {
+  name: string;
+  description?: string;
+  priority: string;
+  taskStatus: string;
+  dueDate: string;
+  stepId: number;
+}
+
+export interface projectPutTaskType {
   id: number;
   name: string;
   priority: string;

@@ -82,7 +82,7 @@ const FormProjectModal: FC<any> = (props) => {
     const assignsArray: any[] = methods.getValues('assignedUsers');
     if (!assignsArray.find((assign) => assign.id === value.id)) {
       SnackbarUtils.success('Dodano użytkownika');
-      assignsArray.push({ ...value, projectRole: projectRoleEnum.DEVELOPER.value, memberType: projectMemberEnum.MEMBER.value });
+      assignsArray.push({ ...value, projectRole: projectRoleEnum.MEMBER.value, memberType: projectMemberEnum.DEVELOPER.value });
     } else {
       SnackbarUtils.warning('Użytkownik jest już dodany');
     }
@@ -201,24 +201,24 @@ const FormProjectModal: FC<any> = (props) => {
                         return (
                           <>
                             <Select
-                              value={isCurrentUser ? projectMemberEnum.SUPER_MEMBER.value : user.memberType}
-                              onChange={(e) => handleOnChangeMember(user.id, e.target.value)}
-                              readOnly={isCurrentUser}
-                            >
-                              {Object.values(projectMemberEnum).map((member: { name: string; value: string }) => (
-                                <MenuItem key={member.value} value={member.value}>
-                                  {member.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                            <Select
-                              value={isCurrentUser ? projectRoleEnum.MANAGER.value : user.projectRole}
+                              value={isCurrentUser ? projectRoleEnum.SUPER_MEMBER.value : user.projectRole}
                               onChange={(e) => handleOnChangeRole(user.id, e.target.value)}
                               readOnly={isCurrentUser}
                             >
                               {Object.values(projectRoleEnum).map((role: { name: string; value: string }) => (
                                 <MenuItem key={role.value} value={role.value}>
                                   {role.name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            <Select
+                              value={isCurrentUser ? projectMemberEnum.MANAGER.value : user.memberType}
+                              onChange={(e) => handleOnChangeMember(user.id, e.target.value)}
+                              readOnly={isCurrentUser}
+                            >
+                              {Object.values(projectMemberEnum).map((member: { name: string; value: string }) => (
+                                <MenuItem key={member.value} value={member.value}>
+                                  {member.name}
                                 </MenuItem>
                               ))}
                             </Select>

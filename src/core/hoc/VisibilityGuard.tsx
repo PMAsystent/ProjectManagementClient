@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { projectMemberEnum } from '../enums/project.member';
+import { projectRoleEnum } from '../enums/project.role';
 
 const VisibilityGuard: FC<{ children: any; member: string }> = ({ children, member }) => {
-  if (member !== projectMemberEnum.SUPER_MEMBER.value) return null;
+  if (member !== projectRoleEnum.SUPER_MEMBER.value) return null;
 
   return <>{children}</>;
 };

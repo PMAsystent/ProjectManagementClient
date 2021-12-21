@@ -14,7 +14,7 @@ const TaskList: FC<{ title: string; name: string; prefix: string; tasks: any[] }
               <Draggable index={index} key={task.id} draggableId={`${task.id}`}>
                 {(provided, snapshot) => (
                   <div
-                    className="task"
+                    className="task-container-drop"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
