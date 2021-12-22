@@ -16,8 +16,6 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "pm-asystent"
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          usedocker: true
-          appdir: ""
         env:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
           
