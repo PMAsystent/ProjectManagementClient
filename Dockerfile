@@ -1,8 +1,7 @@
 FROM node:alpine3.12 as build
 
+ENV REACT_APP_API_URL=https://pm-asystent.azurewebsites.net/api
 ENV NODE_OPTIONS=--openssl-legacy-provider
-
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 WORKDIR /code
 
