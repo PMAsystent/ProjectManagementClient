@@ -6,7 +6,7 @@ import { getLoginPath } from '../../core/routes';
 import { getConfirmEmail, selectGetConfirmEmailFetchStatus } from '../../redux/auth/auth.slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStatues } from '../../core/enums/redux.statues';
-import AuthSpinner from '../../components/AuthSpinner/AuthSpinner';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const ConfirmEmail = () => {
   const location = useLocation();
@@ -35,7 +35,7 @@ const ConfirmEmail = () => {
         <h3 className="email-title">
           {getConfirmEmailFetchStatus === fetchStatues.FULFILLED && 'Email został potwierdzony'}
           {getConfirmEmailFetchStatus === fetchStatues.REJECTED && 'Wystąpił problem z potwierdzeniem'}
-          {getConfirmEmailFetchStatus === fetchStatues.PENDING && <AuthSpinner />}
+          {getConfirmEmailFetchStatus === fetchStatues.PENDING && <CircularProgress size={50} />}
         </h3>
         <CustomButton type="button" className="btn-primary" onClick={handleGotoLoginPage}>
           Przejdź do logowania
