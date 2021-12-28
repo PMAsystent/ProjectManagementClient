@@ -1,6 +1,5 @@
 FROM node:alpine3.12 as build
 
-ENV REACT_APP_API_URL=link
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
 WORKDIR /code
