@@ -15,7 +15,7 @@ jobs:
         name: Deploy client
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "pmasystent"
+          heroku_app_name: "pm-asystent"
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           usedocker: true
         env:
