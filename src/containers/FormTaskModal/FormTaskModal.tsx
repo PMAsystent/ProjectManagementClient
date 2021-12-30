@@ -19,7 +19,7 @@ import { taskType } from '../../core/enums/task.type';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
-  description: yup.string().required('Opis jest wymagany').min(10, 'Opis musi mieć conajmniej 10 znaków'),
+  description: yup.string(),
   dueDate: yup
     .mixed()
     .test('is-date', 'Data zakończenia jest wymagana', (value) => isValid(value))
