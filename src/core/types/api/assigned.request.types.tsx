@@ -4,3 +4,7 @@ export interface projectAssignmentsType {
   projectRole: string;
   memberType: string;
 }
+
+export interface taskAssignmentsType {
+  userId: number;
+}

@@ -37,6 +37,7 @@ const FormTaskModal: FC<any> = (props) => {
       description: '',
       dueDate: '',
       priority: 1,
+      assignedUsers: [],
     }),
     []
   );
