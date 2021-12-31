@@ -29,7 +29,10 @@ const INIT_STATE: authReducerInterface = {
 export const postRegister = createAsyncThunk<any, registerUserType, { rejectValue: string }>('auth/register', async (data, { rejectWithValue }) => {
   return await instance
     .post('/Auth/RegisterUser', data)
-    .then((response) => {
+    .then((response: any) => {
+      if (response.data?.errors && response.data.errors.length > 0) {
+        return rejectWithValue(response.data.errors[0]);
+      }
       return response.data;
     })
     .catch((error) => rejectWithValue(error.response.data.title));
@@ -62,6 +65,27 @@ export const postLogin = createAsyncThunk<any, loginUserType, { rejectValue: str
     })
     .catch((error) => rejectWithValue(error.response.data.title));
 });
+
+export const postLogout = createAsyncThunk<any, void, { state: rootReducerInterface; rejectValue: string }>(
+  'auth/logout',
+  async (_, { rejectWithValue, getState }) => {
+    const {
+      auth: { accessToken, user },
+    } = getState();
+
+    let email;
+    if (user) {
+      email = user.email;
+    }
+
+    return await instance
+      .post('/Auth/LogoutUser', { email }, { headers: { authorization: `Bearer ${accessToken}` } })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => rejectWithValue(error.response.data.title));
+  }
+);
 
 export const getConfirmEmail = createAsyncThunk<any, string, { rejectValue: string }>(
   'auth/confirmEmail',
@@ -137,7 +161,7 @@ export const authReducer = createSlice({
       })
       .addCase(postRegister.rejected, (state, action) => {
         state.registerFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.error('Nie udało się zarejestrować');
+        SnackbarUtils.error(action.payload || 'Nie udało się zarejestrować');
       })
       .addCase(getConfirmEmail.pending, (state, action) => {
         state.getConfirmEmailFetchStatus = action.meta.requestStatus;

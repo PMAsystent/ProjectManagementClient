@@ -3,7 +3,7 @@ import './styles.scss';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../../redux/auth/auth.slice';
+import { logout, postLogout } from '../../../redux/auth/auth.slice';
 import { Apps } from '@material-ui/icons';
 import TreeProjectView from '../../../components/TreeProjectView/TreeProjectView';
 import { getDashboardPath } from '../../../core/routes';
@@ -16,6 +16,7 @@ const Sidebar = (props: { open: any; onClose: any }) => {
   const history = useHistory();
 
   const handleLogout = () => {
+    dispatch(postLogout());
     dispatch(logout());
   };
 
