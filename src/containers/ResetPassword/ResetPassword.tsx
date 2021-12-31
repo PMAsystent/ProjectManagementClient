@@ -1,12 +1,10 @@
 import React, { useMemo } from 'react';
-import CustomInput from 'components/CustomInput/CustomInput';
-import CustomButton from 'components/CustomButton/CustomButton';
+import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useHistory } from 'react-router-dom';
-import { sendResetPasswordEmail } from '../../api/utils';
+import CustomInput from '../../components/CustomInput/CustomInput';
+import CustomButton from '../../components/CustomButton/CustomButton';
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
@@ -15,13 +13,24 @@ const validationSchema = yup.object({
     .oneOf([yup.ref('email')], 'Emaile muszą być takie same!')
     .email('Email jest niepoprawny')
     .required('Email jest wymagany!'),
+  password: yup
+    .string()
+    .required('Hasło jest wymagane!')
+    .min(8, 'Hasło musi być dłuższe niż 8 znaków!')
+    .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Hasło musi zawierać dużą literę, cyfrę oraz znak specjalny!'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password')], 'Hasła muszą być takie same!')
+    .required('Potwierdzenie hasła jest wymagane!'),
 });
 
-const ForgotPassword = () => {
+const ResetPassword = () => {
   const defaultValue = useMemo(
     () => ({
       email: '',
       confirmEmail: '',
+      password: '',
+      confirmPassword: '',
     }),
     []
   );
@@ -39,25 +48,15 @@ const ForgotPassword = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const handlegoBack = () => {
-    history.goBack();
-  };
-
   const onSubmit = (values: any) => {
-    sendResetPasswordEmail({ email: values['email'] })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    console.log(values);
   };
 
   return (
     <div className="container">
       <div className="text">
         <h1>PM ASYSTENT</h1>
-        <h3>Przypomnij hasło</h3>
+        <h3>Zmień hasło</h3>
       </div>
       <div className="form">
         <form onSubmit={handleSubmit(onSubmit)} key={'forgotPassword'}>
@@ -69,14 +68,27 @@ const ForgotPassword = () => {
             helperText={errors.confirmEmail?.message}
             error={!!errors.confirmEmail}
           />
+          <CustomInput
+            {...register('password')}
+            placeholder="Nowe Hasło"
+            type="password"
+            helperText={errors.password?.message}
+            error={!!errors.password}
+          />
+          <CustomInput
+            {...register('confirmPassword')}
+            placeholder="Powtórz Nowe Hasło"
+            type="email"
+            helperText={errors.confirmPassword?.message}
+            error={!!errors.confirmPassword}
+          />
           <CustomButton type="submit" className="btn-primary">
-            Wyślij kod
+            Zmień hasło
           </CustomButton>
-          <ArrowBackIcon className="icon" onClick={handlegoBack} />
         </form>
       </div>
     </div>
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;
