@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
+import { sendResetPasswordEmail } from '../../api/utils';
 
 // TODO: FORGOT PASSWORD FUNCTIONS MUST BE ADDED
 
@@ -45,7 +46,13 @@ const ForgotPassword = () => {
   };
 
   const onSubmit = (values: any) => {
-    console.log(values);
+    sendResetPasswordEmail({ email: values['email'] })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

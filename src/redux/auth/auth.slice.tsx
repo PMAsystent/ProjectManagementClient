@@ -112,7 +112,10 @@ export const postNewPassword = createAsyncThunk<any, newPasswordType, { state: r
 
     return await instance
       .post('/Auth/ChangePassword', data, { headers: { authorization: `Bearer ${accessToken}` } })
-      .then((response) => {
+      .then((response: any) => {
+        if (response.data?.errors && response.data.errors.length > 0) {
+          return rejectWithValue(response.data.errors[0]);
+        }
         return response.data;
       })
       .catch((error) => rejectWithValue(error.response.data.title));
@@ -127,8 +130,11 @@ export const postNewEmail = createAsyncThunk<any, newEmailType, { state: rootRed
     } = getState();
 
     return await instance
-      .post('/Auth/ChangeEmail', data, { headers: { authorization: `Bearer ${accessToken}` } })
-      .then((response) => {
+      .post('/Auth/ChangeEmail', { ...data, token: accessToken }, { headers: { authorization: `Bearer ${accessToken}` } })
+      .then((response: any) => {
+        if (response.data?.errors && response.data.errors.length > 0) {
+          return rejectWithValue(response.data.errors[0]);
+        }
         return response.data;
       })
       .catch((error) => rejectWithValue(error.response.data.title));
@@ -213,7 +219,7 @@ export const authReducer = createSlice({
       })
       .addCase(postNewEmail.rejected, (state, action) => {
         state.postNewEmailFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.error('Zmiana maila nie powiodła się');
+        SnackbarUtils.error(action.payload || 'Zmiana maila nie powiodła się');
       })
       .addCase(postNewPassword.pending, (state, action) => {
         state.postNewPasswordFetchStatus = action.meta.requestStatus;
@@ -224,7 +230,7 @@ export const authReducer = createSlice({
       })
       .addCase(postNewPassword.rejected, (state, action) => {
         state.postNewPasswordFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.error('Zmiana hasła nie powiodła się');
+        SnackbarUtils.error(action.payload || 'Zmiana hasła nie powiodła się');
       });
   },
 });

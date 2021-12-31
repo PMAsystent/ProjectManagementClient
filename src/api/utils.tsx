@@ -30,3 +30,7 @@ export const putTaskApi = async (data: projectPutTaskType, accessToken: string) 
 export const getProjectApi = async (projectId: number, accessToken: string | null) => {
   return await instance.get<projectDetails>(`/MyProjects/${projectId}`, { headers: { authorization: `Bearer ${accessToken}` } });
 };
+
+export const sendResetPasswordEmail = async (data: { email: string }) => {
+  return await instance.post('/Auth/SendResetPasswordEmail', data);
+};
