@@ -21,3 +21,9 @@ export interface newPasswordType {
   oldPassword: string;
   newPassword: string;
 }
+
+export interface resetPasswordType {
+  email: string;
+  newPassword: string;
+  token: string;
+}

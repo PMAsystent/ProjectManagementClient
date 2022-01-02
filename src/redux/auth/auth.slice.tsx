@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { instance } from 'api';
-import { loginUserType, newEmailType, newPasswordType, registerUserType } from 'core/types/api/auth.types';
+import { loginUserType, newEmailType, newPasswordType, registerUserType, resetPasswordType } from 'core/types/api/auth.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { rootReducerInterface } from '../rootReducer';
 
@@ -11,6 +11,7 @@ export interface authReducerInterface {
   user: null | { email: string; userId: number; userName: string };
   userFetchStatus: null | string;
   postNewEmailFetchStatus: null | string;
+  postResetPasswordFetchStatus: null | string;
   postNewPasswordFetchStatus: null | string;
   getConfirmEmailFetchStatus: null | string;
 }
@@ -23,6 +24,7 @@ const INIT_STATE: authReducerInterface = {
   userFetchStatus: null,
   postNewEmailFetchStatus: null,
   postNewPasswordFetchStatus: null,
+  postResetPasswordFetchStatus: null,
   getConfirmEmailFetchStatus: null,
 };
 
@@ -103,6 +105,21 @@ export const getConfirmEmail = createAsyncThunk<any, string, { rejectValue: stri
   }
 );
 
+export const postResetPassword = createAsyncThunk<any, resetPasswordType, { state: rootReducerInterface; rejectValue: string }>(
+  'auth/resetPassword',
+  async (data, { rejectWithValue, getState }) => {
+    return await instance
+      .post('/Auth/ResetPassword', data)
+      .then((response: any) => {
+        if (response.data?.errors && response.data.errors.length > 0) {
+          return rejectWithValue(response.data.errors[0]);
+        }
+        return response.data;
+      })
+      .catch((error) => rejectWithValue(error.response.data.title));
+  }
+);
+
 export const postNewPassword = createAsyncThunk<any, newPasswordType, { state: rootReducerInterface; rejectValue: string }>(
   'auth/newPassword',
   async (data, { rejectWithValue, getState }) => {
@@ -154,6 +171,9 @@ export const authReducer = createSlice({
     },
     clearLoginFetchStatus(state) {
       state.loginFetchStatus = null;
+    },
+    clearPostResetPasswordFetchStatus(state) {
+      state.postResetPasswordFetchStatus = null;
     },
   },
   extraReducers: (builder) => {
@@ -221,6 +241,17 @@ export const authReducer = createSlice({
         state.postNewEmailFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error(action.payload || 'Zmiana maila nie powiodła się');
       })
+      .addCase(postResetPassword.pending, (state, action) => {
+        state.postResetPasswordFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(postResetPassword.fulfilled, (state, action) => {
+        state.postResetPasswordFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.success('Zmieniono hasło');
+      })
+      .addCase(postResetPassword.rejected, (state, action) => {
+        state.postResetPasswordFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error(action.payload || 'Zmiana hasła nie powiodła się');
+      })
       .addCase(postNewPassword.pending, (state, action) => {
         state.postNewPasswordFetchStatus = action.meta.requestStatus;
       })
@@ -235,10 +266,11 @@ export const authReducer = createSlice({
   },
 });
 
-export const { logout, clearLoginFetchStatus, clearRegisterFetchStatus } = authReducer.actions;
+export const { logout, clearLoginFetchStatus, clearRegisterFetchStatus, clearPostResetPasswordFetchStatus } = authReducer.actions;
 
 export const selectAccessToken = (state: rootReducerInterface) => state.auth.accessToken;
 export const selectUser = (state: rootReducerInterface) => state.auth.user;
 export const selectLoginFetchStatus = (state: rootReducerInterface) => state.auth.loginFetchStatus;
 export const selectRegisterFetchStatus = (state: rootReducerInterface) => state.auth.registerFetchStatus;
 export const selectGetConfirmEmailFetchStatus = (state: rootReducerInterface) => state.auth.getConfirmEmailFetchStatus;
+export const selectPostResetPasswordFetchStatus = (state: rootReducerInterface) => state.auth.postResetPasswordFetchStatus;

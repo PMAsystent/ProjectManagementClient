@@ -1,10 +1,13 @@
 import React, { useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
+import { useRedirectOnDoneFetchStatus } from '../../core/hooks';
+import { getLoginPath } from '../../core/routes';
+import { clearPostResetPasswordFetchStatus, postResetPassword, selectPostResetPasswordFetchStatus } from '../../redux/auth/auth.slice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
@@ -34,7 +37,8 @@ const ResetPassword = () => {
     }),
     []
   );
-  const history = useHistory();
+  const dispatch = useDispatch();
+  const postResetPasswordFetchStatus = useSelector(selectPostResetPasswordFetchStatus);
 
   const {
     register,
@@ -49,8 +53,10 @@ const ResetPassword = () => {
   });
 
   const onSubmit = (values: any) => {
-    console.log(values);
+    dispatch(postResetPassword({ email: values['email'], newPassword: values['password'], token: 'token123' }));
   };
+
+  useRedirectOnDoneFetchStatus({ status: postResetPasswordFetchStatus, path: getLoginPath, clearFunction: clearPostResetPasswordFetchStatus });
 
   return (
     <div className="container">
@@ -78,7 +84,7 @@ const ResetPassword = () => {
           <CustomInput
             {...register('confirmPassword')}
             placeholder="Powtórz Nowe Hasło"
-            type="email"
+            type="password"
             helperText={errors.confirmPassword?.message}
             error={!!errors.confirmPassword}
           />
