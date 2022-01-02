@@ -10,6 +10,8 @@ import MainLayout from 'layouts/MainLayout/MainLayout';
 export const getLoginPath = '/auth/login';
 export const getRegisterPath = '/auth/register';
 export const getForgotPasswordPath = '/auth/forgotpassword';
+export const getResetPasswordPath = '/auth/resetpassword';
+export const getConfirmEmailPath = '/auth/confirmemail';
 export const getDashboardPath = '/dashboard/overview';
 export const getUserDetailsPath = '/user/details';
 export const getProjectDetailsPath = '/project/:projectid/:stepid?';
@@ -18,6 +20,8 @@ export const getProjectDetailsPath = '/project/:projectid/:stepid?';
 const Login = lazy(() => import('containers/Login/Login'));
 const Register = lazy(() => import('containers/Register/Register'));
 const ForgotPassword = lazy(() => import('containers/ForgotPassword/ForgotPassword'));
+const ResetPassword = lazy(() => import('containers/ResetPassword/ResetPassword'));
+const ConfirmEmail = lazy(() => import('containers/ConfirmEmail/ConfirmEmail'));
 const Dashboard = lazy(() => import('containers/Dashboard/Dashboard'));
 const UserDetails = lazy(() => import('containers/UserDetails/UserDetails'));
 const ProjectDetails = lazy(() => import('containers/ProjectDetails/ProjectDetails'));
@@ -107,6 +111,32 @@ export const publicRoutes = [
       <AuthLayout>
         <Suspense fallback={<AuthSpinner />}>
           <ForgotPassword />
+        </Suspense>
+      </AuthLayout>
+    ),
+  },
+  {
+    path: `${getResetPasswordPath}`,
+    exact: true,
+    name: 'Reset Password',
+    state: 'resetPassword',
+    component: () => (
+      <AuthLayout>
+        <Suspense fallback={<AuthSpinner />}>
+          <ResetPassword />
+        </Suspense>
+      </AuthLayout>
+    ),
+  },
+  {
+    path: `${getConfirmEmailPath}`,
+    exact: true,
+    name: 'Confirm Email',
+    state: 'confirmEmail',
+    component: () => (
+      <AuthLayout>
+        <Suspense fallback={<AuthSpinner />}>
+          <ConfirmEmail />
         </Suspense>
       </AuthLayout>
     ),

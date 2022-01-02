@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { projectPostTaskType, projectPutTaskType } from 'core/types/api/task.request.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { postTaskApi, putTaskApi } from '../../api/utils';
+import { getProject } from 'redux/project/project.slice';
 
 export interface taskReducerInterface {
   taskPostFetchStatus: null | string;
@@ -14,12 +15,14 @@ const INIT_STATE: taskReducerInterface = {
 
 export const postTask = createAsyncThunk<any, projectPostTaskType, { state: rootReducerInterface; rejectValue: string }>(
   'task/postTask',
-  async (data, { rejectWithValue, getState }) => {
+  async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
+      projects: { projectDetails },
     } = getState();
     postTaskApi(data, accessToken || '')
-      .then((response) => {
+      .then(async (response) => {
+        dispatch(getProject(projectDetails?.id || 0));
         return response.data;
       })
       .catch((error) => {
@@ -33,9 +36,11 @@ export const putTask = createAsyncThunk<any, projectPutTaskType, { state: rootRe
   async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
+      projects: { projectDetails },
     } = getState();
     putTaskApi(data, accessToken || '')
       .then(async (response) => {
+        dispatch(getProject(projectDetails?.id || 0));
         return response.data;
       })
       .catch((error) => {
