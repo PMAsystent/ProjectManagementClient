@@ -34,7 +34,6 @@ export const postRegister = createAsyncThunk<any, registerUserType, { rejectValu
     return await instance
       .post('/Auth/RegisterUser', data)
       .then((response: any) => {
-        console.log(response);
         if (response.data?.errors && response.data.errors.length > 0) {
           return rejectWithValue(response.data.errors[0]);
         }
