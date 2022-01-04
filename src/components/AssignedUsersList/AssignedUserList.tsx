@@ -4,6 +4,8 @@ import { Avatar } from '@mui/material';
 import { stringToColor } from 'core/utils';
 import { selectUser } from 'redux/auth/auth.slice';
 import { useSelector } from 'react-redux';
+import { useFormContext } from 'react-hook-form';
+import { taskAssignmentsType } from 'core/types/api/assigned.request.types';
 
 const AssignedUserList: FC<{ users: any[]; includeCurrentUser?: boolean; addtionalActions?: any }> = ({
   users,
@@ -11,10 +13,9 @@ const AssignedUserList: FC<{ users: any[]; includeCurrentUser?: boolean; addtion
   addtionalActions,
 }) => {
   const currentUser = useSelector(selectUser);
-
   return (
     <div className="users-list-container">
-      {includeCurrentUser && currentUser && (
+      {includeCurrentUser === true && currentUser && (
         <div key={currentUser.userName} className="users-list-item">
           <div className="info">
             <Avatar key={currentUser.userName} sx={{ bgcolor: stringToColor(currentUser.userName) }}>

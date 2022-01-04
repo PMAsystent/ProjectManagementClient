@@ -27,6 +27,7 @@ import VisibilityGuard from 'core/hoc/VisibilityGuard';
 import { projectRoleEnum } from '../../core/enums/project.role';
 import AddStepModal from '../AddStepModal/AddStepModal';
 import { projectPutTaskType } from '../../core/types/api/task.request.types';
+import { clearTaskDetails } from 'redux/task/task.slice';
 
 const ProjectDetails = () => {
   const [step, setStep] = useState<null | projectStep>(null);
@@ -157,6 +158,8 @@ const ProjectDetails = () => {
     dispatch(getProject(+projectid));
   }, [dispatch, projectid]);
 
+
+
   useEffect(() => {
     if (projectDetailsFetchStatus === fetchStates.FULFILLED) {
       let todoTasks: Array<projectPutTaskType> = [];
@@ -274,7 +277,15 @@ const ProjectDetails = () => {
       )}
       <BasicSpeedDial actions={actions} />
       {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
-      {addTaskModal && <FormTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} stepId={stepid} />}
+      {addTaskModal && (
+        <FormTaskModal
+          open={addTaskModal}
+          handleClose={() => {
+            setAddTaskModal(false);
+          }}
+          stepId={stepid}
+        />
+      )}
       {editProjectModal && projectDetails && (
         <FormProjectModal
           project={{

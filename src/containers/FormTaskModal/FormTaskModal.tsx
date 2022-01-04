@@ -10,6 +10,7 @@ import { MenuItem, Modal, Select } from '@mui/material';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  clearTaskDetails,
   clearTaskPostFetchStatus,
   getTask,
   postTask,
@@ -77,6 +78,7 @@ const FormTaskModal: FC<any> = (props) => {
     }));
     if (props.task) {
       dispatch(putTask({ ...props.task, ...values }));
+      console.log(values);
     } else {
       dispatch(postTask({ stepId: stepId, progressPercentage: 0, taskStatus: taskType.TODO, ...values }));
     }
@@ -95,14 +97,23 @@ const FormTaskModal: FC<any> = (props) => {
 
   useEffect(() => {
     if (taskDetailsFetchStatus === fetchStates.FULFILLED) {
-      console.log(taskDetails);
       setUsers(taskDetails?.assignedUser || []);
     }
   }, [taskDetailsFetchStatus]);
 
   useEffect(() => {
-    dispatch(getTask(+props.task.id));
-  }, [dispatch, props.task.id]);
+    methods.setValue('assignedUsers', users);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [users]);
+
+  useEffect(() => {
+    if (props.task) {
+      dispatch(getTask(+props.task.id));
+    } else {
+      dispatch(clearTaskDetails());
+      setUsers([]);
+    }
+  }, [dispatch, props.task?.id]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnChangeUsersDebounced = useCallback(
@@ -120,10 +131,11 @@ const FormTaskModal: FC<any> = (props) => {
   );
 
   const handleUserSelect = (e: any, value: any) => {
-    const assignsArray: any[] = methods.getValues('assignedUsers');
+    let assignsArray: any[] = methods.getValues('assignedUsers');
+    //console.log(assignsArray);
     if (!assignsArray.find((assign) => assign.id === value.id)) {
       SnackbarUtils.success('Dodano użytkownika');
-      assignsArray.push({ ...value, projectRole: projectRoleEnum.MEMBER.value, memberType: projectMemberEnum.DEVELOPER.value });
+      assignsArray = assignsArray.concat([{ ...value }]);
     } else {
       SnackbarUtils.warning('Użytkownik jest już dodany');
     }
@@ -131,7 +143,6 @@ const FormTaskModal: FC<any> = (props) => {
   };
 
   const handleRemoveUser = (id: number) => {
-    console.log(users);
     setUsers((users) => users.filter((userState) => userState.id !== id));
   };
 
