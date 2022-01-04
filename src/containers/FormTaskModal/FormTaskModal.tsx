@@ -61,6 +61,9 @@ const FormTaskModal: FC<any> = (props) => {
 
   const onSubmit = (values: any) => {
     values.priority = priorityNumberToString(values.priority);
+    values.assignedUsers = values.assignedUsers.map((users: any) => ({
+      userId: users.id,
+    }));
     if (props.task) {
       dispatch(putTask({ ...props.task, ...values }));
     } else {
