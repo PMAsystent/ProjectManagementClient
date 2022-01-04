@@ -126,7 +126,7 @@ const FormTaskModal: FC<any> = (props) => {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} key={'addtask'}>
             <div className="add-task-container">
-              <h1>Nowy task</h1>
+              <h1>{props.task ? `${props.task.name} - Edycja` : 'Nowy task'}</h1>
               <div className="task-form">
                 <CustomInput
                   placeholder={'Wpisz nazwę'}

@@ -49,6 +49,22 @@ export const putTask = createAsyncThunk<any, projectPutTaskType, { state: rootRe
   }
 );
 
+export const getTask = createAsyncThunk<any, number, { state: rootReducerInterface; rejectValue: string }>(
+  'task/getTask',
+  async (id, { rejectWithValue, getState }) => {
+    const {
+      auth: { accessToken },
+    } = getState();
+    return await getProjectApi(id, accessToken)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        return rejectWithValue(error.response.data.title);
+      });
+  }
+);
+
 export const taskReducer = createSlice({
   name: 'tasks',
   initialState: INIT_STATE,
