@@ -78,7 +78,6 @@ const FormTaskModal: FC<any> = (props) => {
     }));
     if (props.task) {
       dispatch(putTask({ ...props.task, ...values }));
-      console.log(values);
     } else {
       dispatch(postTask({ stepId: stepId, progressPercentage: 0, taskStatus: taskType.TODO, ...values }));
     }
@@ -132,7 +131,6 @@ const FormTaskModal: FC<any> = (props) => {
 
   const handleUserSelect = (e: any, value: any) => {
     let assignsArray: any[] = methods.getValues('assignedUsers');
-    //console.log(assignsArray);
     if (!assignsArray.find((assign) => assign.id === value.id)) {
       SnackbarUtils.success('Dodano użytkownika');
       assignsArray = assignsArray.concat([{ ...value }]);
