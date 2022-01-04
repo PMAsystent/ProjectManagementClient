@@ -1,16 +1,20 @@
 import { rootReducerInterface } from '../rootReducer';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { projectPostTaskType, projectPutTaskType } from 'core/types/api/task.request.types';
+import { projectPostTaskType, projectPutTaskType, taskDetailsType } from 'core/types/api/task.request.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
-import { postTaskApi, putTaskApi } from '../../api/utils';
+import { getTaskApi, postTaskApi, putTaskApi } from '../../api/utils';
 import { getProject } from 'redux/project/project.slice';
 
 export interface taskReducerInterface {
   taskPostFetchStatus: null | string;
+  taskDetailsFetchStatus: null | string;
+  taskDetails: null | taskDetailsType;
 }
 
 const INIT_STATE: taskReducerInterface = {
   taskPostFetchStatus: null,
+  taskDetailsFetchStatus: null,
+  taskDetails: null,
 };
 
 export const postTask = createAsyncThunk<any, projectPostTaskType, { state: rootReducerInterface; rejectValue: string }>(
@@ -55,7 +59,7 @@ export const getTask = createAsyncThunk<any, number, { state: rootReducerInterfa
     const {
       auth: { accessToken },
     } = getState();
-    return await getProjectApi(id, accessToken)
+    return await getTaskApi(id, accessToken)
       .then((response) => {
         return response.data;
       })
@@ -71,6 +75,9 @@ export const taskReducer = createSlice({
   reducers: {
     clearTaskPostFetchStatus(state) {
       state.taskPostFetchStatus = null;
+    },
+    clearTaskDetails(state) {
+      state.taskDetails = INIT_STATE.taskDetails;
     },
   },
   extraReducers: (builder) => {
@@ -95,9 +102,22 @@ export const taskReducer = createSlice({
       .addCase(putTask.rejected, (state, action) => {
         state.taskPostFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error('Zmiana stanu nie powiodła się');
+      })
+      .addCase(getTask.pending, (state, action) => {
+        state.taskDetailsFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(getTask.fulfilled, (state, action) => {
+        state.taskDetailsFetchStatus = action.meta.requestStatus;
+        state.taskDetails = action.payload;
+      })
+      .addCase(getTask.rejected, (state, action) => {
+        state.taskDetailsFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error('Pobranie taska nie powiodło się');
       });
   },
 });
 
-export const { clearTaskPostFetchStatus } = taskReducer.actions;
+export const { clearTaskPostFetchStatus, clearTaskDetails } = taskReducer.actions;
 export const selectTaskPostFetchStatus = (state: rootReducerInterface) => state.tasks.taskPostFetchStatus;
+export const selectTaskDetailsFetchStatus = (state: rootReducerInterface) => state.tasks.taskDetailsFetchStatus;
+export const selectTaskDetails = (state: rootReducerInterface) => state.tasks.taskDetails;

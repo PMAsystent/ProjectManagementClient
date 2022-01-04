@@ -9,7 +9,7 @@ import FormProjectModal from 'containers/FormProjectModal/FormProjectModal';
 import BasicSpeedDial from 'components/BasicSpeedDial/BasicSpeedDial';
 import AddIcon from '@mui/icons-material/Add';
 import ProjectTile from 'components/ProjectTile/ProjectTile';
-import { fetchStatues } from 'core/enums/redux.statues';
+import { fetchStates } from 'core/enums/redux.statues';
 import AuthSpinner from 'components/AuthSpinner/AuthSpinner';
 
 const MainLayout = () => {
@@ -34,7 +34,7 @@ const MainLayout = () => {
   }, [dispatch]);
   return (
     <div className="container">
-      {projectsListFetchStatus === fetchStatues.FULFILLED &&
+      {projectsListFetchStatus === fetchStates.FULFILLED &&
         (projects?.length ? (
           <>
             {projects.map((project: projectType) => {
@@ -57,8 +57,8 @@ const MainLayout = () => {
             </div>
           </div>
         ))}
-      {projectsListFetchStatus === fetchStatues.REJECTED && <div>Some error</div>}
-      {projectsListFetchStatus === fetchStatues.PENDING && <AuthSpinner />}
+      {projectsListFetchStatus === fetchStates.REJECTED && <div>Some error</div>}
+      {projectsListFetchStatus === fetchStates.PENDING && <AuthSpinner />}
       <BasicSpeedDial actions={actions} />
       {addProjectModal && <FormProjectModal open={addProjectModal} handleClose={() => setAddProjectModal(false)} />}
     </div>

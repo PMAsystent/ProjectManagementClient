@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { fetchStatues } from '../enums/redux.statues';
+import { fetchStates } from '../enums/redux.statues';
 import { history } from 'core/utils';
 import { useDispatch } from 'react-redux';
 
@@ -7,7 +7,7 @@ const useRedirectOnDoneFetchStatus: FC<{ status: string | null; path: string; cl
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (status === fetchStatues.FULFILLED) history.push(path);
+    if (status === fetchStates.FULFILLED) history.push(path);
   }, [status, path]);
 
   useEffect(() => {

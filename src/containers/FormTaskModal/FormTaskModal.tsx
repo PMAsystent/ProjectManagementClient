@@ -9,7 +9,15 @@ import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
 import { MenuItem, Modal, Select } from '@mui/material';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearTaskPostFetchStatus, postTask, putTask, selectTaskPostFetchStatus } from '../../redux/task/task.slice';
+import {
+  clearTaskPostFetchStatus,
+  getTask,
+  postTask,
+  putTask,
+  selectTaskDetails,
+  selectTaskDetailsFetchStatus,
+  selectTaskPostFetchStatus,
+} from '../../redux/task/task.slice';
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -24,6 +32,7 @@ import AssignedUserList from 'components/AssignedUsersList/AssignedUserList';
 import { projectMemberEnum } from 'core/enums/project.member';
 import { projectRoleEnum } from 'core/enums/project.role';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
+import { fetchStates } from 'core/enums/redux.statues';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
@@ -38,6 +47,8 @@ const FormTaskModal: FC<any> = (props) => {
   const dispatch = useDispatch();
   const stepId = props.stepId;
   const taskPostFetchStatus = useSelector(selectTaskPostFetchStatus);
+  const taskDetailsFetchStatus = useSelector(selectTaskDetailsFetchStatus);
+  const taskDetails = useSelector(selectTaskDetails);
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
@@ -81,6 +92,17 @@ const FormTaskModal: FC<any> = (props) => {
       });
     }
   }, [methods, props.task]);
+
+  useEffect(() => {
+    if (taskDetailsFetchStatus === fetchStates.FULFILLED) {
+      console.log(taskDetails);
+      setUsers(taskDetails?.assignedUser || []);
+    }
+  }, [taskDetailsFetchStatus]);
+
+  useEffect(() => {
+    dispatch(getTask(+props.task.id));
+  }, [dispatch, props.task.id]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnChangeUsersDebounced = useCallback(
@@ -159,27 +181,29 @@ const FormTaskModal: FC<any> = (props) => {
                   </span>
                 </div>
               </div>
-              <div className="assigns-form">
-                <AsyncAutocomplete
-                  name={'findUsers'}
-                  label={'Dodaj użytkownika'}
-                  nameOptionLabel={'email'}
-                  onChange={handleOnChangeUsersDebounced}
-                  onSelect={handleUserSelect}
-                  options={usersOptions}
-                  setOptions={setUsersOptions}
-                  loading={usersOptionsLoading}
-                  clearOnClose
-                />
-                <div className="label">Użytkownicy</div>
-                <AssignedUserList
-                  users={users}
-                  includeCurrentUser={false}
-                  addtionalActions={(user: any) => {
-                    return <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />;
-                  }}
-                />
-              </div>
+              {taskDetailsFetchStatus === fetchStates.FULFILLED && (
+                <div className="assigns-form">
+                  <AsyncAutocomplete
+                    name={'findUsers'}
+                    label={'Dodaj użytkownika'}
+                    nameOptionLabel={'email'}
+                    onChange={handleOnChangeUsersDebounced}
+                    onSelect={handleUserSelect}
+                    options={usersOptions}
+                    setOptions={setUsersOptions}
+                    loading={usersOptionsLoading}
+                    clearOnClose
+                  />
+                  <div className="label">Użytkownicy</div>
+                  <AssignedUserList
+                    users={users}
+                    includeCurrentUser={false}
+                    addtionalActions={(user: any) => {
+                      return <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />;
+                    }}
+                  />
+                </div>
+              )}
               <CustomInput {...methods.register('assignedUsers')} type="hidden" />
 
               <div className="buttons">
