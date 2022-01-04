@@ -26,12 +26,16 @@
     .custom-textarea {
       margin-bottom: 35px;
     }
+    .custom-date-picker {
+      margin-bottom: 30px;
+    }
   }
-
-  .priority-span {
-    display: flex;
-    flex-direction: row;
-    max-height: 20px;
+  .task-priority {
+    .priority-span {
+      display: flex;
+      flex-direction: row;
+      max-height: 20px;
+    }
   }
   .assigns-form {
     flex-basis: 50%;
