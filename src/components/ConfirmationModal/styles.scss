@@ -1,0 +1,32 @@
+@use '../../assets/styles/colors';
+
+.confirm-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  color: #fff;
+  max-width: 350px;
+  background-color: colors.$bgColor;
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 20px;
+  h1 {
+    flex-basis: 100%;
+    font-weight: 900;
+    font-style: oblique;
+  }
+  p {
+    flex-basis: 100%;
+    margin-bottom: 30px;
+  }
+  .buttons {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 20px;
+    padding-bottom: 30px;
+  }
+}
+

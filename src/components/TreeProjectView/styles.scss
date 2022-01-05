@@ -18,6 +18,14 @@ $hoverColor: rgba(0, 0, 0, 0.09) !important;
       background-color: $hoverColor;
     }
 
+    #edit, #delete {
+      margin-right: 5px;
+    }
+
+    .MuiTreeItem-label  {
+      margin-left: 5px;
+    }
+
     .tree-item__task {
       color: colors.$secondaryTextColor;
     }
