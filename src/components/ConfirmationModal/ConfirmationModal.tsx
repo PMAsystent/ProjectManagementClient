@@ -3,7 +3,7 @@ import { Modal } from '@mui/material';
 import './styles.scss';
 import CustomButton from '../CustomButton/CustomButton';
 
-const ConfirmationModal: FC<{ open: boolean; handleClose: any; element: string }> = ({ open, handleClose, element }) => {
+const ConfirmationModal: FC<{ open: boolean; handleClose: any; text: string; title: string }> = ({ open, handleClose, text, title }) => {
   return (
     <Modal
       open={open}
@@ -13,13 +13,15 @@ const ConfirmationModal: FC<{ open: boolean; handleClose: any; element: string }
       sx={{ overflowY: 'scroll', overflowX: 'hidden', marginBottom: '15px' }}
     >
       <div className="confirm-container">
-        <h1>Usuwanie elementu</h1>
-        <p>
-          Czy napewno chcesz usunąć <b>{element}</b> ?
-        </p>
+        <h1>{title}</h1>
+        <p>{text}</p>
         <div className="buttons">
-          <CustomButton className="btn-success" onClick={() => handleClose(true)}>Tak</CustomButton>
-          <CustomButton className="btn-go-back" onClick={() => handleClose(false)}>Anuluj</CustomButton>
+          <CustomButton className="btn-success" onClick={() => handleClose(true)}>
+            Tak
+          </CustomButton>
+          <CustomButton className="btn-go-back" onClick={() => handleClose(false)}>
+            Anuluj
+          </CustomButton>
         </div>
       </div>
     </Modal>

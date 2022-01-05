@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import { clearDeleteStepFetchStatus, deleteStep, selectDeleteStepFetchStatus } from '../../redux/step/step.slice';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
-import {getProjectDetailsPath} from "../../core/routes";
+import { getProjectDetailsPath } from '../../core/routes';
 
 const TreeProjectView: FC<any> = () => {
   const history = useHistory();
@@ -130,7 +130,12 @@ const TreeProjectView: FC<any> = () => {
       </TreeView>
       {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectId} />}
       {deleteStepModal && selectedStep && (
-        <ConfirmationModal element={selectedStep?.name} open={deleteStepModal} handleClose={handleCloseDeleteStep} />
+        <ConfirmationModal
+          text={`Czy napewno chcesz usunąć ${selectedStep?.name}?`}
+          title={'Usuwanie Stepu'}
+          open={deleteStepModal}
+          handleClose={handleCloseDeleteStep}
+        />
       )}
     </>
   );

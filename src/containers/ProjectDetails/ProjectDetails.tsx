@@ -42,9 +42,12 @@ import AddStepModal from '../AddStepModal/AddStepModal';
 import { projectPutTaskType } from '../../core/types/api/task.request.types';
 import { Tooltip } from '@mui/material';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
+import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 
 const ProjectDetails = () => {
   const [step, setStep] = useState<null | projectStep>(null);
+  const [deleteProjectModal, setDeleteProjectModal] = useState<boolean>(false);
+  const [archiveProjectModal, setArchiveProjectModal] = useState<boolean>(false);
   const [editProjectModal, setEditProjectModal] = useState(false);
   const [addStepModal, setAddStepModal] = useState<boolean>(false);
   const [activeTasks, setActiveTasks] = useState(0);
@@ -110,6 +113,20 @@ const ProjectDetails = () => {
 
   const handleDeleteProject = () => {
     dispatch(deleteProject(+projectid));
+  };
+
+  const handleCloseDeleteProject = (success: boolean) => {
+    setDeleteProjectModal(false);
+    if (success) {
+      handleDeleteProject();
+    }
+  };
+
+  const handleCloseArchiveProject = (success: boolean) => {
+    setArchiveProjectModal(false);
+    if (success) {
+      handleArchiveProject();
+    }
   };
 
   const onDragEnd = async (result: any, columns: any, setColumns: any) => {
@@ -240,11 +257,11 @@ const ProjectDetails = () => {
                     <EditIcon onClick={() => setEditProjectModal(true)} />
                   </Tooltip>
                   <Tooltip title="Zarchiwizuj Projekt">
-                    <ArchiveIcon onClick={handleArchiveProject} />
+                    <ArchiveIcon onClick={() => setArchiveProjectModal(true)} />
                   </Tooltip>
                   {projectDetails?.projectCreator && projectDetails?.projectCreator.userId === user?.userId && (
                     <Tooltip title="Usuń Projekt">
-                      <DeleteIcon onClick={handleDeleteProject} />
+                      <DeleteIcon onClick={() => setDeleteProjectModal(true)} />
                     </Tooltip>
                   )}
                 </VisibilityGuard>
@@ -313,6 +330,22 @@ const ProjectDetails = () => {
       )}
       <BasicSpeedDial actions={actions} />
       {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
+      {deleteProjectModal && (
+        <ConfirmationModal
+          title={'Usuwanie Projektu'}
+          text={`Czy napewno chcesz usunąć ${projectDetails?.name}?`}
+          open={deleteProjectModal}
+          handleClose={handleCloseDeleteProject}
+        />
+      )}
+      {archiveProjectModal && (
+        <ConfirmationModal
+          title={'Archiwizowanie Projektu'}
+          text={`Czy napewno chcesz zarchiwizować ${projectDetails?.name}?`}
+          open={archiveProjectModal}
+          handleClose={handleCloseArchiveProject}
+        />
+      )}
       {addTaskModal && (
         <FormTaskModal
           open={addTaskModal}
