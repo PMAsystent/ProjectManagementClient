@@ -196,29 +196,28 @@ const FormTaskModal: FC<any> = (props) => {
                   </span>
                 </div>
               </div>
-              {taskDetailsFetchStatus === fetchStates.FULFILLED && (
-                <div className="assigns-form">
-                  <AsyncAutocomplete
-                    name={'findUsers'}
-                    label={'Dodaj użytkownika'}
-                    nameOptionLabel={'email'}
-                    onChange={handleOnChangeUsersDebounced}
-                    onSelect={handleUserSelect}
-                    options={usersOptions}
-                    setOptions={setUsersOptions}
-                    loading={usersOptionsLoading}
-                    clearOnClose
-                  />
-                  <div className="label">Użytkownicy</div>
-                  <AssignedUserList
-                    users={users}
-                    includeCurrentUser={false}
-                    addtionalActions={(user: any) => {
-                      return <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />;
-                    }}
-                  />
-                </div>
-              )}
+              <div className="assigns-form">
+                <AsyncAutocomplete
+                  name={'findUsers'}
+                  label={'Dodaj użytkownika'}
+                  nameOptionLabel={'email'}
+                  onChange={handleOnChangeUsersDebounced}
+                  onSelect={handleUserSelect}
+                  options={usersOptions}
+                  setOptions={setUsersOptions}
+                  loading={usersOptionsLoading}
+                  clearOnClose
+                />
+                <div className="label">Użytkownicy</div>
+                <AssignedUserList
+                  users={users}
+                  includeCurrentUser={false}
+                  addtionalActions={(user: any) => {
+                    return <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />;
+                  }}
+                />
+              </div>
+
               <CustomInput {...methods.register('assignedUsers')} type="hidden" />
 
               <div className="buttons">
