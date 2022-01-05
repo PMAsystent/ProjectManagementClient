@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Badge, Box, Hidden, IconButton, Toolbar, Tooltip } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, Hidden, IconButton, Input, TextField, Toolbar, Tooltip } from '@mui/material';
 import { NotificationsNone, Settings, Search, Menu } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { getUserDetailsPath } from 'core/routes';
@@ -11,7 +11,6 @@ import React from 'react';
 const Navbar = (props: { onSidebarOpen: any }) => {
   const { onSidebarOpen } = props;
   const currentUser = useSelector(selectUser);
-
   const history = useHistory();
 
   const onAvatarClick = () => {
@@ -26,11 +25,10 @@ const Navbar = (props: { onSidebarOpen: any }) => {
             <Menu />
           </IconButton>
         </Hidden>
-        <Tooltip title="Search">
-          <IconButton className="search-button">
-            <Search fontSize="small" className="navbar-icon" id="SEARCH-ICON" />
-          </IconButton>
-        </Tooltip>
+        <Box className={'search-box'} sx={{ display: 'flex', alignItems: 'flex-end' }}>
+          <Search fontSize="small" className="navbar-icon" id="SEARCH-ICON" />
+          <TextField id="input-with-sx" variant="standard" />
+        </Box>
         <Box sx={{ flexGrow: 20 }} />
         <Tooltip title="Notifications">
           <IconButton color="inherit">

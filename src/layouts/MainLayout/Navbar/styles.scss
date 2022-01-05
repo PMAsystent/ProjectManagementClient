@@ -10,6 +10,29 @@ $avatarSize: 40px;
     width: calc(100% - #{constants.$SidebarWidth});
     left: constants.$SidebarWidth;
   }
+  .search-box {
+    padding-left: 20px;
+    width: 100%;
+    .MuiTextField-root {
+      width: 100%;
+      .MuiInputBase-input.MuiInput-input {
+        color: colors.$textColor;
+        font-size: 20px;
+        padding: 0 0 0 5px;
+
+        margin-bottom: 2px;
+      }
+      .MuiInput-underline {
+        &::after, &::before, &:hover:not(.Mui-disabled):before {
+          border: 0;
+        }
+      }
+    }
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
   .top-avatar {
     cursor: pointer;
     height: $avatarSize;
