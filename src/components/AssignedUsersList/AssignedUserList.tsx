@@ -4,8 +4,6 @@ import { Avatar } from '@mui/material';
 import { stringToColor } from 'core/utils';
 import { selectUser } from 'redux/auth/auth.slice';
 import { useSelector } from 'react-redux';
-import { useFormContext } from 'react-hook-form';
-import { taskAssignmentsType } from 'core/types/api/assigned.request.types';
 
 const AssignedUserList: FC<{ users: any[]; includeCurrentUser?: boolean; addtionalActions?: any }> = ({
   users,
