@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Badge, Box, Hidden, IconButton, Input, TextField, Toolbar, Tooltip } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, Hidden, IconButton, TextField, Toolbar, Tooltip } from '@mui/material';
 import { NotificationsNone, Settings, Search, Menu } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { getUserDetailsPath } from 'core/routes';

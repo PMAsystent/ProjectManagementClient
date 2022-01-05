@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
-import { MenuItem, Modal, Select } from '@mui/material';
+import { Modal } from '@mui/material';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -30,8 +30,6 @@ import { priorityNumberToString, priorityStringToNumber } from 'core/utils';
 import { taskType } from '../../core/enums/task.type';
 import AsyncAutocomplete from 'components/AsyncAutocomplete/AsyncAutocomplete';
 import AssignedUserList from 'components/AssignedUsersList/AssignedUserList';
-import { projectMemberEnum } from 'core/enums/project.member';
-import { projectRoleEnum } from 'core/enums/project.role';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { fetchStates } from 'core/enums/redux.statues';
 import { deleteTaskAssignment, postTaskAssignment } from 'redux/taskAssignments/taskAssignments.slice';
@@ -99,7 +97,7 @@ const FormTaskModal: FC<any> = (props) => {
     if (taskDetailsFetchStatus === fetchStates.FULFILLED) {
       setUsers(taskDetails?.assignedUser || []);
     }
-  }, [taskDetailsFetchStatus]);
+  }, [taskDetails?.assignedUser, taskDetailsFetchStatus]);
 
   useEffect(() => {
     methods.setValue('assignedUsers', users);
@@ -113,7 +111,7 @@ const FormTaskModal: FC<any> = (props) => {
       dispatch(clearTaskDetails());
       setUsers([]);
     }
-  }, [dispatch, props.task?.id]);
+  }, [dispatch, props.task, props.task.id]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnChangeUsersDebounced = useCallback(

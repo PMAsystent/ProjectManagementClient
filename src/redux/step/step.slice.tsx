@@ -2,7 +2,7 @@ import { rootReducerInterface } from '../rootReducer';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { instance } from '../../api';
-import {getProject, getProjects} from '../project/project.slice';
+import { getProject, getProjects } from '../project/project.slice';
 
 export interface stepReducerInterface {
   deleteStepFetchStatus: null | string;

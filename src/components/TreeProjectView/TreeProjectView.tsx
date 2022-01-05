@@ -16,7 +16,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import { clearDeleteStepFetchStatus, deleteStep, selectDeleteStepFetchStatus } from '../../redux/step/step.slice';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
-import { getProjectDetailsPath } from '../../core/routes';
 
 const TreeProjectView: FC<any> = () => {
   const history = useHistory();
