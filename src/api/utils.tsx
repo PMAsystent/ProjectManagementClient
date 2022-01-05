@@ -29,6 +29,7 @@ export const putTaskApi = async (data: projectPutTaskType, accessToken: string) 
 export const getTaskApi = async (taskId: number, accessToken: string | null) => {
   return await instance.get<taskDetailsType>(`/Tasks/${taskId}`, { headers: { authorization: `Bearer ${accessToken}` } });
 };
+
 export const getProjectApi = async (projectId: number, accessToken: string | null) => {
   return await instance.get<projectDetails>(`/MyProjects/${projectId}`, { headers: { authorization: `Bearer ${accessToken}` } });
 };
