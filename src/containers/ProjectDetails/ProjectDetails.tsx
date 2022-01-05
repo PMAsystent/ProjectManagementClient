@@ -12,8 +12,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   archiveProject,
   clearProjectArchiveFetchStatus,
-  clearProjectDeleteFetchStatus, deleteProject,
-  getProject, selectProjectArchiveFetchStatus, selectProjectDeleteFetchStatus,
+  clearProjectDeleteFetchStatus,
+  deleteProject,
+  getProject,
+  selectProjectArchiveFetchStatus,
+  selectProjectDeleteFetchStatus,
   selectProjectDetails,
   selectProjectDetailsFetchStatus,
   setProjectProgressPercentage,
