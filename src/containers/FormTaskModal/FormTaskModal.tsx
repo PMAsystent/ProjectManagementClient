@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -6,16 +6,34 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
-import { Modal } from '@mui/material';
+import { MenuItem, Modal, Select } from '@mui/material';
+import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearTaskPostFetchStatus, postTask, putTask, selectTaskPostFetchStatus } from '../../redux/task/task.slice';
+import {
+  clearTaskDetails,
+  clearTaskPostFetchStatus,
+  getTask,
+  postTask,
+  putTask,
+  selectTaskDetails,
+  selectTaskDetailsFetchStatus,
+  selectTaskPostFetchStatus,
+} from '../../redux/task/task.slice';
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import { findUsers } from '../../api/utils';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 import CustomPriorityField from 'components/CustomPriorityField/CustomPriorityField';
 import PriorityNameDisplayer from 'components/PriorityNameDisplayer/PriorityNameDisplayer';
 import { priorityNumberToString, priorityStringToNumber } from 'core/utils';
 import { taskType } from '../../core/enums/task.type';
+import AsyncAutocomplete from 'components/AsyncAutocomplete/AsyncAutocomplete';
+import AssignedUserList from 'components/AssignedUsersList/AssignedUserList';
+import { projectMemberEnum } from 'core/enums/project.member';
+import { projectRoleEnum } from 'core/enums/project.role';
+import SnackbarUtils from 'core/utils/SnackbarUtils';
+import { fetchStates } from 'core/enums/redux.statues';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
@@ -30,7 +48,11 @@ const FormTaskModal: FC<any> = (props) => {
   const dispatch = useDispatch();
   const stepId = props.stepId;
   const taskPostFetchStatus = useSelector(selectTaskPostFetchStatus);
-
+  const taskDetailsFetchStatus = useSelector(selectTaskDetailsFetchStatus);
+  const taskDetails = useSelector(selectTaskDetails);
+  const [usersOptions, setUsersOptions] = useState<any[]>([]);
+  const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
   const defaultValue: any = useMemo(
     () => ({
       name: '',
@@ -51,6 +73,9 @@ const FormTaskModal: FC<any> = (props) => {
 
   const onSubmit = (values: any) => {
     values.priority = priorityNumberToString(values.priority);
+    values.assignedUsers = values.assignedUsers.map((users: any) => ({
+      userId: users.id,
+    }));
     if (props.task) {
       dispatch(putTask({ ...props.task, ...values }));
     } else {
@@ -69,8 +94,57 @@ const FormTaskModal: FC<any> = (props) => {
     }
   }, [methods, props.task]);
 
-  useCloseModalOnDoneFetchStatus({ status: taskPostFetchStatus, clearFunction: clearTaskPostFetchStatus, handleClose: props.handleClose });
+  useEffect(() => {
+    if (taskDetailsFetchStatus === fetchStates.FULFILLED) {
+      setUsers(taskDetails?.assignedUser || []);
+    }
+  }, [taskDetailsFetchStatus]);
 
+  useEffect(() => {
+    methods.setValue('assignedUsers', users);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [users]);
+
+  useEffect(() => {
+    if (props.task) {
+      dispatch(getTask(+props.task.id));
+    } else {
+      dispatch(clearTaskDetails());
+      setUsers([]);
+    }
+  }, [dispatch, props.task?.id]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleOnChangeUsersDebounced = useCallback(
+    debounce(async (query) => {
+      setUsersOptionsLoading(true);
+      const response: any = await findUsers(query);
+      if (response?.count > 0) {
+        setUsersOptions(response.users);
+      } else {
+        setUsersOptions([]);
+      }
+      setUsersOptionsLoading(false);
+    }, 800),
+    []
+  );
+
+  const handleUserSelect = (e: any, value: any) => {
+    let assignsArray: any[] = methods.getValues('assignedUsers');
+    if (!assignsArray.find((assign) => assign.id === value.id)) {
+      SnackbarUtils.success('Dodano użytkownika');
+      assignsArray = assignsArray.concat([{ ...value }]);
+    } else {
+      SnackbarUtils.warning('Użytkownik jest już dodany');
+    }
+    setUsers(assignsArray);
+  };
+
+  const handleRemoveUser = (id: number) => {
+    setUsers((users) => users.filter((userState) => userState.id !== id));
+  };
+
+  useCloseModalOnDoneFetchStatus({ status: taskPostFetchStatus, clearFunction: clearTaskPostFetchStatus, handleClose: props.handleClose });
   return (
     <Modal
       open={props.open}
@@ -83,7 +157,7 @@ const FormTaskModal: FC<any> = (props) => {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} key={'addtask'}>
             <div className="add-task-container">
-              <h1>Nowy task</h1>
+              <h1>{props.task ? `${props.task.name} - Edycja` : 'Nowy task'}</h1>
               <div className="task-form">
                 <CustomInput
                   placeholder={'Wpisz nazwę'}
@@ -108,14 +182,38 @@ const FormTaskModal: FC<any> = (props) => {
                   helperText={methods.formState.errors.dueDate?.message}
                   error={!!methods.formState.errors.dueDate}
                 />
+                <div className="task-priority">
+                  <p>Priorytet</p>
+                  <span className="priority-span">
+                    <CustomPriorityField name="priority" />
+                    <PriorityNameDisplayer priorityFieldName="priority" />
+                  </span>
+                </div>
               </div>
-              <div className="task-priority">
-                <p>Priorytet</p>
-                <span className="priority-span">
-                  <CustomPriorityField name="priority" />
-                  <PriorityNameDisplayer priorityFieldName="priority" />
-                </span>
-              </div>
+              {taskDetailsFetchStatus === fetchStates.FULFILLED && (
+                <div className="assigns-form">
+                  <AsyncAutocomplete
+                    name={'findUsers'}
+                    label={'Dodaj użytkownika'}
+                    nameOptionLabel={'email'}
+                    onChange={handleOnChangeUsersDebounced}
+                    onSelect={handleUserSelect}
+                    options={usersOptions}
+                    setOptions={setUsersOptions}
+                    loading={usersOptionsLoading}
+                    clearOnClose
+                  />
+                  <div className="label">Użytkownicy</div>
+                  <AssignedUserList
+                    users={users}
+                    includeCurrentUser={false}
+                    addtionalActions={(user: any) => {
+                      return <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />;
+                    }}
+                  />
+                </div>
+              )}
+              <CustomInput {...methods.register('assignedUsers')} type="hidden" />
 
               <div className="buttons">
                 <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>

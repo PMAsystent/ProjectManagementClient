@@ -10,7 +10,7 @@ import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProject, selectProjectDetails, selectProjectDetailsFetchStatus, setProjectProgressPercentage } from 'redux/project/project.slice';
-import { fetchStatues } from 'core/enums/redux.statues';
+import { fetchStates } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from 'components/TaskList/TaskList';
 import { taskType } from 'core/enums/task.type';
@@ -27,6 +27,7 @@ import VisibilityGuard from 'core/hoc/VisibilityGuard';
 import { projectRoleEnum } from '../../core/enums/project.role';
 import AddStepModal from '../AddStepModal/AddStepModal';
 import { projectPutTaskType } from '../../core/types/api/task.request.types';
+import { clearTaskDetails } from 'redux/task/task.slice';
 
 const ProjectDetails = () => {
   const [step, setStep] = useState<null | projectStep>(null);
@@ -157,8 +158,10 @@ const ProjectDetails = () => {
     dispatch(getProject(+projectid));
   }, [dispatch, projectid]);
 
+
+
   useEffect(() => {
-    if (projectDetailsFetchStatus === fetchStatues.FULFILLED) {
+    if (projectDetailsFetchStatus === fetchStates.FULFILLED) {
       let todoTasks: Array<projectPutTaskType> = [];
       let inProgressTasks: Array<projectPutTaskType> = [];
       let completedTasks: Array<projectPutTaskType> = [];
@@ -198,7 +201,7 @@ const ProjectDetails = () => {
 
   return (
     <section className="project-container">
-      {projectDetailsFetchStatus === fetchStatues.FULFILLED && (
+      {projectDetailsFetchStatus === fetchStates.FULFILLED && (
         <>
           <div className="project-header">
             <div className="info">
@@ -274,7 +277,15 @@ const ProjectDetails = () => {
       )}
       <BasicSpeedDial actions={actions} />
       {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
-      {addTaskModal && <FormTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} stepId={stepid} />}
+      {addTaskModal && (
+        <FormTaskModal
+          open={addTaskModal}
+          handleClose={() => {
+            setAddTaskModal(false);
+          }}
+          stepId={stepid}
+        />
+      )}
       {editProjectModal && projectDetails && (
         <FormProjectModal
           project={{
