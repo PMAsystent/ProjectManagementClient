@@ -43,6 +43,7 @@ import { projectPutTaskType } from '../../core/types/api/task.request.types';
 import { Tooltip } from '@mui/material';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
+import { selectTaskSearch } from '../../redux/shared/shared.slice';
 
 const ProjectDetails = () => {
   const [step, setStep] = useState<null | projectStep>(null);
@@ -58,6 +59,7 @@ const ProjectDetails = () => {
   const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
   const projectDeleteFetchStatus = useSelector(selectProjectDeleteFetchStatus);
   const projectArchiveFetchStatus = useSelector(selectProjectArchiveFetchStatus);
+  const searchTask = useSelector(selectTaskSearch);
   const accessToken = useSelector(selectAccessToken);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -322,7 +324,19 @@ const ProjectDetails = () => {
           <DragDropContext onDragEnd={(result) => onDragEnd(result, columns, setColumns)}>
             <div className="project-tasks">
               {Object.entries(columns).map(([columnId, column]: any) => (
-                <TaskList tasks={column?.items || []} key={columnId} name={column?.name || ''} title={column?.title || ''} prefix={columnId} />
+                <TaskList
+                  tasks={
+                    column?.items.filter((item: any) => {
+                      const name = item.name.toUpperCase();
+                      const search = searchTask.toUpperCase();
+                      return name.includes(search);
+                    }) || []
+                  }
+                  key={columnId}
+                  name={column?.name || ''}
+                  title={column?.title || ''}
+                  prefix={columnId}
+                />
               ))}
             </div>
           </DragDropContext>

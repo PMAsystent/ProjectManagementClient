@@ -1,21 +1,38 @@
 import { AppBar, Avatar, Badge, Box, Hidden, IconButton, TextField, Toolbar, Tooltip } from '@mui/material';
 import { NotificationsNone, Settings, Search, Menu } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
-import { getUserDetailsPath } from 'core/routes';
+import { getDashboardPath, getUserDetailsPath } from 'core/routes';
 import './styles.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from 'redux/auth/auth.slice';
 import { stringToColor } from '../../../core/utils';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { changeProjectSearch, changeTaskSearch } from '../../../redux/shared/shared.slice';
 
 const Navbar = (props: { onSidebarOpen: any }) => {
+  const [value, setValue] = useState('');
   const { onSidebarOpen } = props;
   const currentUser = useSelector(selectUser);
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const onAvatarClick = () => {
     history.push(getUserDetailsPath);
   };
+
+  const handleOnSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+    if (history.location.pathname === getDashboardPath) {
+      dispatch(changeProjectSearch(e.target.value));
+    } else if (history.location.pathname.includes('/project/')) {
+      dispatch(changeTaskSearch(e.target.value));
+    }
+  };
+
+  useEffect(() => {
+    dispatch(changeProjectSearch(''));
+    dispatch(changeTaskSearch(''));
+  }, [dispatch, history.location.pathname]);
 
   return (
     <AppBar elevation={0} className="navbar-root">
@@ -27,7 +44,13 @@ const Navbar = (props: { onSidebarOpen: any }) => {
         </Hidden>
         <Box className={'search-box'} sx={{ display: 'flex', alignItems: 'flex-end' }}>
           <Search fontSize="small" className="navbar-icon" id="SEARCH-ICON" />
-          <TextField id="input-with-sx" variant="standard" />
+          <TextField
+            id="search"
+            variant="standard"
+            value={value}
+            onChange={handleOnSearchChange}
+            disabled={!history.location.pathname.includes('/project/') && history.location.pathname !== getDashboardPath}
+          />
         </Box>
         <Box sx={{ flexGrow: 20 }} />
         <Tooltip title="Notifications">
