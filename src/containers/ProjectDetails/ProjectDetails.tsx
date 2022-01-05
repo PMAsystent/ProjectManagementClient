@@ -9,17 +9,27 @@ import { getDashboardPath } from 'core/routes';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProject, selectProjectDetails, selectProjectDetailsFetchStatus, setProjectProgressPercentage } from 'redux/project/project.slice';
+import {
+  archiveProject,
+  clearProjectArchiveFetchStatus,
+  clearProjectDeleteFetchStatus, deleteProject,
+  getProject, selectProjectArchiveFetchStatus, selectProjectDeleteFetchStatus,
+  selectProjectDetails,
+  selectProjectDetailsFetchStatus,
+  setProjectProgressPercentage,
+} from 'redux/project/project.slice';
 import { fetchStatues } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from 'components/TaskList/TaskList';
 import { taskType } from 'core/enums/task.type';
 import { getProjectApi, putTaskApi } from 'api/utils';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
-import { selectAccessToken } from 'redux/auth/auth.slice';
+import { selectAccessToken, selectUser } from 'redux/auth/auth.slice';
 import CustomButton from 'components/CustomButton/CustomButton';
 import AvatarList from 'components/AvatarList/AvatarList';
 import EditIcon from '@mui/icons-material/Edit';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FormProjectModal from '../FormProjectModal/FormProjectModal';
 import { projectStep } from 'core/types/api/step.request.types';
 import FormTaskModal from 'containers/FormTaskModal/FormTaskModal';
@@ -27,6 +37,8 @@ import VisibilityGuard from 'core/hoc/VisibilityGuard';
 import { projectRoleEnum } from '../../core/enums/project.role';
 import AddStepModal from '../AddStepModal/AddStepModal';
 import { projectPutTaskType } from '../../core/types/api/task.request.types';
+import { Tooltip } from '@mui/material';
+import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
 
 const ProjectDetails = () => {
   const [step, setStep] = useState<null | projectStep>(null);
@@ -38,7 +50,10 @@ const ProjectDetails = () => {
   const projectDetails = useSelector(selectProjectDetails);
   const { projectid, stepid } = useParams<{ projectid: string; stepid: string }>();
   const projectDetailsFetchStatus = useSelector(selectProjectDetailsFetchStatus);
+  const projectDeleteFetchStatus = useSelector(selectProjectDeleteFetchStatus);
+  const projectArchiveFetchStatus = useSelector(selectProjectArchiveFetchStatus);
   const accessToken = useSelector(selectAccessToken);
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const history = useHistory();
   const [columns, setColumns] = useState<any>({
@@ -85,6 +100,14 @@ const ProjectDetails = () => {
     }
     return actionsArray;
   }, [history, projectDetails?.currentUserInfoInProject?.projectRole, stepid]);
+
+  const handleArchiveProject = () => {
+    dispatch(archiveProject({ id: +projectid, isActive: false }));
+  };
+
+  const handleDeleteProject = () => {
+    dispatch(deleteProject(+projectid));
+  };
 
   const onDragEnd = async (result: any, columns: any, setColumns: any) => {
     const task = projectDetails?.projectTasks.find((task) => task.id === +result.draggableId);
@@ -196,6 +219,9 @@ const ProjectDetails = () => {
     }
   }, [projectDetails?.projectSteps, projectDetails?.projectTasks, projectDetailsFetchStatus, stepid]);
 
+  useRedirectOnDoneFetchStatus({ status: projectArchiveFetchStatus, path: getDashboardPath, clearFunction: clearProjectArchiveFetchStatus });
+  useRedirectOnDoneFetchStatus({ status: projectDeleteFetchStatus, path: getDashboardPath, clearFunction: clearProjectDeleteFetchStatus });
+
   return (
     <section className="project-container">
       {projectDetailsFetchStatus === fetchStatues.FULFILLED && (
@@ -207,7 +233,17 @@ const ProjectDetails = () => {
                   {projectDetails?.name} {step?.name && `- ${step.name}`}
                 </h1>
                 <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
-                  <EditIcon onClick={() => setEditProjectModal(true)} />
+                  <Tooltip title="Edycja Projektu">
+                    <EditIcon onClick={() => setEditProjectModal(true)} />
+                  </Tooltip>
+                  <Tooltip title="Zarchiwizuj Projekt">
+                    <ArchiveIcon onClick={handleArchiveProject} />
+                  </Tooltip>
+                  {projectDetails?.projectCreator && projectDetails?.projectCreator.userId === user?.userId && (
+                    <Tooltip title="Usuń Projekt">
+                      <DeleteIcon onClick={handleDeleteProject} />
+                    </Tooltip>
+                  )}
                 </VisibilityGuard>
               </div>
               <div className="info-item">

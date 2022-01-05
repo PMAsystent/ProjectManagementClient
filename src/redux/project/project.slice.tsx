@@ -13,6 +13,8 @@ export interface projectReducerInterface {
   projectDetailsFetchStatus: null | string;
   projectPostFetchStatus: null | string;
   projectPutFetchStatus: null | string;
+  projectArchiveFetchStatus: null | string;
+  projectDeleteFetchStatus: null | string;
 }
 
 const INIT_STATE: projectReducerInterface = {
@@ -22,6 +24,8 @@ const INIT_STATE: projectReducerInterface = {
   projectDetailsFetchStatus: null,
   projectPostFetchStatus: null,
   projectPutFetchStatus: null,
+  projectArchiveFetchStatus: null,
+  projectDeleteFetchStatus: null,
 };
 
 export const getProjects = createAsyncThunk<any, void, { state: rootReducerInterface; rejectValue: string }>(
@@ -75,6 +79,41 @@ export const postProject = createAsyncThunk<any, postProjectType, { state: rootR
   }
 );
 
+export const archiveProject = createAsyncThunk<any, { id: number; isActive: boolean }, { state: rootReducerInterface; rejectValue: string }>(
+  'project/archiveProject',
+  async ({ id, isActive }, { rejectWithValue, getState, dispatch }) => {
+    const {
+      auth: { accessToken },
+    } = getState();
+    return await instance
+      .patch(`/MyProjects/${id}/archive/${isActive}`, {}, { headers: { authorization: `Bearer ${accessToken}` } })
+      .then((response) => {
+        dispatch(getProjects());
+        return response.data;
+      })
+      .catch((error) => {
+        return rejectWithValue(error.response?.data || '');
+      });
+  }
+);
+
+export const deleteProject = createAsyncThunk<any, number, { state: rootReducerInterface; rejectValue: string }>(
+  'project/deleteProject',
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    const {
+      auth: { accessToken },
+    } = getState();
+    return await instance
+      .delete(`/MyProjects/${id}`, { headers: { authorization: `Bearer ${accessToken}` } })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        return rejectWithValue(error.response?.data || '');
+      });
+  }
+);
+
 export const putProject = createAsyncThunk<any, putProjectType, { state: rootReducerInterface; rejectValue: string }>(
   'project/putProject',
   async (data, { rejectWithValue, getState, dispatch }) => {
@@ -105,6 +144,12 @@ export const projectReducer = createSlice({
     },
     clearProjectPutFetchStatus(state) {
       state.projectPutFetchStatus = null;
+    },
+    clearProjectArchiveFetchStatus(state) {
+      state.projectArchiveFetchStatus = null;
+    },
+    clearProjectDeleteFetchStatus(state) {
+      state.projectDeleteFetchStatus = null;
     },
     setProjectAssignedUsers(state, action: PayloadAction<Array<projectAssignmentsType>>) {
       if (state.projectDetails) {
@@ -148,6 +193,28 @@ export const projectReducer = createSlice({
         state.projectPostFetchStatus = action.meta.requestStatus;
         SnackbarUtils.success('Dodano projekt');
       })
+      .addCase(archiveProject.rejected, (state, action) => {
+        state.projectArchiveFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error('Archiwizacja projektu nie powiodła się');
+      })
+      .addCase(archiveProject.pending, (state, action) => {
+        state.projectArchiveFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(archiveProject.fulfilled, (state, action) => {
+        state.projectArchiveFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.success('Zarchiwizowano projekt');
+      })
+      .addCase(deleteProject.rejected, (state, action) => {
+        state.projectDeleteFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error('Usuwanie projektu nie powiodło się');
+      })
+      .addCase(deleteProject.pending, (state, action) => {
+        state.projectDeleteFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.projectDeleteFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.success('Usunięto projekt');
+      })
       .addCase(postProject.rejected, (state, action) => {
         state.projectPostFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error('Dodanie projektu nie powiodło się');
@@ -166,8 +233,15 @@ export const projectReducer = createSlice({
   },
 });
 
-export const { clearProjectPostFetchStatus, clearProjectDetails, clearProjectPutFetchStatus, setProjectAssignedUsers, setProjectProgressPercentage } =
-  projectReducer.actions;
+export const {
+  clearProjectPostFetchStatus,
+  clearProjectDetails,
+  clearProjectPutFetchStatus,
+  setProjectAssignedUsers,
+  setProjectProgressPercentage,
+  clearProjectArchiveFetchStatus,
+  clearProjectDeleteFetchStatus,
+} = projectReducer.actions;
 
 export const selectProjects = (state: rootReducerInterface) => state.projects.projectList;
 export const selectProjectsListFetchStatus = (state: rootReducerInterface) => state.projects.projectListFetchStatus;
@@ -175,3 +249,5 @@ export const selectProjectPostFetchStatus = (state: rootReducerInterface) => sta
 export const selectProjectDetails = (state: rootReducerInterface) => state.projects.projectDetails;
 export const selectProjectDetailsFetchStatus = (state: rootReducerInterface) => state.projects.projectDetailsFetchStatus;
 export const selectProjectPutFetchStatus = (state: rootReducerInterface) => state.projects.projectPutFetchStatus;
+export const selectProjectDeleteFetchStatus = (state: rootReducerInterface) => state.projects.projectDeleteFetchStatus;
+export const selectProjectArchiveFetchStatus = (state: rootReducerInterface) => state.projects.projectArchiveFetchStatus;
