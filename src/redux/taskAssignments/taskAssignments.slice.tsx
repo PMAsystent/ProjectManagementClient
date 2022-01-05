@@ -9,13 +9,11 @@ import { getTask } from 'redux/task/task.slice';
 export interface taskAssignmentsInterface {
   taskAssignmentsPostFetchStatus: null | string;
   taskAssignmentsDeleteFetchStatus: null | string;
-  taskAssignments: Array<taskAssignmentsType>;
 }
 
 const INIT_STATE: taskAssignmentsInterface = {
   taskAssignmentsPostFetchStatus: null,
   taskAssignmentsDeleteFetchStatus: null,
-  taskAssignments: [],
 };
 
 export const postTaskAssignment = createAsyncThunk<any, postTaskAssignmentsType, { state: rootReducerInterface; rejectValue: string }>(
@@ -72,7 +70,6 @@ export const taskAssignments = createSlice({
       })
       .addCase(postTaskAssignment.fulfilled, (state, action) => {
         state.taskAssignmentsPostFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.success('Dodano użytkownika');
       })
       .addCase(postTaskAssignment.rejected, (state, action) => {
         state.taskAssignmentsPostFetchStatus = action.meta.requestStatus;
@@ -83,7 +80,6 @@ export const taskAssignments = createSlice({
       })
       .addCase(deleteTaskAssignment.fulfilled, (state, action) => {
         state.taskAssignmentsDeleteFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.success('Usunięto użytkownika');
       })
       .addCase(deleteTaskAssignment.rejected, (state, action) => {
         state.taskAssignmentsDeleteFetchStatus = action.meta.requestStatus;
