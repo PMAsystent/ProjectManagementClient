@@ -34,6 +34,7 @@ import { projectMemberEnum } from 'core/enums/project.member';
 import { projectRoleEnum } from 'core/enums/project.role';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { fetchStates } from 'core/enums/redux.statues';
+import { deleteTaskAssignment, postTaskAssignment } from 'redux/taskAssignments/taskAssignments.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
@@ -132,7 +133,9 @@ const FormTaskModal: FC<any> = (props) => {
   const handleUserSelect = (e: any, value: any) => {
     let assignsArray: any[] = methods.getValues('assignedUsers');
     if (!assignsArray.find((assign) => assign.id === value.id)) {
-      SnackbarUtils.success('Dodano użytkownika');
+      if (props.task) {
+        dispatch(postTaskAssignment({ userId: value.id, taskId: props.task.id }));
+      }
       assignsArray = assignsArray.concat([{ ...value }]);
     } else {
       SnackbarUtils.warning('Użytkownik jest już dodany');
@@ -141,6 +144,9 @@ const FormTaskModal: FC<any> = (props) => {
   };
 
   const handleRemoveUser = (id: number) => {
+    if (props.task) {
+      dispatch(deleteTaskAssignment({ userId: id, taskId: props.task.id }));
+    }
     setUsers((users) => users.filter((userState) => userState.id !== id));
   };
 
