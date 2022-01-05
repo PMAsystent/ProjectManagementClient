@@ -28,17 +28,20 @@ const INIT_STATE: authReducerInterface = {
   getConfirmEmailFetchStatus: null,
 };
 
-export const postRegister = createAsyncThunk<any, registerUserType, { rejectValue: string }>('auth/register', async (data, { rejectWithValue }) => {
-  return await instance
-    .post('/Auth/RegisterUser', data)
-    .then((response: any) => {
-      if (response.data?.errors && response.data.errors.length > 0) {
-        return rejectWithValue(response.data.errors[0]);
-      }
-      return response.data;
-    })
-    .catch((error) => rejectWithValue(error.response.data.title));
-});
+export const postRegister = createAsyncThunk<any, registerUserType, { rejectValue: string }>(
+  'auth/registeruser',
+  async (data, { rejectWithValue }) => {
+    return await instance
+      .post('/Auth/RegisterUser', data)
+      .then((response: any) => {
+        if (response.data?.errors && response.data.errors.length > 0) {
+          return rejectWithValue(response.data.errors[0]);
+        }
+        return response.data;
+      })
+      .catch((error) => rejectWithValue(error.response.data.title));
+  }
+);
 
 export const getCurrentUser = createAsyncThunk<any, void, { state: rootReducerInterface; rejectValue: string }>(
   'auth/getCurrentUser',

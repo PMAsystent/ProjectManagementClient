@@ -27,7 +27,7 @@ import TaskList from 'components/TaskList/TaskList';
 import { taskType } from 'core/enums/task.type';
 import { getProjectApi, putTaskApi } from 'api/utils';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
-import { selectAccessToken, selectUser } from 'redux/auth/auth.slice';
+import { selectAccessToken } from 'redux/auth/auth.slice';
 import CustomButton from 'components/CustomButton/CustomButton';
 import AvatarList from 'components/AvatarList/AvatarList';
 import EditIcon from '@mui/icons-material/Edit';
@@ -40,6 +40,7 @@ import VisibilityGuard from 'core/hoc/VisibilityGuard';
 import { projectRoleEnum } from '../../core/enums/project.role';
 import AddStepModal from '../AddStepModal/AddStepModal';
 import { projectPutTaskType } from '../../core/types/api/task.request.types';
+import { clearTaskDetails } from 'redux/task/task.slice';
 import { Tooltip } from '@mui/material';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
 
@@ -183,8 +184,10 @@ const ProjectDetails = () => {
     dispatch(getProject(+projectid));
   }, [dispatch, projectid]);
 
+
+
   useEffect(() => {
-    if (projectDetailsFetchStatus === fetchStatues.FULFILLED) {
+    if (projectDetailsFetchStatus === fetchStates.FULFILLED) {
       let todoTasks: Array<projectPutTaskType> = [];
       let inProgressTasks: Array<projectPutTaskType> = [];
       let completedTasks: Array<projectPutTaskType> = [];
@@ -313,7 +316,15 @@ const ProjectDetails = () => {
       )}
       <BasicSpeedDial actions={actions} />
       {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
-      {addTaskModal && <FormTaskModal open={addTaskModal} handleClose={() => setAddTaskModal(false)} stepId={stepid} />}
+      {addTaskModal && (
+        <FormTaskModal
+          open={addTaskModal}
+          handleClose={() => {
+            setAddTaskModal(false);
+          }}
+          stepId={stepid}
+        />
+      )}
       {editProjectModal && projectDetails && (
         <FormProjectModal
           project={{
