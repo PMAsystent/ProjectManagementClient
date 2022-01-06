@@ -1,6 +1,6 @@
 import { instance } from 'api';
 import SnackbarUtils from '../core/utils/SnackbarUtils';
-import { projectPostTaskType, projectPutTaskType } from '../core/types/api/task.request.types';
+import { projectPostTaskType, projectPutTaskType, taskDetailsType } from '../core/types/api/task.request.types';
 import { projectStep } from '../core/types/api/step.request.types';
 import { projectDetails } from '../core/types/api/project.requests.types';
 
@@ -25,6 +25,9 @@ export const postTaskApi = async (data: projectPostTaskType, accessToken: string
 
 export const putTaskApi = async (data: projectPutTaskType, accessToken: string) => {
   return await instance.put('/Tasks', data, { headers: { authorization: `Bearer ${accessToken}` } });
+};
+export const getTaskApi = async (taskId: number, accessToken: string | null) => {
+  return await instance.get<taskDetailsType>(`/Tasks/${taskId}`, { headers: { authorization: `Bearer ${accessToken}` } });
 };
 
 export const getProjectApi = async (projectId: number, accessToken: string | null) => {

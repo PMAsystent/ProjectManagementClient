@@ -1,22 +1,18 @@
-import { taskAssignmentsType } from "./assigned.request.types";
+import { taskAssignmentsType } from './assigned.request.types';
 
-export interface projectPostTaskType {
-  name: string;
-  description?: string;
-  priority: string;
-  taskStatus: string;
-  dueDate: string;
-  assignedUsers: Array<taskAssignmentsType>;
-  stepId: number;
+export interface projectPostTaskType extends Omit<taskDetailsType, 'subTasks' | 'id'> {}
+
+export interface projectPutTaskType extends Omit<taskDetailsType, 'subTasks'> {
+  progressPercentage: number;
 }
-
-export interface projectPutTaskType {
+export interface taskDetailsType {
   id: number;
   name: string;
   priority: string;
   taskStatus: string;
   dueDate: string;
-  progressPercentage: number;
   stepId: number;
+  assignedUser: Array<taskAssignmentsType>;
+  subTasks: Array<any>; // todo
   description?: string;
 }

@@ -1,4 +1,4 @@
-export const fetchStatues = {
+export const fetchStates = {
   PENDING: 'pending',
   FULFILLED: 'fulfilled',
   REJECTED: 'rejected',

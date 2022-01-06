@@ -5,7 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { getLoginPath } from '../../core/routes';
 import { getConfirmEmail, selectGetConfirmEmailFetchStatus } from '../../redux/auth/auth.slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchStatues } from '../../core/enums/redux.statues';
+import { fetchStates } from '../../core/enums/redux.statues';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const ConfirmEmail = () => {
@@ -33,9 +33,9 @@ const ConfirmEmail = () => {
       </div>
       <div className="form">
         <h3 className="email-title">
-          {getConfirmEmailFetchStatus === fetchStatues.FULFILLED && 'Email został potwierdzony'}
-          {getConfirmEmailFetchStatus === fetchStatues.REJECTED && 'Wystąpił problem z potwierdzeniem'}
-          {getConfirmEmailFetchStatus === fetchStatues.PENDING && <CircularProgress size={50} />}
+          {getConfirmEmailFetchStatus === fetchStates.FULFILLED && 'Email został potwierdzony'}
+          {getConfirmEmailFetchStatus === fetchStates.REJECTED && 'Wystąpił problem z potwierdzeniem'}
+          {getConfirmEmailFetchStatus === fetchStates.PENDING && <CircularProgress size={50} />}
         </h3>
         <CustomButton type="button" className="btn-primary" onClick={handleGotoLoginPage}>
           Przejdź do logowania

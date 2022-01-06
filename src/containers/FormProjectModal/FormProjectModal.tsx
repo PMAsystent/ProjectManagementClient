@@ -27,6 +27,7 @@ import {
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
+import { selectUser } from '../../redux/auth/auth.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
@@ -45,6 +46,7 @@ const FormProjectModal: FC<any> = (props) => {
   const [users, setUsers] = useState<any[]>([]);
   const projectPostFetchStatus = useSelector(selectProjectPostFetchStatus);
   const projectPutFetchStatus = useSelector(selectProjectPutFetchStatus);
+  const currentUser = useSelector(selectUser);
 
   const defaultValue: any = useMemo(
     () => ({
@@ -80,7 +82,9 @@ const FormProjectModal: FC<any> = (props) => {
 
   const handleUserSelect = (e: any, value: any) => {
     const assignsArray: any[] = methods.getValues('assignedUsers');
-    if (!assignsArray.find((assign) => assign.id === value.id)) {
+    if (value.id === currentUser?.userId) {
+      SnackbarUtils.warning('Zalogowany użytkownik jest już dodany');
+    } else if (!assignsArray.find((assign) => assign.id === value.id)) {
       SnackbarUtils.success('Dodano użytkownika');
       assignsArray.push({ ...value, projectRole: projectRoleEnum.MEMBER.value, memberType: projectMemberEnum.DEVELOPER.value });
     } else {

@@ -22,7 +22,7 @@ import { useParams } from 'react-router-dom';
 import { projectRoleEnum } from '../../core/enums/project.role';
 import { projectMemberEnum } from '../../core/enums/project.member';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { fetchStatues } from '../../core/enums/redux.statues';
+import { fetchStates } from '../../core/enums/redux.statues';
 import { setProjectAssignedUsers } from '../../redux/project/project.slice';
 import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
 
@@ -101,7 +101,7 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
   }, [dispatch, projectid]);
 
   useEffect(() => {
-    if (projectAssignmentsGetFetchStatus === fetchStatues.FULFILLED) {
+    if (projectAssignmentsGetFetchStatus === fetchStates.FULFILLED) {
       dispatch(setProjectAssignedUsers(users));
     }
   }, [dispatch, projectAssignmentsGetFetchStatus, users]);

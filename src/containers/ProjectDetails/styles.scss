@@ -44,8 +44,11 @@
       .header-item {
         flex-basis: 100%;
         display: flex;
-        svg {
+        svg:first-of-type {
           margin-left: 15px;
+        }
+        svg {
+          margin-left: 5px;
           cursor: pointer;
           opacity: 0.8;
           transition: opacity .25s ease-in-out;

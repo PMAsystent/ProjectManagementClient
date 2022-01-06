@@ -5,11 +5,11 @@ import CustomButton from '../CustomButton/CustomButton';
 import { format } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 
-const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; typeOfProject: string; endDate: string; id: number }> = ({
+const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; isActive: boolean; endDate: string; id: number }> = ({
   name,
   activeTasks,
   progressBar,
-  typeOfProject,
+  isActive,
   endDate,
   id,
 }) => {
@@ -37,8 +37,8 @@ const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; 
         <h4>{activeTasks}</h4>
       </div>
       <div>
-        <p>Typ projektu</p>
-        <h4>{typeOfProject}</h4>
+        <p>Stan</p>
+        <h4>{isActive ? 'Aktywne' : 'Zarchiwizowane'}</h4>
       </div>
       <div>
         <p>Deadline</p>

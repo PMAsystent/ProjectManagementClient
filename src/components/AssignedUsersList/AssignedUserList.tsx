@@ -5,12 +5,15 @@ import { stringToColor } from 'core/utils';
 import { selectUser } from 'redux/auth/auth.slice';
 import { useSelector } from 'react-redux';
 
-const AssignedUserList: FC<{ users: any[]; addtionalActions?: any }> = ({ users, addtionalActions }) => {
+const AssignedUserList: FC<{ users: any[]; includeCurrentUser?: boolean; addtionalActions?: any }> = ({
+  users,
+  includeCurrentUser = true,
+  addtionalActions,
+}) => {
   const currentUser = useSelector(selectUser);
-
   return (
     <div className="users-list-container">
-      {currentUser && (
+      {includeCurrentUser === true && currentUser && (
         <div key={currentUser.userName} className="users-list-item">
           <div className="info">
             <Avatar key={currentUser.userName} sx={{ bgcolor: stringToColor(currentUser.userName) }}>
