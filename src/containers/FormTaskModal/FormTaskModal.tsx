@@ -111,7 +111,7 @@ const FormTaskModal: FC<any> = (props) => {
       dispatch(clearTaskDetails());
       setUsers([]);
     }
-  }, [dispatch, props.task, props.task.id]);
+  }, [dispatch, props.task, props.task?.id]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnChangeUsersDebounced = useCallback(
