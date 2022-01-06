@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
-import { Modal } from '@mui/material';
+import { IconButton, Modal, Tooltip } from '@mui/material';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -22,6 +22,7 @@ import {
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { findUsers } from '../../api/utils';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 import CustomPriorityField from 'components/CustomPriorityField/CustomPriorityField';
@@ -162,6 +163,11 @@ const FormTaskModal: FC<any> = (props) => {
           <form onSubmit={methods.handleSubmit(onSubmit)} key={'addtask'}>
             <div className="add-task-container">
               <h1>{props.task ? `${props.task.name} - Edycja` : 'Nowy task'}</h1>
+              <Tooltip title="Przełącz widok">
+                <IconButton size="small" className="btn-switch-view" >
+                  <FormatListBulletedIcon />
+                </IconButton>
+              </Tooltip>
               <div className="task-form">
                 <CustomInput
                   placeholder={'Wpisz nazwę'}
