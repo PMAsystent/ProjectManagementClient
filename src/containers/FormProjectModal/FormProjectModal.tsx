@@ -27,7 +27,7 @@ import {
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
-import {selectUser} from "../../redux/auth/auth.slice";
+import { selectUser } from '../../redux/auth/auth.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),

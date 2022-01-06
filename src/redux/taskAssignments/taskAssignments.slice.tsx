@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { instance } from 'api';
-import { taskAssignmentsType } from 'core/types/api/assigned.request.types';
 import { postTaskAssignmentsType } from 'core/types/api/taskAssignments.request.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { rootReducerInterface } from 'redux/rootReducer';
