@@ -11,13 +11,14 @@ import AddIcon from '@mui/icons-material/Add';
 import ProjectTile from 'components/ProjectTile/ProjectTile';
 import { fetchStates } from 'core/enums/redux.statues';
 import AuthSpinner from 'components/AuthSpinner/AuthSpinner';
-import { selectProjectSearch } from '../../redux/shared/shared.slice';
+import { selectProjectSearch, selectWithArchive } from '../../redux/shared/shared.slice';
 
 const MainLayout = () => {
   const dispatch = useDispatch();
   const searchProject = useSelector(selectProjectSearch);
   const projects = useSelector(selectProjects);
   const projectsListFetchStatus = useSelector(selectProjectsListFetchStatus);
+  const withArchive = useSelector(selectWithArchive);
   const [addProjectModal, setAddProjectModal] = React.useState(false);
   const actions = useMemo(
     () => [
@@ -46,13 +47,19 @@ const MainLayout = () => {
                 const search = searchProject.toUpperCase();
                 return name.includes(search);
               })
+              .filter((project) => {
+                if (withArchive) {
+                  return true;
+                }
+                return project.isActive;
+              })
               .map((project: projectType) => {
                 const card = {
                   id: project.id,
                   name: project.name,
                   activeTasks: 26,
                   progressBar: project.progressPercentage,
-                  typeOfProject: 'Aplikacja',
+                  isActive: project.isActive,
                   endDate: project.dueDate,
                 };
                 return <ProjectTile {...card} key={project.id} />;

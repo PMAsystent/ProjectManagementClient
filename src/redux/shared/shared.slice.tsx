@@ -4,11 +4,13 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface sharedReducerInterface {
   projectSearch: string;
   taskSearch: string;
+  withArchive: boolean;
 }
 
 const INIT_STATE: sharedReducerInterface = {
   projectSearch: '',
   taskSearch: '',
+  withArchive: false,
 };
 
 export const sharedReducer = createSlice({
@@ -21,10 +23,14 @@ export const sharedReducer = createSlice({
     changeTaskSearch(state, data: any) {
       state.taskSearch = data.payload;
     },
+    changeWithArchive(state, data: any) {
+      state.withArchive = data.payload;
+    },
   },
 });
 
-export const { changeProjectSearch, changeTaskSearch } = sharedReducer.actions;
+export const { changeProjectSearch, changeTaskSearch, changeWithArchive } = sharedReducer.actions;
 
 export const selectProjectSearch = (state: rootReducerInterface) => state.shared.projectSearch;
 export const selectTaskSearch = (state: rootReducerInterface) => state.shared.taskSearch;
+export const selectWithArchive = (state: rootReducerInterface) => state.shared.withArchive;

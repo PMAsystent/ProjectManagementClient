@@ -1,5 +1,5 @@
-import { AppBar, Avatar, Badge, Box, Hidden, IconButton, TextField, Toolbar, Tooltip } from '@mui/material';
-import { NotificationsNone, Settings, Search, Menu } from '@material-ui/icons';
+import { AppBar, Avatar, Box, Hidden, IconButton, TextField, Toolbar, Tooltip } from '@mui/material';
+import { Settings, Search, Menu } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { getDashboardPath, getUserDetailsPath } from 'core/routes';
 import './styles.scss';
@@ -7,10 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from 'redux/auth/auth.slice';
 import { stringToColor } from '../../../core/utils';
 import React, { useEffect, useState } from 'react';
-import { changeProjectSearch, changeTaskSearch } from '../../../redux/shared/shared.slice';
+import { changeProjectSearch, changeTaskSearch, changeWithArchive, selectWithArchive } from '../../../redux/shared/shared.slice';
+import Switch from '@mui/material/Switch';
 
 const Navbar = (props: { onSidebarOpen: any }) => {
+  const withArchive = useSelector(selectWithArchive);
   const [value, setValue] = useState('');
+  const [archive, setArchive] = useState(withArchive);
   const { onSidebarOpen } = props;
   const currentUser = useSelector(selectUser);
   const history = useHistory();
@@ -27,6 +30,11 @@ const Navbar = (props: { onSidebarOpen: any }) => {
     } else if (history.location.pathname.includes('/project/')) {
       dispatch(changeTaskSearch(e.target.value));
     }
+  };
+
+  const handleArchiveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setArchive(e.target.checked);
+    dispatch(changeWithArchive(e.target.checked));
   };
 
   useEffect(() => {
@@ -53,12 +61,8 @@ const Navbar = (props: { onSidebarOpen: any }) => {
           />
         </Box>
         <Box sx={{ flexGrow: 20 }} />
-        <Tooltip title="Notifications">
-          <IconButton color="inherit">
-            <Badge badgeContent={4} className="navbar-badge">
-              <NotificationsNone className="navbar-icon" />
-            </Badge>
-          </IconButton>
+        <Tooltip title="Zarchiwizowane projekty">
+          <Switch checked={archive} onChange={handleArchiveChange} inputProps={{ 'aria-label': 'controlled' }} />
         </Tooltip>
         <Tooltip title="Settings">
           <IconButton color="inherit">
