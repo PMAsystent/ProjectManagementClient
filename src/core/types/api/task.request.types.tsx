@@ -1,4 +1,5 @@
 import { taskAssignmentsType } from './assigned.request.types';
+import { projectSubtask } from './subtask.request.types';
 
 export interface projectPostTaskType extends Omit<taskDetailsType, 'subTasks' | 'id'> {}
 
@@ -13,6 +14,6 @@ export interface taskDetailsType {
   dueDate: string;
   stepId: number;
   assignedUser: Array<taskAssignmentsType>;
-  subTasks: Array<any>; // todo
+  subtasks: Array<projectSubtask>;
   description?: string;
 }

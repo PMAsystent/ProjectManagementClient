@@ -34,6 +34,9 @@ import AssignedUserList from 'components/AssignedUsersList/AssignedUserList';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { fetchStates } from 'core/enums/redux.statues';
 import { deleteTaskAssignment, postTaskAssignment } from 'redux/taskAssignments/taskAssignments.slice';
+import SubtaskItem from 'components/SubtaskItem/SubtaskItem';
+import { projectSubtask } from 'core/types/api/subtask.request.types';
+import SubtaskView from 'components/SubtaskView/SubtaskView';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
@@ -53,6 +56,7 @@ const FormTaskModal: FC<any> = (props) => {
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
+  const [isTaskDetailsView, setIsTaskDetailsView] = useState(true);
   const defaultValue: any = useMemo(
     () => ({
       name: '',
@@ -163,75 +167,83 @@ const FormTaskModal: FC<any> = (props) => {
           <form onSubmit={methods.handleSubmit(onSubmit)} key={'addtask'}>
             <div className="add-task-container">
               <h1>{props.task ? `${props.task.name} - Edycja` : 'Nowy task'}</h1>
-              <Tooltip title="Przełącz widok">
-                <IconButton size="small" className="btn-switch-view" >
-                  <FormatListBulletedIcon />
-                </IconButton>
-              </Tooltip>
-              <div className="task-form">
-                <CustomInput
-                  placeholder={'Wpisz nazwę'}
-                  label={'Nazwa'}
-                  {...methods.register('name')}
-                  type="text"
-                  helperText={methods.formState.errors.name?.message}
-                  error={!!methods.formState.errors.name}
-                />
-                <CustomTextArea
-                  placeholder={'Wpisz opis'}
-                  label={'Opis'}
-                  {...methods.register('description')}
-                  helperText={methods.formState.errors.description?.message}
-                  error={!!methods.formState.errors.description}
-                />
-                <CustomDatePicker
-                  placeholder={'mm/dd/yyyy'}
-                  min={new Date()}
-                  name={'dueDate'}
-                  label={'Deadline'}
-                  helperText={methods.formState.errors.dueDate?.message}
-                  error={!!methods.formState.errors.dueDate}
-                />
-                <div className="task-priority">
-                  <p>Priorytet</p>
-                  <span className="priority-span">
-                    <CustomPriorityField name="priority" />
-                    <PriorityNameDisplayer priorityFieldName="priority" />
-                  </span>
-                </div>
-              </div>
-              <div className="assigns-form">
-                <AsyncAutocomplete
-                  name={'findUsers'}
-                  label={'Dodaj użytkownika'}
-                  nameOptionLabel={'email'}
-                  onChange={handleOnChangeUsersDebounced}
-                  onSelect={handleUserSelect}
-                  options={usersOptions}
-                  setOptions={setUsersOptions}
-                  loading={usersOptionsLoading}
-                  clearOnClose
-                />
-                <div className="label">Użytkownicy</div>
-                <AssignedUserList
-                  users={users}
-                  includeCurrentUser={false}
-                  addtionalActions={(user: any) => {
-                    return <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />;
-                  }}
-                />
-              </div>
+              {props.task && (
+                <Tooltip title="Przełącz widok">
+                  <IconButton size="small" className="btn-switch-view" onClick={() => setIsTaskDetailsView(!isTaskDetailsView)}>
+                    <FormatListBulletedIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+              {isTaskDetailsView ? (
+                <>
+                  <div className="task-form">
+                    <CustomInput
+                      placeholder={'Wpisz nazwę'}
+                      label={'Nazwa'}
+                      {...methods.register('name')}
+                      type="text"
+                      helperText={methods.formState.errors.name?.message}
+                      error={!!methods.formState.errors.name}
+                    />
+                    <CustomTextArea
+                      placeholder={'Wpisz opis'}
+                      label={'Opis'}
+                      {...methods.register('description')}
+                      helperText={methods.formState.errors.description?.message}
+                      error={!!methods.formState.errors.description}
+                    />
+                    <CustomDatePicker
+                      placeholder={'mm/dd/yyyy'}
+                      min={new Date()}
+                      name={'dueDate'}
+                      label={'Deadline'}
+                      helperText={methods.formState.errors.dueDate?.message}
+                      error={!!methods.formState.errors.dueDate}
+                    />
+                    <div className="task-priority">
+                      <p>Priorytet</p>
+                      <span className="priority-span">
+                        <CustomPriorityField name="priority" />
+                        <PriorityNameDisplayer priorityFieldName="priority" />
+                      </span>
+                    </div>
+                  </div>
+                  <div className="assigns-form">
+                    <AsyncAutocomplete
+                      name={'findUsers'}
+                      label={'Dodaj użytkownika'}
+                      nameOptionLabel={'email'}
+                      onChange={handleOnChangeUsersDebounced}
+                      onSelect={handleUserSelect}
+                      options={usersOptions}
+                      setOptions={setUsersOptions}
+                      loading={usersOptionsLoading}
+                      clearOnClose
+                    />
+                    <div className="label">Użytkownicy</div>
+                    <AssignedUserList
+                      users={users}
+                      includeCurrentUser={false}
+                      addtionalActions={(user: any) => {
+                        return <PersonRemoveIcon onClick={() => handleRemoveUser(user.id)} />;
+                      }}
+                    />
+                  </div>
 
-              <CustomInput {...methods.register('assignedUsers')} type="hidden" />
+                  <CustomInput {...methods.register('assignedUsers')} type="hidden" />
 
-              <div className="buttons">
-                <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
-                  Wróć
-                </CustomButton>
-                <CustomButton type="submit" className="btn-success">
-                  Zapisz
-                </CustomButton>
-              </div>
+                  <div className="buttons">
+                    <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
+                      Wróć
+                    </CustomButton>
+                    <CustomButton type="submit" className="btn-success">
+                      Zapisz
+                    </CustomButton>
+                  </div>
+                </>
+              ) : (
+                <SubtaskView task={props.task} />
+              )}
             </div>
           </form>
         </FormProvider>
