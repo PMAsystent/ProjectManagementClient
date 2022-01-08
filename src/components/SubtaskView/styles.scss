@@ -1,0 +1,24 @@
+@use '../../assets/styles/colors';
+.subtasks-container {
+  flex-basis: 100%;
+  padding: 15px;
+  .add-subtask-container{
+    .custom-input{
+      flex-basis: 85%;
+    }
+    display: flex;
+    align-items: center;
+    gap:30px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .subtasks-list-container {
+    max-height: 420px;
+    min-height: 300px;
+    overflow-y: auto;
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+}

@@ -153,7 +153,11 @@ const FormTaskModal: FC<any> = (props) => {
     setUsers((users) => users.filter((userState) => userState.id !== id));
   };
 
-  useCloseModalOnDoneFetchStatus({ status: taskPostFetchStatus, clearFunction: clearTaskPostFetchStatus, handleClose: props.handleClose });
+  useCloseModalOnDoneFetchStatus({
+    status: taskPostFetchStatus,
+    clearFunction: clearTaskPostFetchStatus,
+    handleClose: props.handleClose,
+  });
   return (
     <Modal
       open={props.open}
@@ -242,7 +246,7 @@ const FormTaskModal: FC<any> = (props) => {
                   </div>
                 </>
               ) : (
-                <SubtaskView task={props.task} />
+                <SubtaskView task={props.task} handleClose={props.handleClose} />
               )}
             </div>
           </form>

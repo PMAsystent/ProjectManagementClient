@@ -3,6 +3,7 @@ import SnackbarUtils from '../core/utils/SnackbarUtils';
 import { projectPostTaskType, projectPutTaskType, taskDetailsType } from '../core/types/api/task.request.types';
 import { projectStep } from '../core/types/api/step.request.types';
 import { projectDetails } from '../core/types/api/project.requests.types';
+import { projectPostSubtaskType } from '../core/types/api/subtask.request.types';
 
 export const findUsers = async (query: string) => {
   return await instance
@@ -17,6 +18,10 @@ export const findUsers = async (query: string) => {
 
 export const postStep = async (data: projectStep, accessToken: string | null) => {
   return await instance.post('/Step', data, { headers: { authorization: `Bearer ${accessToken}` } });
+};
+
+export const postSubtaskApi = async (data: projectPostSubtaskType, accessToken: string) => {
+  return await instance.post('/Subtasks', data, { headers: { authorization: `Bearer ${accessToken}` } });
 };
 
 export const postTaskApi = async (data: projectPostTaskType, accessToken: string) => {

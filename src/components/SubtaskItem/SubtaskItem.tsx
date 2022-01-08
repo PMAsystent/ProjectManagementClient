@@ -1,3 +1,4 @@
+import './styles.scss';
 import { projectSubtask } from 'core/types/api/subtask.request.types';
 import { FC } from 'react';
 
