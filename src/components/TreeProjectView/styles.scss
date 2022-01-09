@@ -19,11 +19,19 @@ $hoverColor: rgba(0, 0, 0, 0.09) !important;
     }
 
     #edit, #delete {
-      margin-right: 5px;
+      margin-left: 5px;
+    }
+
+    #edit:hover{
+      color: colors.$primaryColor;
+    }
+
+    #delete:hover{
+      color: #d02f2f;
     }
 
     .MuiTreeItem-label  {
-      margin-left: 5px;
+      margin-left: 10px;
     }
 
     .tree-item__task {
