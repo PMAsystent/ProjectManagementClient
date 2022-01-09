@@ -1,0 +1,29 @@
+@use '../../assets/styles/colors';
+.subtask-item {
+  animation: opacityAnimation 0.3s both;
+  border-radius: 2px;
+  flex-basis: 100%;
+  background-color: colors.$secondaryColor;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .task-name-container {
+    display: flex;
+    span {
+      margin-left: 15px;
+      overflow-wrap: anywhere;
+      flex-basis: 70%;
+    }
+  }
+
+  .buttons-container {
+    padding-right: 20px;
+    padding-top: 1px;
+  }
+}

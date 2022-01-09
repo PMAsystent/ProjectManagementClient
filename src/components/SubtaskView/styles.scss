@@ -2,23 +2,35 @@
 .subtasks-container {
   flex-basis: 100%;
   padding: 15px;
-  .add-subtask-container{
-    .custom-input{
-      flex-basis: 85%;
+  .add-subtask-container {
+    .custom-input {
+      flex-basis: 95%;
     }
     display: flex;
     align-items: center;
-    gap:30px;
+    gap: 30px;
     flex-direction: row;
     flex-wrap: nowrap;
   }
   .subtasks-list-container {
     max-height: 420px;
-    min-height: 300px;
+    min-height: 100px;
     overflow-y: auto;
     max-width: 100%;
     display: flex;
+    gap: 0px;
     flex-wrap: wrap;
+    align-items: center;
     margin: 0;
+    animation: opacityAnimation 0.3s both;
+    background-color: colors.$bgColor;
+    border-radius: 2px;
+    margin-bottom: 15px;
+  }
+  .buttons {
+    button {
+      margin-right: 0px !important;
+    }
+    padding-right: 0px !important;
   }
 }

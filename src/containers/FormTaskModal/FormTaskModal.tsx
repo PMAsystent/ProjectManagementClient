@@ -246,7 +246,7 @@ const FormTaskModal: FC<any> = (props) => {
                   </div>
                 </>
               ) : (
-                <SubtaskView task={props.task} handleClose={props.handleClose} />
+                <SubtaskView handleClose={props.handleClose} />
               )}
             </div>
           </form>

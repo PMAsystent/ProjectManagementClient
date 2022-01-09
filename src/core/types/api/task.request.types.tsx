@@ -3,7 +3,7 @@ import { projectSubtask } from './subtask.request.types';
 
 export interface projectPostTaskType extends Omit<taskDetailsType, 'subTasks' | 'id'> {}
 
-export interface projectPutTaskType extends Omit<taskDetailsType, 'subTasks'> {
+export interface projectPutTaskType extends taskDetailsType {
   progressPercentage: number;
 }
 export interface taskDetailsType {
