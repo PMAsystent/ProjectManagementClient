@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -55,6 +55,15 @@ const FormStepModal: FC<any> = (props) => {
 
     props.handleClose();
   };
+
+  useEffect(() => {
+    if (props.step) {
+      methods.reset({
+        name: props.step.name,
+        description: props.step.description || '',
+      });
+    }
+  }, [methods, props.step]);
 
   return (
     <Modal
