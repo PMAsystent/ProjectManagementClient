@@ -38,7 +38,7 @@ import { projectStep } from 'core/types/api/step.request.types';
 import FormTaskModal from 'containers/FormTaskModal/FormTaskModal';
 import VisibilityGuard from 'core/hoc/VisibilityGuard';
 import { projectRoleEnum } from '../../core/enums/project.role';
-import AddStepModal from '../AddStepModal/AddStepModal';
+import FormStepModal from '../FormStepModal/FormStepModal';
 import { projectPutTaskType } from '../../core/types/api/task.request.types';
 import { Tooltip } from '@mui/material';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
@@ -343,7 +343,7 @@ const ProjectDetails = () => {
         </>
       )}
       <BasicSpeedDial actions={actions} />
-      {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
+      {addStepModal && <FormStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
       {deleteProjectModal && (
         <ConfirmationModal
           title={'Usuwanie Projektu'}
