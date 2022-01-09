@@ -7,27 +7,39 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectProjectDetails, selectProjects } from 'redux/project/project.slice';
 import './styles.scss';
 import { projectType } from 'core/types/api/project.requests.types';
-import AddStepModal from 'containers/AddStepModal/AddStepModal';
+import FormStepModal from 'containers/FormStepModal/FormStepModal';
 import { useHistory } from 'react-router-dom';
 import { projectStep } from 'core/types/api/step.request.types';
 import VisibilityGuard from 'core/hoc/VisibilityGuard';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
-import { clearDeleteStepFetchStatus, deleteStep, selectDeleteStepFetchStatus } from '../../redux/step/step.slice';
+import {
+  clearDeleteStepFetchStatus,
+  clearPostStepFetchStatus,
+  clearPutStepFetchStatus,
+  deleteStep,
+  selectDeleteStepFetchStatus,
+  selectPostStepFetchStatus,
+  selectPutStepFetchStatus,
+} from '../../redux/step/step.slice';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
 
 const TreeProjectView: FC<any> = () => {
   const history = useHistory();
+
+  const dispatch = useDispatch();
   const projectsRedux = useSelector(selectProjects);
   const projectDetails = useSelector(selectProjectDetails);
+  const deleteStepFetchStatus = useSelector(selectDeleteStepFetchStatus);
+  const postStepFetchStatus = useSelector(selectPostStepFetchStatus);
+  const putStepFetchStatus = useSelector(selectPutStepFetchStatus);
 
   const [selectedStep, setSelectedStep] = useState<any>(null);
   const [addStepModal, setAddStepModal] = useState<boolean>(false);
+  const [editStepModal, setEditStepModal] = useState<boolean>(false);
   const [deleteStepModal, setDeleteStepModal] = useState<boolean>(false);
   const [projectId, setProjectId] = useState<number>(-1);
-  const dispatch = useDispatch();
-  const deleteStepFetchStatus = useSelector(selectDeleteStepFetchStatus);
 
   const goToProjectDetails = (projectId: any, stepId?: any) => {
     history.push(`/project/${projectId}/${stepId || ''}`);
@@ -54,6 +66,18 @@ const TreeProjectView: FC<any> = () => {
     status: deleteStepFetchStatus,
     path: `/project/${projectDetails?.id}`,
     clearFunction: clearDeleteStepFetchStatus,
+  });
+
+  useRedirectOnDoneFetchStatus({
+    status: postStepFetchStatus,
+    path: `/project/${projectDetails?.id}`,
+    clearFunction: clearPostStepFetchStatus,
+  });
+
+  useRedirectOnDoneFetchStatus({
+    status: putStepFetchStatus,
+    path: `/project/${projectDetails?.id}`,
+    clearFunction: clearPutStepFetchStatus,
   });
 
   return (
@@ -93,14 +117,14 @@ const TreeProjectView: FC<any> = () => {
                       setSelectedStep(step);
                       if (e.target?.id) {
                         if (e.target.id === 'edit') {
-                          // TODO: edit step
+                          setEditStepModal(true);
                         }
                         if (e.target.id === 'delete') {
                           setDeleteStepModal(true);
                         }
                       } else if (e.target?.parentNode?.id) {
                         if (e.target.parentNode.id === 'edit') {
-                          // TODO: edit step
+                          setEditStepModal(true);
                         }
                         if (e.target.parentNode.id === 'delete') {
                           setDeleteStepModal(true);
@@ -127,7 +151,8 @@ const TreeProjectView: FC<any> = () => {
           );
         })}
       </TreeView>
-      {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectId} />}
+      {addStepModal && <FormStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectId} />}
+      {editStepModal && <FormStepModal open={editStepModal} handleClose={() => setEditStepModal(false)} projectId={projectId} step={selectedStep} />}
       {deleteStepModal && selectedStep && (
         <ConfirmationModal
           text={`Czy napewno chcesz usunąć ${selectedStep?.name}?`}

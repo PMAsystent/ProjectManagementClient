@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -7,29 +7,18 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
 import { Modal } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectAccessToken } from '../../redux/auth/auth.slice';
-import { postStep } from '../../api/utils';
-import SnackbarUtils from '../../core/utils/SnackbarUtils';
-import { getProjects } from '../../redux/project/project.slice';
+import { useDispatch } from 'react-redux';
+import { postStep, putStep } from '../../redux/step/step.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
   description: yup.string().required('Opis jest wymagany').min(10, 'Opis musi mieć conajmniej 10 znaków'),
 });
 
-const AddStepModal: FC<any> = (props) => {
-  const accessToken = useSelector(selectAccessToken);
+const FormStepModal: FC<any> = (props) => {
   const projectId = props.projectId;
+  const step = props.step;
   const dispatch = useDispatch();
-
-  const getProjectId = () => {
-    return projectId;
-  };
-
-  const getAccessToken = () => {
-    return accessToken;
-  };
 
   const defaultValue: any = useMemo(
     () => ({
@@ -47,21 +36,34 @@ const AddStepModal: FC<any> = (props) => {
   });
 
   const onSubmit = async (values: any) => {
-    const accessToken = getAccessToken();
-    const projectId = getProjectId();
+    if (step?.id) {
+      const putValues = {
+        id: step.id,
+        name: values.name,
+      };
 
-    await postStep({ ...values, projectId }, accessToken)
-      .then((response) => {
-        if (response.data) {
-          SnackbarUtils.success('Dodano step');
-          dispatch(getProjects());
-          props.handleClose();
-        }
-      })
-      .catch((error) => {
-        SnackbarUtils.error('Nie udało się dodać stepa');
-      });
+      dispatch(putStep({ ...putValues }));
+    } else {
+      const postValues = {
+        name: values.name,
+        description: values.description,
+        projectId: projectId,
+      };
+
+      dispatch(postStep({ ...postValues }));
+    }
+
+    props.handleClose();
   };
+
+  useEffect(() => {
+    if (props.step) {
+      methods.reset({
+        name: props.step.name,
+        description: props.step.description || '',
+      });
+    }
+  }, [methods, props.step]);
 
   return (
     <Modal
@@ -75,10 +77,10 @@ const AddStepModal: FC<any> = (props) => {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} key={'addProject'}>
             <div className="add-step-container">
-              <h1>Nowy step</h1>
+              <h1>{step ? `Edytuj step` : `Dodaj step`}</h1>
               <div className="step-form">
                 <CustomInput
-                  placeholder={'Wpisz nazwę'}
+                  placeholder={step ? step.name : 'Wpisz nazwę'}
                   label={'Nazwa'}
                   {...methods.register('name')}
                   type="text"
@@ -109,4 +111,4 @@ const AddStepModal: FC<any> = (props) => {
   );
 };
 
-export default AddStepModal;
+export default FormStepModal;
