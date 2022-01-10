@@ -18,12 +18,21 @@
     span {
       margin-left: 15px;
       overflow-wrap: anywhere;
-      flex-basis: 70%;
+      flex-basis: 65%;
     }
   }
 
   .buttons-container {
     padding-right: 20px;
     padding-top: 1px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    input {
+      .svg {
+        color: white;
+      }
+    }
   }
 }

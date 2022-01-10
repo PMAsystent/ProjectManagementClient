@@ -9,7 +9,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import CustomButton from 'components/CustomButton/CustomButton';
-import { deleteSubtask, postSubtask } from '../../redux/subtask/subtask.slice';
+import { deleteSubtask, postSubtask, updateSubtaskStatus } from '../../redux/subtask/subtask.slice';
 import { getTask, selectTaskDetails } from 'redux/task/task.slice';
 
 const validationSchema = yup.object({
@@ -42,6 +42,10 @@ const SubtaskView: FC<{ handleClose: any }> = ({ handleClose }) => {
     dispatch(deleteSubtask({ taskId: taskDetails?.id || 0, id: subtaskId }));
   };
 
+  const onStateChange = (subtaskId: number, status: boolean) => {
+    dispatch(updateSubtaskStatus({ taskId: taskDetails?.id || 0, status: status, id: subtaskId }));
+  };
+
   const onKeyPress = (event: any) => {
     if (event.key === 'Enter') {
       onAdd();
@@ -72,7 +76,7 @@ const SubtaskView: FC<{ handleClose: any }> = ({ handleClose }) => {
         {taskDetails &&
           taskDetails.subtasks.length > 0 &&
           taskDetails.subtasks.map((subtask: projectSubtask) => {
-            return <SubtaskItem subtask={subtask} onSubtaskDelete={onDelete} />;
+            return <SubtaskItem key={subtask.id} subtask={subtask} onSubtaskDelete={onDelete} onSubtaskStateChange={onStateChange} />;
           })}
       </div>
       <div className="buttons">
