@@ -44,10 +44,8 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    input {
-      svg {
-        color: white;
-      }
+    svg {
+      color: white !important;
     }
   }
 }
