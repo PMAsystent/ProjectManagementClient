@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { rootReducerInterface } from '../rootReducer';
-import { postSubtaskApi, postTaskApi } from '../../api/utils';
 import { projectPostSubtaskType, projectSubtask } from '../../core/types/api/subtask.request.types';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { getTask } from 'redux/task/task.slice';
 import { instance } from 'api';
+import { postSubtaskApi } from 'api/utils.subtask';
 
 export interface subtaskReducerInterface {
   subtaskPostFetchStatus: null | string;
