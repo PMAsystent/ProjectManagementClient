@@ -5,7 +5,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
 import { Modal } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { postStep, putStep } from '../../redux/step/step.slice';
@@ -85,7 +84,7 @@ const FormStepModal: FC<any> = (props) => {
               </div>
               <div className="buttons">
                 <CustomButton type="button" className="btn-go-back" onClick={props.handleClose}>
-                  wróć
+                  Wróć
                 </CustomButton>
                 <CustomButton type="submit" className="btn-success">
                   Zapisz
