@@ -5,8 +5,9 @@
   flex-basis: 100%;
   background-color: colors.$secondaryColor;
   padding-left: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 15px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
@@ -15,10 +16,24 @@
 
   .task-name-container {
     display: flex;
-    span {
+    align-items: center;
+    flex-basis: 75%;
+    user-select: none;
+    .custom-input {
+      input:read-only {
+        pointer-events: none;
+      }
       margin-left: 15px;
       overflow-wrap: anywhere;
-      flex-basis: 65%;
+      flex-basis: 95%;
+      .MuiTextField-root {
+        height: 42px;
+        .MuiInputBase-input.MuiInput-input {
+          height: 42px;
+          padding: 0 0 0 10px;
+          margin-bottom: 0px;
+        }
+      }
     }
   }
 
@@ -30,7 +45,7 @@
     justify-content: center;
     align-items: center;
     input {
-      .svg {
+      svg {
         color: white;
       }
     }

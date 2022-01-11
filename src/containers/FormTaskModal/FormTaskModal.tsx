@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
-import { IconButton, Modal, Tooltip } from '@mui/material';
+import { Button, IconButton, Modal, Tooltip } from '@mui/material';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -22,7 +22,6 @@ import {
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { findUsers } from '../../api/utils';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 import CustomPriorityField from 'components/CustomPriorityField/CustomPriorityField';
@@ -37,7 +36,8 @@ import { deleteTaskAssignment, postTaskAssignment } from 'redux/taskAssignments/
 import SubtaskItem from 'components/SubtaskItem/SubtaskItem';
 import { projectSubtask } from 'core/types/api/subtask.request.types';
 import SubtaskView from 'components/SubtaskView/SubtaskView';
-
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import FeedIcon from '@mui/icons-material/Feed';
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
   description: yup.string(),
@@ -173,9 +173,14 @@ const FormTaskModal: FC<any> = (props) => {
               <h1>{props.task ? `${props.task.name} - Edycja` : 'Nowy task'}</h1>
               {props.task && (
                 <Tooltip title="Przełącz widok">
-                  <IconButton size="small" className="btn-switch-view" onClick={() => setIsTaskDetailsView(!isTaskDetailsView)}>
-                    <FormatListBulletedIcon />
-                  </IconButton>
+                  <Button
+                    size="medium"
+                    endIcon={isTaskDetailsView ? <FormatListNumberedIcon /> : <FeedIcon />}
+                    className="btn-switch-view"
+                    onClick={() => setIsTaskDetailsView(!isTaskDetailsView)}
+                  >
+                    {isTaskDetailsView ? 'Subtaski' : 'Task'}
+                  </Button>
                 </Tooltip>
               )}
               {isTaskDetailsView ? (

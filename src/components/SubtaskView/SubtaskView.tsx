@@ -9,7 +9,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import CustomButton from 'components/CustomButton/CustomButton';
-import { deleteSubtask, postSubtask, updateSubtaskStatus } from '../../redux/subtask/subtask.slice';
+import { deleteSubtask, postSubtask, updateSubtaskName, updateSubtaskStatus } from '../../redux/subtask/subtask.slice';
 import { getTask, selectTaskDetails } from 'redux/task/task.slice';
 
 const validationSchema = yup.object({
@@ -22,7 +22,7 @@ const SubtaskView: FC<{ handleClose: any }> = ({ handleClose }) => {
   const [helperText, setHelperText] = useState('');
   const [error, setError] = useState(false);
   const [newSubtaskName, setNewSubtaskName] = useState('');
-
+  const [enabledSubtaskId, setEnabledSubtaskId] = useState(0);
   const onAdd = async () => {
     try {
       await validationSchema.validate({ name: newSubtaskName });
@@ -53,6 +53,10 @@ const SubtaskView: FC<{ handleClose: any }> = ({ handleClose }) => {
     }
   };
 
+  const disableOtherInputs = (id:number) => {
+    setEnabledSubtaskId(id);
+  };
+
   return (
     <div className="subtasks-container">
       <div className="add-subtask-container">
@@ -76,7 +80,16 @@ const SubtaskView: FC<{ handleClose: any }> = ({ handleClose }) => {
         {taskDetails &&
           taskDetails.subtasks.length > 0 &&
           taskDetails.subtasks.map((subtask: projectSubtask) => {
-            return <SubtaskItem key={subtask.id} subtask={subtask} onSubtaskDelete={onDelete} onSubtaskStateChange={onStateChange} />;
+            return (
+              <SubtaskItem
+                key={subtask.id}
+                subtask={subtask}
+                onSubtaskDelete={onDelete}
+                onSubtaskStateChange={onStateChange}
+                setEnabledSubtaskId={disableOtherInputs}
+                enabledSubtaskId={enabledSubtaskId}
+              />
+            );
           })}
       </div>
       <div className="buttons">

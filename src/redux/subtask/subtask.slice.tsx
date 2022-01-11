@@ -56,23 +56,26 @@ export const deleteSubtask = createAsyncThunk<any, { id: number; taskId: number 
   }
 );
 
-export const updateSubtaskName = createAsyncThunk<any, { id: number; taskId: number }, { state: rootReducerInterface; rejectValue: string }>(
-  'subtask/updateSubtaskName',
-  async (data, { rejectWithValue, getState, dispatch }) => {
-    const {
-      auth: { accessToken },
-    } = getState();
-    return await instance
-      .put(`/Subtasks/updateName/${data.id}`, { headers: { authorization: `Bearer ${accessToken}` } })
-      .then((response) => {
-        dispatch(getTask(data.taskId || 0));
-        return response.data;
-      })
-      .catch((error) => {
-        return rejectWithValue(error.response?.data || '');
-      });
-  }
-);
+export const updateSubtaskName = createAsyncThunk<
+  any,
+  { id: number; taskId: number; name: string },
+  { state: rootReducerInterface; rejectValue: string }
+>('subtask/updateSubtaskName', async (data, { rejectWithValue, getState, dispatch }) => {
+  const {
+    auth: { accessToken },
+  } = getState();
+  return await instance
+    .put(`/Subtasks/updateName/${data.id}`, data.name.toString(), {
+      headers: { 'Content-Type': 'application/json', authorization: `Bearer ${accessToken}` },
+    })
+    .then((response) => {
+      dispatch(getTask(data.taskId || 0));
+      return response.data;
+    })
+    .catch((error) => {
+      return rejectWithValue(error.response?.data || '');
+    });
+});
 
 export const updateSubtaskStatus = createAsyncThunk<
   any,
@@ -83,7 +86,9 @@ export const updateSubtaskStatus = createAsyncThunk<
     auth: { accessToken },
   } = getState();
   return await instance
-    .put(`/Subtasks/updateStatus/${data.id}`, data.status.toString(), { headers: {'Content-Type':'application/json', authorization: `Bearer ${accessToken}` } })
+    .put(`/Subtasks/updateStatus/${data.id}`, data.status.toString(), {
+      headers: { 'Content-Type': 'application/json', authorization: `Bearer ${accessToken}` },
+    })
     .then((response) => {
       dispatch(getTask(data.taskId || 0));
       return response.data;
