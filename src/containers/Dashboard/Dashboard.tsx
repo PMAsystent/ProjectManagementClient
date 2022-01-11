@@ -57,7 +57,7 @@ const MainLayout = () => {
                 const card = {
                   id: project.id,
                   name: project.name,
-                  activeTasks: 26,
+                  activeTasks: project.activeTasksCount,
                   progressBar: project.progressPercentage,
                   isActive: project.isActive,
                   endDate: project.dueDate,
