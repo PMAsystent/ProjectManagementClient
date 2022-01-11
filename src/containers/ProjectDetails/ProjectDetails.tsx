@@ -15,6 +15,7 @@ import {
   clearProjectDeleteFetchStatus,
   deleteProject,
   getProject,
+  getProjects,
   selectProjectArchiveFetchStatus,
   selectProjectDeleteFetchStatus,
   selectProjectDetails,
@@ -170,6 +171,7 @@ const ProjectDetails = () => {
             if (result.data) {
               dispatch(setProjectProgressPercentage(result.data.progressPercentage));
             }
+            dispatch(getProjects()); // update projects list -> show new progressPercentage
           })
           .catch(() => {
             destItems.splice(destination.index, 0, removed);
