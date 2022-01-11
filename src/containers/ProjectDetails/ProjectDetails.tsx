@@ -15,6 +15,7 @@ import {
   clearProjectDeleteFetchStatus,
   deleteProject,
   getProject,
+  getProjects,
   selectProjectArchiveFetchStatus,
   selectProjectDeleteFetchStatus,
   selectProjectDetails,
@@ -25,7 +26,8 @@ import { fetchStates } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from 'components/TaskList/TaskList';
 import { taskType } from 'core/enums/task.type';
-import { getProjectApi, putTaskApi } from 'api/utils';
+import { getProjectApi } from 'api/utils.project';
+import { putTaskApi } from 'api/utils.task';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { selectAccessToken, selectUser } from 'redux/auth/auth.slice';
 import CustomButton from 'components/CustomButton/CustomButton';
@@ -38,7 +40,7 @@ import { projectStep } from 'core/types/api/step.request.types';
 import FormTaskModal from 'containers/FormTaskModal/FormTaskModal';
 import VisibilityGuard from 'core/hoc/VisibilityGuard';
 import { projectRoleEnum } from '../../core/enums/project.role';
-import AddStepModal from '../AddStepModal/AddStepModal';
+import FormStepModal from '../FormStepModal/FormStepModal';
 import { projectPutTaskType } from '../../core/types/api/task.request.types';
 import { Tooltip } from '@mui/material';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
@@ -164,13 +166,14 @@ const ProjectDetails = () => {
           },
           accessToken || ''
         )
-          .then(async (response) => {
+          .then(async () => {
             const result = await getProjectApi(+projectid, accessToken);
             if (result.data) {
               dispatch(setProjectProgressPercentage(result.data.progressPercentage));
             }
+            dispatch(getProjects()); // update projects list -> show new progressPercentage
           })
-          .catch((error) => {
+          .catch(() => {
             destItems.splice(destination.index, 0, removed);
             setColumns({
               ...columns,
@@ -343,7 +346,7 @@ const ProjectDetails = () => {
         </>
       )}
       <BasicSpeedDial actions={actions} />
-      {addStepModal && <AddStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
+      {addStepModal && <FormStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectid} />}
       {deleteProjectModal && (
         <ConfirmationModal
           title={'Usuwanie Projektu'}

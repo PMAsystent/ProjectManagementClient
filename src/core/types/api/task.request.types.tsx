@@ -17,3 +17,9 @@ export interface taskDetailsType {
   subtasks: Array<projectSubtask>;
   description?: string;
 }
+
+export interface projectPostTaskType extends Omit<taskDetailsType, 'subTasks' | 'id'> {}
+
+export interface projectPutTaskType extends Omit<taskDetailsType, 'subTasks'> {
+  progressPercentage: number;
+}

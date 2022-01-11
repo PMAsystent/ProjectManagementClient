@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
-import { useForm, FormProvider } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -22,7 +22,7 @@ import {
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { findUsers } from '../../api/utils';
+import { findUsers } from '../../api/utils.auth';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 import CustomPriorityField from 'components/CustomPriorityField/CustomPriorityField';
 import PriorityNameDisplayer from 'components/PriorityNameDisplayer/PriorityNameDisplayer';

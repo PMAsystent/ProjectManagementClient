@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { instance } from 'api';
-import { postTaskAssignmentsType } from 'core/types/api/taskAssignments.request.types';
+import { deleteTaskAssignmentsType, postTaskAssignmentsType } from 'core/types/api/taskAssignments.request.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { rootReducerInterface } from 'redux/rootReducer';
 import { getTask } from 'redux/task/task.slice';
+import { deleteTaskAssignmentApi, postTaskAssignmentApi } from '../../api/utils.taskAssignment';
 
 export interface taskAssignmentsInterface {
   taskAssignmentsPostFetchStatus: null | string;
@@ -21,8 +21,7 @@ export const postTaskAssignment = createAsyncThunk<any, postTaskAssignmentsType,
     const {
       auth: { accessToken },
     } = getState();
-    return await instance
-      .post('/TaskAssignment', data, { headers: { authorization: `Bearer ${accessToken}` } })
+    return postTaskAssignmentApi(data, accessToken || '')
       .then((response) => {
         dispatch(getTask(data.taskId));
         return response.data;
@@ -33,14 +32,13 @@ export const postTaskAssignment = createAsyncThunk<any, postTaskAssignmentsType,
   }
 );
 
-export const deleteTaskAssignment = createAsyncThunk<any, { userId: number; taskId: number }, { state: rootReducerInterface; rejectValue: string }>(
+export const deleteTaskAssignment = createAsyncThunk<any, deleteTaskAssignmentsType, { state: rootReducerInterface; rejectValue: string }>(
   'taskAssignments/delete',
   async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
     } = getState();
-    return await instance
-      .delete('/TaskAssignment', { headers: { authorization: `Bearer ${accessToken}` }, data })
+    return deleteTaskAssignmentApi(data, accessToken || '')
       .then((response) => {
         dispatch(getTask(data.taskId));
         return response.data;
