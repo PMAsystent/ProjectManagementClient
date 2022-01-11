@@ -12,7 +12,6 @@ import { postStep, putStep } from '../../redux/step/step.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
-  description: yup.string().required('Opis jest wymagany').min(10, 'Opis musi mieć conajmniej 10 znaków'),
 });
 
 const FormStepModal: FC<any> = (props) => {
@@ -23,7 +22,6 @@ const FormStepModal: FC<any> = (props) => {
   const defaultValue: any = useMemo(
     () => ({
       name: '',
-      description: '',
     }),
     []
   );
@@ -46,7 +44,6 @@ const FormStepModal: FC<any> = (props) => {
     } else {
       const postValues = {
         name: values.name,
-        description: values.description,
         projectId: projectId,
       };
 
@@ -60,7 +57,6 @@ const FormStepModal: FC<any> = (props) => {
     if (props.step) {
       methods.reset({
         name: props.step.name,
-        description: props.step.description || '',
       });
     }
   }, [methods, props.step]);
@@ -70,7 +66,6 @@ const FormStepModal: FC<any> = (props) => {
       open={props.open}
       onClose={props.handleClose}
       aria-labelledby="modal-app-step"
-      aria-describedby="modal-modal-description"
       sx={{ overflowY: 'scroll', overflowX: 'hidden', marginBottom: '15px' }}
     >
       <div>
@@ -86,13 +81,6 @@ const FormStepModal: FC<any> = (props) => {
                   type="text"
                   helperText={methods.formState.errors.name?.message}
                   error={!!methods.formState.errors.name}
-                />
-                <CustomTextArea
-                  placeholder={'Wpisz opis'}
-                  label={'Opis'}
-                  {...methods.register('description')}
-                  helperText={methods.formState.errors.description?.message}
-                  error={!!methods.formState.errors.description}
                 />
               </div>
               <div className="buttons">
