@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import './styles.scss';
 import * as yup from 'yup';
-import { useForm, FormProvider } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -9,7 +9,7 @@ import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
 import { MenuItem, Modal, Select } from '@mui/material';
 import AsyncAutocomplete from '../../components/AsyncAutocomplete/AsyncAutocomplete';
 import { debounce } from 'lodash';
-import { findUsers } from '../../api/utils';
+import { findUsers } from '../../api/utils.auth';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import AssignedUserList from '../../components/AssignedUsersList/AssignedUserList';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';

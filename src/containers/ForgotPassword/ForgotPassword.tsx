@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
-import { sendResetPasswordEmail } from '../../api/utils';
+import { sendResetPasswordEmailApi } from '../../api/utils.auth';
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
   };
 
   const onSubmit = (values: any) => {
-    sendResetPasswordEmail({ email: values['email'] })
+    sendResetPasswordEmailApi({ email: values['email'] })
       .then((response) => {
         console.log(response);
       })

@@ -25,7 +25,8 @@ import { fetchStates } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
 import TaskList from 'components/TaskList/TaskList';
 import { taskType } from 'core/enums/task.type';
-import { getProjectApi, putTaskApi } from 'api/utils';
+import { getProjectApi } from 'api/utils.project';
+import { putTaskApi } from 'api/utils.task';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { selectAccessToken, selectUser } from 'redux/auth/auth.slice';
 import CustomButton from 'components/CustomButton/CustomButton';
@@ -164,13 +165,13 @@ const ProjectDetails = () => {
           },
           accessToken || ''
         )
-          .then(async (response) => {
+          .then(async () => {
             const result = await getProjectApi(+projectid, accessToken);
             if (result.data) {
               dispatch(setProjectProgressPercentage(result.data.progressPercentage));
             }
           })
-          .catch((error) => {
+          .catch(() => {
             destItems.splice(destination.index, 0, removed);
             setColumns({
               ...columns,
