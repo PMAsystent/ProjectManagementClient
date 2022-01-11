@@ -5,7 +5,7 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import AsyncAutocomplete from '../../components/AsyncAutocomplete/AsyncAutocomplete';
 import AssignedUserList from '../../components/AssignedUsersList/AssignedUserList';
 import { debounce } from 'lodash';
-import { findUsers } from '../../api/utils';
+import { findUsers } from '../../api/utils.auth';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { useDispatch, useSelector } from 'react-redux';
 import {

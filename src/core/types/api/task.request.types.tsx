@@ -1,10 +1,5 @@
 import { taskAssignmentsType } from './assigned.request.types';
 
-export interface projectPostTaskType extends Omit<taskDetailsType, 'subTasks' | 'id'> {}
-
-export interface projectPutTaskType extends Omit<taskDetailsType, 'subTasks'> {
-  progressPercentage: number;
-}
 export interface taskDetailsType {
   id: number;
   name: string;
@@ -15,4 +10,10 @@ export interface taskDetailsType {
   assignedUser: Array<taskAssignmentsType>;
   subTasks: Array<any>; // todo
   description?: string;
+}
+
+export interface projectPostTaskType extends Omit<taskDetailsType, 'subTasks' | 'id'> {}
+
+export interface projectPutTaskType extends Omit<taskDetailsType, 'subTasks'> {
+  progressPercentage: number;
 }

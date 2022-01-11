@@ -8,6 +8,7 @@ export interface projectType {
   dueDate: string;
   isActive: boolean;
   progressPercentage: number;
+  activeTasksCount: number;
   steps: Array<projectStep>;
 }
 
@@ -27,7 +28,7 @@ export interface putProjectType extends Omit<postProjectType, 'assignedUsers'> {
   id: number;
 }
 
-export interface projectDetails extends Omit<projectType, 'isActive'> {
+export interface projectDetailsType extends Omit<projectType, 'isActive'> {
   description: string;
   created: string;
   projectSteps: Array<projectStep>;

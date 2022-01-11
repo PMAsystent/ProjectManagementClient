@@ -1,8 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { instance } from 'api';
 import { loginUserType, newEmailType, newPasswordType, registerUserType, resetPasswordType } from 'core/types/api/auth.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { rootReducerInterface } from '../rootReducer';
+import {
+  changeEmailApi,
+  confirmEmail,
+  getCurrentUserApi,
+  newPasswordApi,
+  resetPasswordApi,
+  userLoginApi,
+  userLogoutApi,
+  userRegisterApi,
+} from '../../api/utils.auth';
 
 export interface authReducerInterface {
   registerFetchStatus: null | string;
@@ -31,8 +40,7 @@ const INIT_STATE: authReducerInterface = {
 export const postRegister = createAsyncThunk<any, registerUserType, { rejectValue: string }>(
   'auth/registeruser',
   async (data, { rejectWithValue }) => {
-    return await instance
-      .post('/Auth/RegisterUser', data)
+    return userRegisterApi(data)
       .then((response: any) => {
         if (response.data?.errors && response.data.errors.length > 0) {
           return rejectWithValue(response.data.errors[0]);
@@ -50,8 +58,7 @@ export const getCurrentUser = createAsyncThunk<any, void, { state: rootReducerIn
       auth: { accessToken },
     } = getState();
 
-    return await instance
-      .post('/Auth/GetCurrentUserByToken', { token: accessToken })
+    return getCurrentUserApi(accessToken || '')
       .then((response) => {
         return response.data;
       })
@@ -60,8 +67,7 @@ export const getCurrentUser = createAsyncThunk<any, void, { state: rootReducerIn
 );
 
 export const postLogin = createAsyncThunk<any, loginUserType, { rejectValue: string }>('auth/login', async (data, { rejectWithValue }) => {
-  return await instance
-    .post<{ token: string; user: { email: string; id: number; userName: string }; errors: string[] }>('/Auth/LoginUser', data)
+  return userLoginApi(data)
     .then((response) => {
       if (response.data?.errors && response.data.errors.length > 0) {
         return rejectWithValue(response.data.errors[0]);
@@ -83,8 +89,7 @@ export const postLogout = createAsyncThunk<any, void, { state: rootReducerInterf
       email = user.email;
     }
 
-    return await instance
-      .post('/Auth/LogoutUser', { email }, { headers: { authorization: `Bearer ${accessToken}` } })
+    return userLogoutApi(email, accessToken || '')
       .then((response) => {
         return response.data;
       })
@@ -95,8 +100,7 @@ export const postLogout = createAsyncThunk<any, void, { state: rootReducerInterf
 export const getConfirmEmail = createAsyncThunk<any, string, { rejectValue: string }>(
   'auth/confirmEmail',
   async (queryString, { rejectWithValue }) => {
-    return await instance
-      .get(`/Auth/ConfirmEmail${queryString}`)
+    return confirmEmail(queryString)
       .then((response) => {
         if (response.data) {
           return response.data;
@@ -110,9 +114,8 @@ export const getConfirmEmail = createAsyncThunk<any, string, { rejectValue: stri
 
 export const postResetPassword = createAsyncThunk<any, resetPasswordType, { state: rootReducerInterface; rejectValue: string }>(
   'auth/resetPassword',
-  async (data, { rejectWithValue, getState }) => {
-    return await instance
-      .post('/Auth/ResetPassword', data)
+  async (data, { rejectWithValue }) => {
+    return resetPasswordApi(data)
       .then((response: any) => {
         if (response.data?.errors && response.data.errors.length > 0) {
           return rejectWithValue(response.data.errors[0]);
@@ -129,9 +132,7 @@ export const postNewPassword = createAsyncThunk<any, newPasswordType, { state: r
     const {
       auth: { accessToken },
     } = getState();
-
-    return await instance
-      .post('/Auth/ChangePassword', data, { headers: { authorization: `Bearer ${accessToken}` } })
+    return newPasswordApi(data, accessToken || '')
       .then((response: any) => {
         if (response.data?.errors && response.data.errors.length > 0) {
           return rejectWithValue(response.data.errors[0]);
@@ -149,8 +150,7 @@ export const postNewEmail = createAsyncThunk<any, newEmailType, { state: rootRed
       auth: { accessToken },
     } = getState();
 
-    return await instance
-      .post('/Auth/ChangeEmail', { ...data, token: accessToken }, { headers: { authorization: `Bearer ${accessToken}` } })
+    return changeEmailApi(data, accessToken || '')
       .then((response: any) => {
         if (response.data?.errors && response.data.errors.length > 0) {
           return rejectWithValue(response.data.errors[0]);

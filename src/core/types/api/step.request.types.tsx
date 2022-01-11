@@ -6,7 +6,6 @@ export interface projectStep {
 
 export interface postStepType {
   name: string;
-  description: string;
   projectId: number;
 }
 
