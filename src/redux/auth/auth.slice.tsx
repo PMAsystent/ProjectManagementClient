@@ -7,6 +7,7 @@ import {
   confirmEmail,
   getCurrentUserApi,
   newPasswordApi,
+  refreshTokenApi,
   resetPasswordApi,
   userLoginApi,
   userLogoutApi,
@@ -23,6 +24,7 @@ export interface authReducerInterface {
   postResetPasswordFetchStatus: null | string;
   postNewPasswordFetchStatus: null | string;
   getConfirmEmailFetchStatus: null | string;
+  postRefreshTokenFetchStatus: null | string;
 }
 
 const INIT_STATE: authReducerInterface = {
@@ -35,12 +37,35 @@ const INIT_STATE: authReducerInterface = {
   postNewPasswordFetchStatus: null,
   postResetPasswordFetchStatus: null,
   getConfirmEmailFetchStatus: null,
+  postRefreshTokenFetchStatus: null,
 };
 
 export const postRegister = createAsyncThunk<any, registerUserType, { rejectValue: string }>(
   'auth/registeruser',
   async (data, { rejectWithValue }) => {
     return userRegisterApi(data)
+      .then((response: any) => {
+        if (response.data?.errors && response.data.errors.length > 0) {
+          return rejectWithValue(response.data.errors[0]);
+        }
+        return response.data;
+      })
+      .catch((error) => rejectWithValue(error.response.data.title));
+  }
+);
+
+export const postRefreshToken = createAsyncThunk<any, void, { state: rootReducerInterface; rejectValue: string }>(
+  'auth/refreshtoken',
+  async (_, { rejectWithValue, getState }) => {
+    const {
+      auth: { accessToken, user },
+    } = getState();
+
+    let email;
+    if (user) {
+      email = user.email;
+    }
+    return refreshTokenApi(accessToken, email || '')
       .then((response: any) => {
         if (response.data?.errors && response.data.errors.length > 0) {
           return rejectWithValue(response.data.errors[0]);
@@ -168,6 +193,7 @@ export const authReducer = createSlice({
     logout(state) {
       state.accessToken = null;
       state.user = null;
+      state.postResetPasswordFetchStatus = null;
     },
     clearRegisterFetchStatus(state) {
       state.registerFetchStatus = null;
@@ -265,6 +291,17 @@ export const authReducer = createSlice({
       .addCase(postNewPassword.rejected, (state, action) => {
         state.postNewPasswordFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error(action.payload || 'Zmiana hasła nie powiodła się');
+      })
+      .addCase(postRefreshToken.pending, (state, action) => {
+        state.postRefreshTokenFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(postRefreshToken.fulfilled, (state, action) => {
+        state.postRefreshTokenFetchStatus = action.meta.requestStatus;
+        if (action.payload.token) state.accessToken = action.payload.token;
+      })
+      .addCase(postRefreshToken.rejected, (state, action) => {
+        state.postRefreshTokenFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error(action.payload || 'Sesja wygasła - wylogowano użytkownika');
       });
   },
 });
@@ -277,3 +314,4 @@ export const selectLoginFetchStatus = (state: rootReducerInterface) => state.aut
 export const selectRegisterFetchStatus = (state: rootReducerInterface) => state.auth.registerFetchStatus;
 export const selectGetConfirmEmailFetchStatus = (state: rootReducerInterface) => state.auth.getConfirmEmailFetchStatus;
 export const selectPostResetPasswordFetchStatus = (state: rootReducerInterface) => state.auth.postResetPasswordFetchStatus;
+export const selectPostRefreshTokenFetchStatus = (state: rootReducerInterface) => state.auth.postRefreshTokenFetchStatus;

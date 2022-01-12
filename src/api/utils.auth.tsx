@@ -2,6 +2,11 @@ import { instance } from 'api';
 import SnackbarUtils from '../core/utils/SnackbarUtils';
 import { loginUserType, newEmailType, newPasswordType, registerUserType, resetPasswordType } from '../core/types/api/auth.types';
 
+// refresh token
+export const refreshTokenApi = async (accessToken: string | null, email: string) => {
+  return await instance.post('/Auth/RefreshToken', { email }, { headers: { authorization: `Bearer ${accessToken}` } });
+};
+
 // get current user by token
 export const getCurrentUserApi = async (accessToken: string | null) => {
   return await instance.post('/Auth/GetCurrentUserByToken', { token: accessToken });
