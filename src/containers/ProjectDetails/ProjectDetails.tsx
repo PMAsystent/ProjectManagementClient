@@ -370,6 +370,7 @@ const ProjectDetails = () => {
             setAddTaskModal(false);
           }}
           stepId={stepid}
+          projectId={+projectid}
         />
       )}
       {editProjectModal && projectDetails && (

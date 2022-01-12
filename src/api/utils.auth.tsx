@@ -53,9 +53,9 @@ export const sendResetPasswordEmailApi = async (data: { email: string }) => {
 };
 
 // find users by query string
-export const findUsers = async (query: string) => {
+export const findUsers = async (query: string, accessToken: string | null, projectId?: number) => {
   return await instance
-    .get(`/Users/findUsers?term=${query}`)
+    .get(`/Users/findUsers?term=${query}${projectId ? `&projectId=${projectId}` : ''}`, { headers: { authorization: `Bearer ${accessToken}` } })
     .then((response) => {
       return response.data;
     })

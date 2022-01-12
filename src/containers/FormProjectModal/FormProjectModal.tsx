@@ -27,7 +27,7 @@ import {
 import { useCloseModalOnDoneFetchStatus } from '../../core/hooks';
 import { isValid } from 'date-fns';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
-import { selectUser } from '../../redux/auth/auth.slice';
+import { selectAccessToken, selectUser } from '../../redux/auth/auth.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
@@ -47,6 +47,7 @@ const FormProjectModal: FC<any> = (props) => {
   const projectPostFetchStatus = useSelector(selectProjectPostFetchStatus);
   const projectPutFetchStatus = useSelector(selectProjectPutFetchStatus);
   const currentUser = useSelector(selectUser);
+  const accessToken = useSelector(selectAccessToken);
 
   const defaultValue: any = useMemo(
     () => ({
@@ -69,7 +70,7 @@ const FormProjectModal: FC<any> = (props) => {
   const handleOnChangeUsersDebounced = useCallback(
     debounce(async (query) => {
       setUsersOptionsLoading(true);
-      const response: any = await findUsers(query);
+      const response: any = await findUsers(query, accessToken);
       if (response?.count > 0) {
         setUsersOptions(response.users);
       } else {
