@@ -63,7 +63,12 @@ const Navbar = (props: { onSidebarOpen: any }) => {
         <Box sx={{ flexGrow: 20 }} />
         <p className="label">Zarchiwizowane</p>
         <Tooltip title="Zarchiwizowane projekty">
-          <Switch checked={archive} onChange={handleArchiveChange} inputProps={{ 'aria-label': 'controlled' }} />
+          <Switch
+            disabled={history.location.pathname !== getDashboardPath}
+            checked={archive}
+            onChange={handleArchiveChange}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />
         </Tooltip>
         <Tooltip title="Edycja profilu">
           {currentUser ? (
