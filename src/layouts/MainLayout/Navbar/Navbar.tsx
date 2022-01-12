@@ -1,5 +1,5 @@
 import { AppBar, Avatar, Box, Hidden, IconButton, TextField, Toolbar, Tooltip } from '@mui/material';
-import { Settings, Search, Menu } from '@material-ui/icons';
+import { Search, Menu } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { getDashboardPath, getUserDetailsPath } from 'core/routes';
 import './styles.scss';
@@ -61,13 +61,9 @@ const Navbar = (props: { onSidebarOpen: any }) => {
           />
         </Box>
         <Box sx={{ flexGrow: 20 }} />
+        <p className='label'>Zarchiwizowane</p>
         <Tooltip title="Zarchiwizowane projekty">
           <Switch checked={archive} onChange={handleArchiveChange} inputProps={{ 'aria-label': 'controlled' }} />
-        </Tooltip>
-        <Tooltip title="Settings">
-          <IconButton color="inherit">
-            <Settings className="navbar-icon" />
-          </IconButton>
         </Tooltip>
         <Tooltip title="Edycja profilu">
           {currentUser ? (
