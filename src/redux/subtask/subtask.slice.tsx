@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { rootReducerInterface } from '../rootReducer';
-import { projectPostSubtaskType, projectSubtask } from '../../core/types/api/subtask.request.types';
+import { projectPostSubtaskType } from '../../core/types/api/subtask.request.types';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { getTask } from 'redux/task/task.slice';
 import { instance } from 'api';
@@ -25,7 +25,6 @@ export const postSubtask = createAsyncThunk<any, projectPostSubtaskType, { state
   async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
-      projects: { projectDetails },
     } = getState();
     postSubtaskApi(data, accessToken || '')
       .then(async (response) => {

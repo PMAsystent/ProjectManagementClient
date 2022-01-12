@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
-import { Button, IconButton, Modal, Tooltip } from '@mui/material';
+import { Button, Modal, Tooltip } from '@mui/material';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -33,8 +33,6 @@ import AssignedUserList from 'components/AssignedUsersList/AssignedUserList';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { fetchStates } from 'core/enums/redux.statues';
 import { deleteTaskAssignment, postTaskAssignment } from 'redux/taskAssignments/taskAssignments.slice';
-import SubtaskItem from 'components/SubtaskItem/SubtaskItem';
-import { projectSubtask } from 'core/types/api/subtask.request.types';
 import SubtaskView from 'components/SubtaskView/SubtaskView';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import FeedIcon from '@mui/icons-material/Feed';
