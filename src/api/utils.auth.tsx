@@ -9,7 +9,7 @@ export const refreshTokenApi = async (accessToken: string | null, email: string)
 
 // get current user by token
 export const getCurrentUserApi = async (accessToken: string | null) => {
-  return await instance.post('/Auth/GetCurrentUserByToken', { token: accessToken });
+  return await instance.get(`/Auth/GetCurrentUserByToken?token=${accessToken}`, { headers: { authorization: `Bearer ${accessToken}` } });
 };
 
 // user register
