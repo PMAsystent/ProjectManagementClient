@@ -1,14 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { instance } from '../../api';
 import { rootReducerInterface } from '../rootReducer';
-import { myProjectsType, postProjectType, projectDetails, projectType, putProjectType } from '../../core/types/api/project.requests.types';
+import { postProjectType, projectDetailsType, projectType, putProjectType } from '../../core/types/api/project.requests.types';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
-import { getProjectApi } from '../../api/utils';
+import { deleteProjectApi, getProjectApi, getProjectsApi, patchProjectApi, postProjectApi, putProjectApi } from '../../api/utils.project';
 import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
 
 export interface projectReducerInterface {
   projectList: Array<projectType>;
-  projectDetails: null | projectDetails;
+  projectDetails: null | projectDetailsType;
   projectListFetchStatus: null | string;
   projectDetailsFetchStatus: null | string;
   projectPostFetchStatus: null | string;
@@ -34,8 +33,7 @@ export const getProjects = createAsyncThunk<any, void, { state: rootReducerInter
     const {
       auth: { accessToken },
     } = getState();
-    return await instance
-      .get<myProjectsType>('/MyProjects', { headers: { authorization: `Bearer ${accessToken}` } })
+    return getProjectsApi(accessToken || '')
       .then((response) => {
         return response.data.projectsList ?? [];
       })
@@ -51,7 +49,7 @@ export const getProject = createAsyncThunk<any, number, { state: rootReducerInte
     const {
       auth: { accessToken },
     } = getState();
-    return await getProjectApi(id, accessToken)
+    return getProjectApi(id, accessToken || '')
       .then((response) => {
         return response.data;
       })
@@ -67,8 +65,7 @@ export const postProject = createAsyncThunk<any, postProjectType, { state: rootR
     const {
       auth: { accessToken },
     } = getState();
-    return await instance
-      .post('/MyProjects', data, { headers: { authorization: `Bearer ${accessToken}` } })
+    return postProjectApi(data, accessToken || '')
       .then((response) => {
         dispatch(getProjects());
         return response.data;
@@ -85,8 +82,7 @@ export const archiveProject = createAsyncThunk<any, { id: number; isActive: bool
     const {
       auth: { accessToken },
     } = getState();
-    return await instance
-      .patch(`/MyProjects/${id}/archive/${isActive}`, {}, { headers: { authorization: `Bearer ${accessToken}` } })
+    return patchProjectApi(id, isActive, accessToken || '')
       .then((response) => {
         dispatch(getProjects());
         return response.data;
@@ -103,9 +99,9 @@ export const deleteProject = createAsyncThunk<any, number, { state: rootReducerI
     const {
       auth: { accessToken },
     } = getState();
-    return await instance
-      .delete(`/MyProjects/${id}`, { headers: { authorization: `Bearer ${accessToken}` } })
+    return deleteProjectApi(id, accessToken || '')
       .then((response) => {
+        dispatch(getProjects());
         return response.data;
       })
       .catch((error) => {
@@ -120,8 +116,7 @@ export const putProject = createAsyncThunk<any, putProjectType, { state: rootRed
     const {
       auth: { accessToken },
     } = getState();
-    return await instance
-      .put('/MyProjects', data, { headers: { authorization: `Bearer ${accessToken}` } })
+    return putProjectApi(data, accessToken || '')
       .then((response) => {
         dispatch(getProject(data.id));
         return response.data;

@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { instance } from 'api';
 import { postProjectAssignmentsType, putProjectAssignmentsType } from 'core/types/api/projectAssignments.request.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
-import { getProjectApi } from 'api/utils';
+import { getProjectApi } from 'api/utils.project';
 import { projectAssignmentsType } from 'core/types/api/assigned.request.types';
 
 export interface projectAssignmentsInterface {
@@ -24,7 +24,7 @@ const INIT_STATE: projectAssignmentsInterface = {
 
 export const getProjectAssignments = createAsyncThunk<any, number, { state: rootReducerInterface; rejectValue: string }>(
   'projectAssignments/get',
-  async (id, { rejectWithValue, getState, dispatch }) => {
+  async (id, { rejectWithValue, getState }) => {
     const {
       auth: { accessToken },
     } = getState();

@@ -1,9 +1,9 @@
 import { rootReducerInterface } from '../rootReducer';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
-import { instance } from '../../api';
 import { getProject, getProjects } from '../project/project.slice';
 import { postStepType, putStepType } from '../../core/types/api/step.request.types';
+import { deleteStepApi, postStepApi, putStepApi } from '../../api/utils.step';
 
 export interface stepReducerInterface {
   deleteStepFetchStatus: null | string;
@@ -24,8 +24,7 @@ export const postStep = createAsyncThunk<any, postStepType, { state: rootReducer
       auth: { accessToken },
       projects: { projectDetails },
     } = getState();
-    return await instance
-      .post('/Step', data, { headers: { authorization: `Bearer ${accessToken}` } })
+    return postStepApi(data, accessToken || '')
       .then((response) => {
         dispatch(getProjects());
         if (projectDetails) dispatch(getProject(projectDetails.id));
@@ -45,8 +44,7 @@ export const putStep = createAsyncThunk<any, putStepType, { state: rootReducerIn
       auth: { accessToken },
       projects: { projectDetails },
     } = getState();
-    return await instance
-      .put('/Step', data, { headers: { authorization: `Bearer ${accessToken}` } })
+    return putStepApi(data, accessToken || '')
       .then((response) => {
         dispatch(getProjects());
         if (projectDetails) dispatch(getProject(projectDetails.id));
@@ -66,8 +64,7 @@ export const deleteStep = createAsyncThunk<any, number, { state: rootReducerInte
       auth: { accessToken },
       projects: { projectDetails },
     } = getState();
-    return await instance
-      .delete(`/Step/${id}`, { headers: { authorization: `Bearer ${accessToken}` } })
+    return deleteStepApi(id, accessToken || '')
       .then((response) => {
         dispatch(getProjects());
         if (projectDetails) dispatch(getProject(projectDetails.id));
