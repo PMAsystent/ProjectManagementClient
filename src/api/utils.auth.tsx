@@ -1,6 +1,6 @@
 import { instance } from 'api';
 import SnackbarUtils from '../core/utils/SnackbarUtils';
-import { loginUserType, newEmailType, newPasswordType, registerUserType, resetPasswordType } from '../core/types/api/auth.types';
+import { loginUserType, newPasswordType, registerUserType, resetPasswordType } from '../core/types/api/auth.types';
 
 // refresh token
 export const refreshTokenApi = async (accessToken: string | null, email: string) => {
@@ -40,11 +40,6 @@ export const newPasswordApi = async (data: newPasswordType, accessToken: string 
 // email confirm
 export const confirmEmail = async (queryString: string) => {
   return await instance.get(`/Auth/ConfirmEmail${queryString}`);
-};
-
-// email change
-export const changeEmailApi = async (data: newEmailType, accessToken: string | null) => {
-  return await instance.post('/Auth/ChangeEmail', { ...data, token: accessToken }, { headers: { authorization: `Bearer ${accessToken}` } });
 };
 
 // email reset password

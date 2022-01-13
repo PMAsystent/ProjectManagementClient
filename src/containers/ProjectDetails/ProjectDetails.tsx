@@ -16,7 +16,6 @@ import {
   deleteProject,
   getProject,
   getProjects,
-  refreshTaskPercentage,
   selectProjectArchiveFetchStatus,
   selectProjectDeleteFetchStatus,
   selectProjectDetails,

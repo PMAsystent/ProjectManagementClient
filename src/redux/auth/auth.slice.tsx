@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { loginUserType, newEmailType, newPasswordType, registerUserType, resetPasswordType } from 'core/types/api/auth.types';
+import { loginUserType, newPasswordType, registerUserType, resetPasswordType } from 'core/types/api/auth.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { rootReducerInterface } from '../rootReducer';
 import {
-  changeEmailApi,
   confirmEmail,
   getCurrentUserApi,
   newPasswordApi,
@@ -20,7 +19,6 @@ export interface authReducerInterface {
   accessToken: null | string;
   user: null | { email: string; userId: number; userName: string };
   userFetchStatus: null | string;
-  postNewEmailFetchStatus: null | string;
   postResetPasswordFetchStatus: null | string;
   postNewPasswordFetchStatus: null | string;
   getConfirmEmailFetchStatus: null | string;
@@ -33,7 +31,6 @@ const INIT_STATE: authReducerInterface = {
   accessToken: null,
   user: null,
   userFetchStatus: null,
-  postNewEmailFetchStatus: null,
   postNewPasswordFetchStatus: null,
   postResetPasswordFetchStatus: null,
   getConfirmEmailFetchStatus: null,
@@ -168,24 +165,6 @@ export const postNewPassword = createAsyncThunk<any, newPasswordType, { state: r
   }
 );
 
-export const postNewEmail = createAsyncThunk<any, newEmailType, { state: rootReducerInterface; rejectValue: string }>(
-  'auth/newEmail',
-  async (data, { rejectWithValue, getState }) => {
-    const {
-      auth: { accessToken },
-    } = getState();
-
-    return changeEmailApi(data, accessToken || '')
-      .then((response: any) => {
-        if (response.data?.errors && response.data.errors.length > 0) {
-          return rejectWithValue(response.data.errors[0]);
-        }
-        return response.data;
-      })
-      .catch((error) => rejectWithValue(error.response.data.title));
-  }
-);
-
 export const authReducer = createSlice({
   name: 'auth',
   initialState: INIT_STATE,
@@ -258,17 +237,6 @@ export const authReducer = createSlice({
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.userFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error('Pobieranie danych nie powiodło się');
-      })
-      .addCase(postNewEmail.pending, (state, action) => {
-        state.postNewEmailFetchStatus = action.meta.requestStatus;
-      })
-      .addCase(postNewEmail.fulfilled, (state, action) => {
-        state.postNewEmailFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.success('Zmieniono email');
-      })
-      .addCase(postNewEmail.rejected, (state, action) => {
-        state.postNewEmailFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.error(action.payload || 'Zmiana maila nie powiodła się');
       })
       .addCase(postResetPassword.pending, (state, action) => {
         state.postResetPasswordFetchStatus = action.meta.requestStatus;
