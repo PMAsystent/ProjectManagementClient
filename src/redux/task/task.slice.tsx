@@ -22,7 +22,7 @@ export const postTask = createAsyncThunk<any, projectPostTaskType, { state: root
   async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
-      projects: { projectDetails },
+      project: { projectDetails },
     } = getState();
     return postTaskApi(data, accessToken || '')
       .then(async (response) => {
@@ -40,7 +40,7 @@ export const putTask = createAsyncThunk<any, projectPutTaskType, { state: rootRe
   async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
-      projects: { projectDetails },
+      project: { projectDetails },
     } = getState();
     return putTaskApi(data, accessToken || '')
       .then(async (response) => {

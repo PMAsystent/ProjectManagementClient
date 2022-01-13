@@ -5,6 +5,7 @@ import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { getTask } from 'redux/task/task.slice';
 import { instance } from 'api';
 import { postSubtaskApi } from 'api/utils.subtask';
+import { getProject, refreshTaskPercentage } from 'redux/project/project.slice';
 
 export interface subtaskReducerInterface {
   subtaskPostFetchStatus: null | string;
@@ -25,11 +26,11 @@ export const postSubtask = createAsyncThunk<any, projectPostSubtaskType, { state
   async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
-      projects: { projectDetails },
     } = getState();
     postSubtaskApi(data, accessToken || '')
       .then(async (response) => {
         dispatch(getTask(data.taskId || 0));
+        dispatch(refreshTaskPercentage(data.taskId));
         return response.data;
       })
       .catch((error) => {
@@ -48,6 +49,7 @@ export const deleteSubtask = createAsyncThunk<any, { id: number; taskId: number 
       .delete(`/Subtasks/${data.id}`, { headers: { authorization: `Bearer ${accessToken}` } })
       .then((response) => {
         dispatch(getTask(data.taskId || 0));
+        dispatch(refreshTaskPercentage(data.taskId));
         return response.data;
       })
       .catch((error) => {
@@ -84,6 +86,7 @@ export const updateSubtaskStatus = createAsyncThunk<
 >('subtask/updateSubtaskStatus', async (data, { rejectWithValue, getState, dispatch }) => {
   const {
     auth: { accessToken },
+    project: { projectDetails },
   } = getState();
   return await instance
     .put(`/Subtasks/updateStatus/${data.id}`, data.status.toString(), {
@@ -91,6 +94,7 @@ export const updateSubtaskStatus = createAsyncThunk<
     })
     .then((response) => {
       dispatch(getTask(data.taskId || 0));
+      dispatch(refreshTaskPercentage(data.taskId));
       return response.data;
     })
     .catch((error) => {
