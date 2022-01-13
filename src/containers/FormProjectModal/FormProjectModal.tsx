@@ -31,7 +31,7 @@ import { selectAccessToken, selectUser } from '../../redux/auth/auth.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki'),
-  description: yup.string().required('Opis jest wymagany').min(20, 'Opis musi mieć conajmniej 20 znaków'),
+  description: yup.string().max(100, 'Opis musi mieć mniej niż 100 znaków'),
   dueDate: yup
     .mixed()
     .test('is-date', 'Data zakończenia jest wymagana', (value) => isValid(value))
