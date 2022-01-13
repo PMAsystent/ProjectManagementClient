@@ -8,7 +8,7 @@ import { sharedReducer, sharedReducerInterface } from './shared/shared.slice';
 
 export interface rootReducerInterface {
   auth: authReducerInterface;
-  projects: projectReducerInterface;
+  project: projectReducerInterface;
   tasks: taskReducerInterface;
   projectAssignments: projectAssignmentsInterface;
   step: stepReducerInterface;
@@ -17,7 +17,7 @@ export interface rootReducerInterface {
 
 const rootReducer = combineReducers<rootReducerInterface>({
   auth: authReducer.reducer,
-  projects: projectReducer.reducer,
+  project: projectReducer.reducer,
   tasks: taskReducer.reducer,
   projectAssignments: projectAssignments.reducer,
   step: stepReducer.reducer,
