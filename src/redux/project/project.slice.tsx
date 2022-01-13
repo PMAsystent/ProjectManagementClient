@@ -4,6 +4,7 @@ import { postProjectType, projectDetailsType, projectType, putProjectType } from
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { deleteProjectApi, getProjectApi, getProjectsApi, patchProjectApi, postProjectApi, putProjectApi } from '../../api/utils.project';
 import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
+import { projectPutTaskType } from 'core/types/api/task.request.types';
 
 export interface projectReducerInterface {
   projectList: Array<projectType>;
@@ -14,6 +15,7 @@ export interface projectReducerInterface {
   projectPutFetchStatus: null | string;
   projectArchiveFetchStatus: null | string;
   projectDeleteFetchStatus: null | string;
+  projectRefreshTaskPercentageFetchStatus: null | string;
 }
 
 const INIT_STATE: projectReducerInterface = {
@@ -25,6 +27,7 @@ const INIT_STATE: projectReducerInterface = {
   projectPutFetchStatus: null,
   projectArchiveFetchStatus: null,
   projectDeleteFetchStatus: null,
+  projectRefreshTaskPercentageFetchStatus: null,
 };
 
 export const getProjects = createAsyncThunk<any, void, { state: rootReducerInterface; rejectValue: string }>(
@@ -52,6 +55,23 @@ export const getProject = createAsyncThunk<any, number, { state: rootReducerInte
     return getProjectApi(id, accessToken || '')
       .then((response) => {
         return response.data;
+      })
+      .catch((error) => {
+        return rejectWithValue(error.response.data.title);
+      });
+  }
+);
+
+export const refreshTaskPercentage = createAsyncThunk<any, number, { state: rootReducerInterface; rejectValue: string }>(
+  'project/refreshTaskPercentage',
+  async (taskId, { rejectWithValue, getState }) => {
+    const {
+      auth: { accessToken },
+      project: { projectDetails },
+    } = getState();
+    return getProjectApi(projectDetails?.id || 0, accessToken || '')
+      .then((response) => {
+        return response.data.projectTasks.find((t) => t.id === taskId);
       })
       .catch((error) => {
         return rejectWithValue(error.response.data.title);
@@ -156,6 +176,11 @@ export const projectReducer = createSlice({
         state.projectDetails.progressPercentage = action.payload;
       }
     },
+    setProjectTaskList(state, action: PayloadAction<Array<projectPutTaskType>>) {
+      if (state.projectDetails) {
+        state.projectDetails.projectTasks = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -224,6 +249,20 @@ export const projectReducer = createSlice({
       .addCase(putProject.rejected, (state, action) => {
         state.projectPutFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error('Aktualizacja się nie powiodła');
+      })
+      .addCase(refreshTaskPercentage.pending, (state, action) => {
+        state.projectRefreshTaskPercentageFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(refreshTaskPercentage.fulfilled, (state, action) => {
+        state.projectRefreshTaskPercentageFetchStatus = action.meta.requestStatus;
+        state.projectDetails?.projectTasks.forEach((task) => {
+          if (task.id === action.payload.id) {
+            task.progressPercentage = action.payload.progressPercentage;
+          }
+        });
+      })
+      .addCase(refreshTaskPercentage.rejected, (state, action) => {
+        state.projectRefreshTaskPercentageFetchStatus = action.meta.requestStatus;
       });
   },
 });
@@ -234,15 +273,16 @@ export const {
   clearProjectPutFetchStatus,
   setProjectAssignedUsers,
   setProjectProgressPercentage,
+  setProjectTaskList,
   clearProjectArchiveFetchStatus,
   clearProjectDeleteFetchStatus,
 } = projectReducer.actions;
 
-export const selectProjects = (state: rootReducerInterface) => state.projects.projectList;
-export const selectProjectsListFetchStatus = (state: rootReducerInterface) => state.projects.projectListFetchStatus;
-export const selectProjectPostFetchStatus = (state: rootReducerInterface) => state.projects.projectPostFetchStatus;
-export const selectProjectDetails = (state: rootReducerInterface) => state.projects.projectDetails;
-export const selectProjectDetailsFetchStatus = (state: rootReducerInterface) => state.projects.projectDetailsFetchStatus;
-export const selectProjectPutFetchStatus = (state: rootReducerInterface) => state.projects.projectPutFetchStatus;
-export const selectProjectDeleteFetchStatus = (state: rootReducerInterface) => state.projects.projectDeleteFetchStatus;
-export const selectProjectArchiveFetchStatus = (state: rootReducerInterface) => state.projects.projectArchiveFetchStatus;
+export const selectProjects = (state: rootReducerInterface) => state.project.projectList;
+export const selectProjectsListFetchStatus = (state: rootReducerInterface) => state.project.projectListFetchStatus;
+export const selectProjectPostFetchStatus = (state: rootReducerInterface) => state.project.projectPostFetchStatus;
+export const selectProjectDetails = (state: rootReducerInterface) => state.project.projectDetails;
+export const selectProjectDetailsFetchStatus = (state: rootReducerInterface) => state.project.projectDetailsFetchStatus;
+export const selectProjectPutFetchStatus = (state: rootReducerInterface) => state.project.projectPutFetchStatus;
+export const selectProjectDeleteFetchStatus = (state: rootReducerInterface) => state.project.projectDeleteFetchStatus;
+export const selectProjectArchiveFetchStatus = (state: rootReducerInterface) => state.project.projectArchiveFetchStatus;

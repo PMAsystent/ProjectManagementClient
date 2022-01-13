@@ -16,11 +16,13 @@ import {
   deleteProject,
   getProject,
   getProjects,
+  refreshTaskPercentage,
   selectProjectArchiveFetchStatus,
   selectProjectDeleteFetchStatus,
   selectProjectDetails,
   selectProjectDetailsFetchStatus,
   setProjectProgressPercentage,
+  setProjectTaskList,
 } from 'redux/project/project.slice';
 import { fetchStates } from 'core/enums/redux.statues';
 import { DragDropContext } from 'react-beautiful-dnd';
@@ -169,6 +171,7 @@ const ProjectDetails = () => {
           .then(async () => {
             const result = await getProjectApi(+projectid, accessToken);
             if (result.data) {
+              dispatch(setProjectTaskList(result.data.projectTasks));
               dispatch(setProjectProgressPercentage(result.data.progressPercentage));
             }
             dispatch(getProjects()); // update projects list -> show new progressPercentage

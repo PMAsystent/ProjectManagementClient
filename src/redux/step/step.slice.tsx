@@ -22,7 +22,7 @@ export const postStep = createAsyncThunk<any, postStepType, { state: rootReducer
   async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
-      projects: { projectDetails },
+      project: { projectDetails },
     } = getState();
     return postStepApi(data, accessToken || '')
       .then((response) => {
@@ -42,7 +42,7 @@ export const putStep = createAsyncThunk<any, putStepType, { state: rootReducerIn
   async (data, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
-      projects: { projectDetails },
+      project: { projectDetails },
     } = getState();
     return putStepApi(data, accessToken || '')
       .then((response) => {
@@ -62,7 +62,7 @@ export const deleteStep = createAsyncThunk<any, number, { state: rootReducerInte
   async (id, { rejectWithValue, getState, dispatch }) => {
     const {
       auth: { accessToken },
-      projects: { projectDetails },
+      project: { projectDetails },
     } = getState();
     return deleteStepApi(id, accessToken || '')
       .then((response) => {
