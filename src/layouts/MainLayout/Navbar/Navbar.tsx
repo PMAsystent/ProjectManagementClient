@@ -55,6 +55,7 @@ const Navbar = (props: { onSidebarOpen: any }) => {
           <TextField
             id="search"
             variant="standard"
+            placeholder={history.location.pathname.includes('/project/') ? 'Wpisz nazwę task' : 'Wpisz nazwę projektu'}
             value={value}
             onChange={handleOnSearchChange}
             disabled={!history.location.pathname.includes('/project/') && history.location.pathname !== getDashboardPath}
