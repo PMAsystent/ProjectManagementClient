@@ -21,17 +21,17 @@ $hoverColor: rgba(0, 0, 0, 0.09) !important;
       background-color: $hoverColor;
     }
 
-    #edit, #delete {
+    #edit-step, #delete-step {
       margin-left: 5px;
       transition: color .25s ease-in-out;
     }
 
-    #edit:hover{
+    #edit-step:hover{
       color: colors.$primaryColor;
     }
 
-    #delete:hover{
-      color: #d02f2f;
+    #delete-step:hover{
+      color: colors.$errorColor;
     }
 
     .MuiTreeItem-label  {

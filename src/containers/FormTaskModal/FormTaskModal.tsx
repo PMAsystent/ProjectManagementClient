@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
-import { Button, IconButton, Modal, Tooltip } from '@mui/material';
+import { Button, Modal, Tooltip } from '@mui/material';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -33,11 +33,10 @@ import AssignedUserList from 'components/AssignedUsersList/AssignedUserList';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { fetchStates } from 'core/enums/redux.statues';
 import { deleteTaskAssignment, postTaskAssignment } from 'redux/taskAssignments/taskAssignments.slice';
-import SubtaskItem from 'components/SubtaskItem/SubtaskItem';
-import { projectSubtask } from 'core/types/api/subtask.request.types';
 import SubtaskView from 'components/SubtaskView/SubtaskView';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import FeedIcon from '@mui/icons-material/Feed';
+import { selectAccessToken } from '../../redux/auth/auth.slice';
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
   description: yup.string(),
@@ -57,6 +56,7 @@ const FormTaskModal: FC<any> = (props) => {
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [isTaskDetailsView, setIsTaskDetailsView] = useState(true);
+  const accessToken = useSelector(selectAccessToken);
   const defaultValue: any = useMemo(
     () => ({
       name: '',
@@ -122,7 +122,7 @@ const FormTaskModal: FC<any> = (props) => {
   const handleOnChangeUsersDebounced = useCallback(
     debounce(async (query) => {
       setUsersOptionsLoading(true);
-      const response: any = await findUsers(query);
+      const response: any = await findUsers(query, accessToken, props.projectId);
       if (response?.count > 0) {
         setUsersOptions(response.users);
       } else {

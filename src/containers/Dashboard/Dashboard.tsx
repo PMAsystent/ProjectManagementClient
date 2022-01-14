@@ -16,9 +16,9 @@ import { selectProjectSearch, selectWithArchive } from '../../redux/shared/share
 const MainLayout = () => {
   const dispatch = useDispatch();
   const searchProject = useSelector(selectProjectSearch);
+  const withArchive = useSelector(selectWithArchive);
   const projects = useSelector(selectProjects);
   const projectsListFetchStatus = useSelector(selectProjectsListFetchStatus);
-  const withArchive = useSelector(selectWithArchive);
   const [addProjectModal, setAddProjectModal] = React.useState(false);
   const actions = useMemo(
     () => [

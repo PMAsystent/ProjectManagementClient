@@ -5,6 +5,7 @@ import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { deleteProjectApi, getProjectApi, getProjectsApi, patchProjectApi, postProjectApi, putProjectApi } from '../../api/utils.project';
 import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
 import { projectPutTaskType } from 'core/types/api/task.request.types';
+import {projectStep} from "../../core/types/api/step.request.types";
 
 export interface projectReducerInterface {
   projectList: Array<projectType>;
@@ -181,6 +182,11 @@ export const projectReducer = createSlice({
         state.projectDetails.projectTasks = action.payload;
       }
     },
+    setProjectStepsList(state, action: PayloadAction<Array<projectStep>>) {
+      if (state.projectDetails) {
+        state.projectDetails.projectSteps = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -276,6 +282,7 @@ export const {
   setProjectTaskList,
   clearProjectArchiveFetchStatus,
   clearProjectDeleteFetchStatus,
+  setProjectStepsList,
 } = projectReducer.actions;
 
 export const selectProjects = (state: rootReducerInterface) => state.project.projectList;

@@ -1,10 +1,15 @@
 import { instance } from 'api';
 import SnackbarUtils from '../core/utils/SnackbarUtils';
-import { loginUserType, newEmailType, newPasswordType, registerUserType, resetPasswordType } from '../core/types/api/auth.types';
+import { loginUserType, newPasswordType, registerUserType, resetPasswordType } from '../core/types/api/auth.types';
+
+// refresh token
+export const refreshTokenApi = async (accessToken: string | null, email: string) => {
+  return await instance.post('/Auth/RefreshToken', { email }, { headers: { authorization: `Bearer ${accessToken}` } });
+};
 
 // get current user by token
 export const getCurrentUserApi = async (accessToken: string | null) => {
-  return await instance.post('/Auth/GetCurrentUserByToken', { token: accessToken });
+  return await instance.get(`/Auth/GetCurrentUserByToken?token=${accessToken}`, { headers: { authorization: `Bearer ${accessToken}` } });
 };
 
 // user register
@@ -37,20 +42,15 @@ export const confirmEmail = async (queryString: string) => {
   return await instance.get(`/Auth/ConfirmEmail${queryString}`);
 };
 
-// email change
-export const changeEmailApi = async (data: newEmailType, accessToken: string | null) => {
-  return await instance.post('/Auth/ChangeEmail', { ...data, token: accessToken }, { headers: { authorization: `Bearer ${accessToken}` } });
-};
-
 // email reset password
 export const sendResetPasswordEmailApi = async (data: { email: string }) => {
   return await instance.post('/Auth/SendResetPasswordEmail', data);
 };
 
 // find users by query string
-export const findUsers = async (query: string) => {
+export const findUsers = async (query: string, accessToken: string | null, projectId?: number) => {
   return await instance
-    .get(`/Users/findUsers?term=${query}`)
+    .get(`/Users/findUsers?term=${query}${projectId ? `&projectId=${projectId}` : ''}`, { headers: { authorization: `Bearer ${accessToken}` } })
     .then((response) => {
       return response.data;
     })

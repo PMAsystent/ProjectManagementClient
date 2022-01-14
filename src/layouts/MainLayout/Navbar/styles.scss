@@ -10,6 +10,11 @@ $avatarSize: 40px;
     width: calc(100% - #{constants.$SidebarWidth});
     left: constants.$SidebarWidth;
   }
+  .label {
+    @media (max-width: constants.$MediaMinWidth) {
+      display: none;
+    }
+  }
   .search-box {
     padding-left: 20px;
     width: 100%;

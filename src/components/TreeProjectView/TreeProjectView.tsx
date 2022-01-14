@@ -24,6 +24,7 @@ import {
   selectPutStepFetchStatus,
 } from '../../redux/step/step.slice';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
+import { selectProjectSearch, selectWithArchive } from '../../redux/shared/shared.slice';
 
 const TreeProjectView: FC<any> = () => {
   const history = useHistory();
@@ -34,6 +35,8 @@ const TreeProjectView: FC<any> = () => {
   const deleteStepFetchStatus = useSelector(selectDeleteStepFetchStatus);
   const postStepFetchStatus = useSelector(selectPostStepFetchStatus);
   const putStepFetchStatus = useSelector(selectPutStepFetchStatus);
+  const searchProject = useSelector(selectProjectSearch);
+  const withArchive = useSelector(selectWithArchive);
 
   const [selectedStep, setSelectedStep] = useState<any>(null);
   const [addStepModal, setAddStepModal] = useState<boolean>(false);
@@ -89,67 +92,79 @@ const TreeProjectView: FC<any> = () => {
         defaultExpandIcon={<ChevronRightIcon />}
         expanded={[`${projectDetails?.id}`]}
       >
-        {projectsRedux?.map((project) => {
-          return (
-            <TreeItem
-              key={project.id}
-              nodeId={`${project.id}`}
-              label={`${project.name}`}
-              className={getClassName(project)}
-              onClick={() => {
-                goToProjectDetails(project.id);
-              }}
-            >
-              {project.steps?.map((step: projectStep) => {
-                return (
-                  <TreeItem
-                    key={step.id}
-                    nodeId={`${project.id}_${step.id}`}
-                    label={`${step.name} (${step.progressPercentage}%)`}
-                    icon={
-                      <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
-                        <EditIcon id="edit" />
-                        <DeleteIcon id="delete" />
-                      </VisibilityGuard>
-                    }
-                    className="tree-item__task"
-                    onClick={(e: any) => {
-                      setSelectedStep(step);
-                      if (e.target?.id) {
-                        if (e.target.id === 'edit') {
-                          setEditStepModal(true);
-                        }
-                        if (e.target.id === 'delete') {
-                          setDeleteStepModal(true);
-                        }
-                      } else if (e.target?.parentNode?.id) {
-                        if (e.target.parentNode.id === 'edit') {
-                          setEditStepModal(true);
-                        }
-                        if (e.target.parentNode.id === 'delete') {
-                          setDeleteStepModal(true);
-                        }
-                      } else {
-                        goToProjectDetails(project.id, step.id);
+        {projectsRedux
+          ?.filter((project) => {
+            const name = project.name.toUpperCase();
+            const search = searchProject.toUpperCase();
+            return name.includes(search);
+          })
+          .filter((project) => {
+            if (withArchive) {
+              return true;
+            }
+            return project.isActive;
+          })
+          .map((project) => {
+            return (
+              <TreeItem
+                key={project.id}
+                nodeId={`${project.id}`}
+                label={`${project.name}`}
+                className={getClassName(project)}
+                onClick={() => {
+                  goToProjectDetails(project.id);
+                }}
+              >
+                {project.steps?.map((step: projectStep) => {
+                  return (
+                    <TreeItem
+                      key={step.id}
+                      nodeId={`${project.id}_${step.id}`}
+                      label={`${step.name} (${step.progressPercentage}%)`}
+                      icon={
+                        <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
+                          <EditIcon id="edit-step" />
+                          <DeleteIcon id="delete-step" />
+                        </VisibilityGuard>
                       }
+                      className="tree-item__task"
+                      onClick={(e: any) => {
+                        setSelectedStep(step);
+                        if (e.target?.id) {
+                          if (e.target.id === 'edit-step') {
+                            setEditStepModal(true);
+                          }
+                          if (e.target.id === 'delete-step') {
+                            setDeleteStepModal(true);
+                          }
+                        } else if (e.target?.parentNode?.id) {
+                          if (e.target.parentNode.id === 'edit-step') {
+                            setEditStepModal(true);
+                          }
+                          if (e.target.parentNode.id === 'delete-step') {
+                            setDeleteStepModal(true);
+                          }
+                        } else {
+                          goToProjectDetails(project.id, step.id);
+                        }
+                      }}
+                    />
+                  );
+                })}
+                <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
+                  <TreeItem
+                    nodeId={`${project.id}_Add`}
+                    label="Dodaj step"
+                    className="tree-item__step-add"
+                    onClick={() => {
+                      setProjectId(project.id);
+                      setAddStepModal(true);
                     }}
                   />
-                );
-              })}
-              <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
-                <TreeItem
-                  nodeId={`${project.id}_Add`}
-                  label="Dodaj step"
-                  className="tree-item__step-add"
-                  onClick={() => {
-                    setProjectId(project.id);
-                    setAddStepModal(true);
-                  }}
-                />
-              </VisibilityGuard>
-            </TreeItem>
-          );
-        })}
+                </VisibilityGuard>
+              </TreeItem>
+            );
+          })}
       </TreeView>
       {addStepModal && <FormStepModal open={addStepModal} handleClose={() => setAddStepModal(false)} projectId={projectId} />}
       {editStepModal && <FormStepModal open={editStepModal} handleClose={() => setEditStepModal(false)} projectId={projectId} step={selectedStep} />}

@@ -1,16 +1,13 @@
 import './styles.scss';
-import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from 'components/CustomInput/CustomInput';
 import SubtaskItem from 'components/SubtaskItem/SubtaskItem';
 import { projectSubtask } from 'core/types/api/subtask.request.types';
-import { taskDetailsType } from 'core/types/api/task.request.types';
-import React, { FC, useMemo, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import React, { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import CustomButton from 'components/CustomButton/CustomButton';
-import { deleteSubtask, postSubtask, updateSubtaskName, updateSubtaskStatus } from '../../redux/subtask/subtask.slice';
-import { getTask, selectTaskDetails } from 'redux/task/task.slice';
+import { deleteSubtask, postSubtask, updateSubtaskStatus } from '../../redux/subtask/subtask.slice';
+import { selectTaskDetails } from 'redux/task/task.slice';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
@@ -53,7 +50,7 @@ const SubtaskView: FC<{ handleClose: any }> = ({ handleClose }) => {
     }
   };
 
-  const disableOtherInputs = (id:number) => {
+  const disableOtherInputs = (id: number) => {
     setEnabledSubtaskId(id);
   };
 

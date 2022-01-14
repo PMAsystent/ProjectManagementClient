@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { loginUserType, newEmailType, newPasswordType, registerUserType, resetPasswordType } from 'core/types/api/auth.types';
+import { loginUserType, newPasswordType, registerUserType, resetPasswordType } from 'core/types/api/auth.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
 import { rootReducerInterface } from '../rootReducer';
 import {
-  changeEmailApi,
   confirmEmail,
   getCurrentUserApi,
   newPasswordApi,
+  refreshTokenApi,
   resetPasswordApi,
   userLoginApi,
   userLogoutApi,
@@ -19,10 +19,10 @@ export interface authReducerInterface {
   accessToken: null | string;
   user: null | { email: string; userId: number; userName: string };
   userFetchStatus: null | string;
-  postNewEmailFetchStatus: null | string;
   postResetPasswordFetchStatus: null | string;
   postNewPasswordFetchStatus: null | string;
   getConfirmEmailFetchStatus: null | string;
+  postRefreshTokenFetchStatus: null | string;
 }
 
 const INIT_STATE: authReducerInterface = {
@@ -31,16 +31,38 @@ const INIT_STATE: authReducerInterface = {
   accessToken: null,
   user: null,
   userFetchStatus: null,
-  postNewEmailFetchStatus: null,
   postNewPasswordFetchStatus: null,
   postResetPasswordFetchStatus: null,
   getConfirmEmailFetchStatus: null,
+  postRefreshTokenFetchStatus: null,
 };
 
 export const postRegister = createAsyncThunk<any, registerUserType, { rejectValue: string }>(
   'auth/registeruser',
   async (data, { rejectWithValue }) => {
     return userRegisterApi(data)
+      .then((response: any) => {
+        if (response.data?.errors && response.data.errors.length > 0) {
+          return rejectWithValue(response.data.errors[0]);
+        }
+        return response.data;
+      })
+      .catch((error) => rejectWithValue(error.response.data.title));
+  }
+);
+
+export const postRefreshToken = createAsyncThunk<any, void, { state: rootReducerInterface; rejectValue: string }>(
+  'auth/refreshtoken',
+  async (_, { rejectWithValue, getState }) => {
+    const {
+      auth: { accessToken, user },
+    } = getState();
+
+    let email;
+    if (user) {
+      email = user.email;
+    }
+    return refreshTokenApi(accessToken, email || '')
       .then((response: any) => {
         if (response.data?.errors && response.data.errors.length > 0) {
           return rejectWithValue(response.data.errors[0]);
@@ -71,6 +93,9 @@ export const postLogin = createAsyncThunk<any, loginUserType, { rejectValue: str
     .then((response) => {
       if (response.data?.errors && response.data.errors.length > 0) {
         return rejectWithValue(response.data.errors[0]);
+      }
+      if (!response.data?.user) {
+        return rejectWithValue('Nie znaleziono użytkownika');
       }
       return response.data;
     })
@@ -143,24 +168,6 @@ export const postNewPassword = createAsyncThunk<any, newPasswordType, { state: r
   }
 );
 
-export const postNewEmail = createAsyncThunk<any, newEmailType, { state: rootReducerInterface; rejectValue: string }>(
-  'auth/newEmail',
-  async (data, { rejectWithValue, getState }) => {
-    const {
-      auth: { accessToken },
-    } = getState();
-
-    return changeEmailApi(data, accessToken || '')
-      .then((response: any) => {
-        if (response.data?.errors && response.data.errors.length > 0) {
-          return rejectWithValue(response.data.errors[0]);
-        }
-        return response.data;
-      })
-      .catch((error) => rejectWithValue(error.response.data.title));
-  }
-);
-
 export const authReducer = createSlice({
   name: 'auth',
   initialState: INIT_STATE,
@@ -168,6 +175,7 @@ export const authReducer = createSlice({
     logout(state) {
       state.accessToken = null;
       state.user = null;
+      state.postResetPasswordFetchStatus = null;
     },
     clearRegisterFetchStatus(state) {
       state.registerFetchStatus = null;
@@ -233,17 +241,6 @@ export const authReducer = createSlice({
         state.userFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error('Pobieranie danych nie powiodło się');
       })
-      .addCase(postNewEmail.pending, (state, action) => {
-        state.postNewEmailFetchStatus = action.meta.requestStatus;
-      })
-      .addCase(postNewEmail.fulfilled, (state, action) => {
-        state.postNewEmailFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.success('Zmieniono email');
-      })
-      .addCase(postNewEmail.rejected, (state, action) => {
-        state.postNewEmailFetchStatus = action.meta.requestStatus;
-        SnackbarUtils.error(action.payload || 'Zmiana maila nie powiodła się');
-      })
       .addCase(postResetPassword.pending, (state, action) => {
         state.postResetPasswordFetchStatus = action.meta.requestStatus;
       })
@@ -265,6 +262,17 @@ export const authReducer = createSlice({
       .addCase(postNewPassword.rejected, (state, action) => {
         state.postNewPasswordFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error(action.payload || 'Zmiana hasła nie powiodła się');
+      })
+      .addCase(postRefreshToken.pending, (state, action) => {
+        state.postRefreshTokenFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(postRefreshToken.fulfilled, (state, action) => {
+        state.postRefreshTokenFetchStatus = action.meta.requestStatus;
+        if (action.payload.token) state.accessToken = action.payload.token;
+      })
+      .addCase(postRefreshToken.rejected, (state, action) => {
+        state.postRefreshTokenFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error(action.payload || 'Sesja wygasła - wylogowano użytkownika');
       });
   },
 });
@@ -277,3 +285,4 @@ export const selectLoginFetchStatus = (state: rootReducerInterface) => state.aut
 export const selectRegisterFetchStatus = (state: rootReducerInterface) => state.auth.registerFetchStatus;
 export const selectGetConfirmEmailFetchStatus = (state: rootReducerInterface) => state.auth.getConfirmEmailFetchStatus;
 export const selectPostResetPasswordFetchStatus = (state: rootReducerInterface) => state.auth.postResetPasswordFetchStatus;
+export const selectPostRefreshTokenFetchStatus = (state: rootReducerInterface) => state.auth.postRefreshTokenFetchStatus;
