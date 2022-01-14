@@ -20,7 +20,7 @@ const SubtaskItem: FC<{
   onSubtaskStateChange: any;
   setEnabledSubtaskId: any;
   enabledSubtaskId: number;
-}> = ({ subtask, onSubtaskDelete, onSubtaskStateChange, enabledSubtaskId: enabledSubtaskId, setEnabledSubtaskId: setEnabledSubtaskId }) => {
+}> = ({ subtask, onSubtaskDelete, onSubtaskStateChange, enabledSubtaskId, setEnabledSubtaskId }) => {
   const dispatch = useDispatch();
   const [checked, setChecked] = useState(subtask.isDone);
   const [helperText, setHelperText] = useState('');
@@ -59,7 +59,7 @@ const SubtaskItem: FC<{
     if (enabledSubtaskId !== subtask.id) {
       setInputDisabled(true);
     }
-  }, [enabledSubtaskId]);
+  }, [enabledSubtaskId, subtask?.id]);
   return (
     <div className="subtask-item">
       <div className="task-name-container" onDoubleClick={toggleInput}>
@@ -87,6 +87,7 @@ const SubtaskItem: FC<{
         <Tooltip title="Usuń subtask">
           <DeleteIcon
             fontSize="medium"
+            id="delete-subtask"
             onClick={() => {
               onSubtaskDelete(subtask.id);
             }}

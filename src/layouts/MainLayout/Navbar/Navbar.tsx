@@ -1,5 +1,5 @@
 import { AppBar, Avatar, Box, Hidden, IconButton, TextField, Toolbar, Tooltip } from '@mui/material';
-import { Settings, Search, Menu } from '@material-ui/icons';
+import { Search, Menu } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { getDashboardPath, getUserDetailsPath } from 'core/routes';
 import './styles.scss';
@@ -55,19 +55,21 @@ const Navbar = (props: { onSidebarOpen: any }) => {
           <TextField
             id="search"
             variant="standard"
+            placeholder={history.location.pathname.includes('/project/') ? 'Wpisz nazwę task' : 'Wpisz nazwę projektu'}
             value={value}
             onChange={handleOnSearchChange}
             disabled={!history.location.pathname.includes('/project/') && history.location.pathname !== getDashboardPath}
           />
         </Box>
         <Box sx={{ flexGrow: 20 }} />
+        <p className="label">Zarchiwizowane</p>
         <Tooltip title="Zarchiwizowane projekty">
-          <Switch checked={archive} onChange={handleArchiveChange} inputProps={{ 'aria-label': 'controlled' }} />
-        </Tooltip>
-        <Tooltip title="Settings">
-          <IconButton color="inherit">
-            <Settings className="navbar-icon" />
-          </IconButton>
+          <Switch
+            disabled={history.location.pathname !== getDashboardPath}
+            checked={archive}
+            onChange={handleArchiveChange}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />
         </Tooltip>
         <Tooltip title="Edycja profilu">
           {currentUser ? (

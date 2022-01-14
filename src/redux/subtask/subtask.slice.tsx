@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { rootReducerInterface } from '../rootReducer';
-import { projectPostSubtaskType, projectSubtask } from '../../core/types/api/subtask.request.types';
+import { projectPostSubtaskType } from '../../core/types/api/subtask.request.types';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { getTask } from 'redux/task/task.slice';
 import { instance } from 'api';
 import { postSubtaskApi } from 'api/utils.subtask';
-import { getProject, refreshTaskPercentage } from 'redux/project/project.slice';
+import { refreshTaskPercentage } from 'redux/project/project.slice';
 
 export interface subtaskReducerInterface {
   subtaskPostFetchStatus: null | string;
@@ -86,7 +86,6 @@ export const updateSubtaskStatus = createAsyncThunk<
 >('subtask/updateSubtaskStatus', async (data, { rejectWithValue, getState, dispatch }) => {
   const {
     auth: { accessToken },
-    project: { projectDetails },
   } = getState();
   return await instance
     .put(`/Subtasks/updateStatus/${data.id}`, data.status.toString(), {

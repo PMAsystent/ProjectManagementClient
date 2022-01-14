@@ -1,6 +1,18 @@
 @use '../../assets/styles/colors';
 
 .project-container {
+  #edit-project, #delete-project, #archive-project {
+    transition: color .25s ease-in-out;
+  }
+
+  #edit-project:hover {
+    color: colors.$primaryColor;
+  }
+
+  #delete-project:hover, #archive-project:hover {
+    color: colors.$errorColor;
+  }
+
   width: 100%;
   height: 100%;
   padding-bottom: 40px;

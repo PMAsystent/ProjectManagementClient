@@ -9,12 +9,6 @@ export interface loginUserType {
   password: string;
 }
 
-export interface newEmailType {
-  userName: string;
-  email: string;
-  newEmail: string;
-}
-
 export interface newPasswordType {
   userName: string;
   email: string;

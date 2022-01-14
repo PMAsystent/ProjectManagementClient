@@ -31,7 +31,7 @@
         .MuiInputBase-input.MuiInput-input {
           height: 42px;
           padding: 0 0 0 10px;
-          margin-bottom: 0px;
+          margin-bottom: 0;
         }
       }
     }
@@ -46,6 +46,13 @@
     align-items: center;
     svg {
       color: white !important;
+    }
+    #delete-subtask {
+      transition: color .25s ease-in-out;
+    }
+    #delete-subtask:hover {
+      color: colors.$errorColor !important;
+      cursor: pointer;
     }
   }
 }

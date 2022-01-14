@@ -25,6 +25,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { fetchStates } from '../../core/enums/redux.statues';
 import { setProjectAssignedUsers } from '../../redux/project/project.slice';
 import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
+import { selectAccessToken } from '../../redux/auth/auth.slice';
 
 const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, handleClose }) => {
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
@@ -32,13 +33,14 @@ const ProjectAssignedModal: FC<{ open: boolean; handleClose: any }> = ({ open, h
   const dispatch = useDispatch();
   const users = useSelector(selectProjectAssignments);
   const projectAssignmentsGetFetchStatus = useSelector(selectProjectAssignmentsGetFetchStatus);
+  const accessToken = useSelector(selectAccessToken);
   const { projectid } = useParams<{ projectid: string }>();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnChangeUsersDebounced = useCallback(
     debounce(async (query) => {
       setUsersOptionsLoading(true);
-      const response: any = await findUsers(query);
+      const response: any = await findUsers(query, accessToken);
       if (response?.count > 0) {
         setUsersOptions(response.users);
       } else {

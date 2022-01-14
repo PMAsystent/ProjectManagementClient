@@ -16,12 +16,12 @@ import {
   deleteProject,
   getProject,
   getProjects,
-  refreshTaskPercentage,
   selectProjectArchiveFetchStatus,
   selectProjectDeleteFetchStatus,
   selectProjectDetails,
   selectProjectDetailsFetchStatus,
   setProjectProgressPercentage,
+  setProjectStepsList,
   setProjectTaskList,
 } from 'redux/project/project.slice';
 import { fetchStates } from 'core/enums/redux.statues';
@@ -172,6 +172,7 @@ const ProjectDetails = () => {
             const result = await getProjectApi(+projectid, accessToken);
             if (result.data) {
               dispatch(setProjectTaskList(result.data.projectTasks));
+              dispatch(setProjectStepsList(result.data.projectSteps));
               dispatch(setProjectProgressPercentage(result.data.progressPercentage));
             }
             dispatch(getProjects()); // update projects list -> show new progressPercentage
@@ -200,7 +201,7 @@ const ProjectDetails = () => {
   };
 
   useEffect(() => {
-    setActiveTasks(columns[`${1}`].items.length + columns[`${2}`].items.length);
+    setActiveTasks(columns[`${2}`].items.length);
     setCompletedTasks(columns[`${3}`].items.length);
   }, [columns]);
 
@@ -262,14 +263,14 @@ const ProjectDetails = () => {
                 </h1>
                 <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
                   <Tooltip title="Edycja Projektu">
-                    <EditIcon onClick={() => setEditProjectModal(true)} />
+                    <EditIcon id="edit-project" onClick={() => setEditProjectModal(true)} />
                   </Tooltip>
                   <Tooltip title="Zarchiwizuj Projekt">
-                    <ArchiveIcon onClick={() => setArchiveProjectModal(true)} />
+                    <ArchiveIcon id="archive-project" onClick={() => setArchiveProjectModal(true)} />
                   </Tooltip>
                   {projectDetails?.projectCreator && projectDetails?.projectCreator.userId === user?.userId && (
                     <Tooltip title="Usuń Projekt">
-                      <DeleteIcon onClick={() => setDeleteProjectModal(true)} />
+                      <DeleteIcon id="delete-project" onClick={() => setDeleteProjectModal(true)} />
                     </Tooltip>
                   )}
                 </VisibilityGuard>
@@ -322,8 +323,8 @@ const ProjectDetails = () => {
                 })}
                 background
                 backgroundPadding={3}
-                value={projectDetails?.progressPercentage || 0}
-                text={`${projectDetails?.progressPercentage}%`}
+                value={step ? step.progressPercentage : projectDetails?.progressPercentage || 0}
+                text={`${step ? step.progressPercentage : projectDetails?.progressPercentage}%`}
               />
             </div>
           </div>
@@ -373,6 +374,7 @@ const ProjectDetails = () => {
             setAddTaskModal(false);
           }}
           stepId={stepid}
+          projectId={+projectid}
         />
       )}
       {editProjectModal && projectDetails && (

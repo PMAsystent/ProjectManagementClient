@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButton from 'components/CustomButton/CustomButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUser, postNewEmail, postNewPassword, selectUser } from 'redux/auth/auth.slice';
+import { getCurrentUser, postNewPassword, selectUser } from 'redux/auth/auth.slice';
 
 const validationSchemaPassword = yup.object({
   password: yup.string().required('Obecne hasło jest wymagane!'),
@@ -21,13 +21,6 @@ const validationSchemaPassword = yup.object({
     .required('Potwierdzenie hasła jest wymagane!'),
 });
 
-const validationSchemaEmail = yup.object({
-  newEmail: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
-  newEmailConfirm: yup
-    .string()
-    .oneOf([yup.ref('newEmail')], 'Emaile muszą być takie same!')
-    .required('Potwierdzenie email jest wymagane!'),
-});
 const UserDetails = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
@@ -37,13 +30,6 @@ const UserDetails = () => {
       password: '',
       newPassword: '',
       newPasswordConfirm: '',
-    }),
-    []
-  );
-  const defaultValueEmail = useMemo(
-    () => ({
-      newEmail: '',
-      newEmailConfirm: '',
     }),
     []
   );
@@ -58,16 +44,6 @@ const UserDetails = () => {
     }, [defaultValuePassword]),
     resolver: yupResolver(validationSchemaPassword),
   });
-  const {
-    register: registerEmail,
-    handleSubmit: handleSubmitEmail,
-    formState: { errors: errorsEmail },
-  } = useForm({
-    defaultValues: useMemo(() => {
-      return defaultValueEmail;
-    }, [defaultValueEmail]),
-    resolver: yupResolver(validationSchemaEmail),
-  });
 
   const onSubmitChangePassword = (values: any) => {
     if (currentUser) {
@@ -78,16 +54,6 @@ const UserDetails = () => {
         email: currentUser.email,
       };
       dispatch(postNewPassword(payload));
-    }
-  };
-  const onSubmitChangeEmail = (values: any) => {
-    if (currentUser) {
-      const payload = {
-        newEmail: values.newEmail,
-        userName: currentUser.userName,
-        email: currentUser.email,
-      };
-      dispatch(postNewEmail(payload));
     }
   };
 
@@ -101,44 +67,6 @@ const UserDetails = () => {
         <h1>Profil użytkownika</h1>
       </div>
       <div className="segments-container">
-        <div className="segment">
-          <div className="segment-headline">
-            <h2>Email</h2>
-          </div>
-          <div className="segment-content">
-            <form onSubmit={handleSubmitEmail(onSubmitChangeEmail)} key={'change-email'}>
-              <div className="input-field">
-                <h3>Obecny email</h3>
-                <CustomInput value={currentUser?.email || ''} className="dark" disabled={true} />
-              </div>
-              <div className="input-field">
-                <h3>Nowy email</h3>
-                <CustomInput
-                  {...registerEmail('newEmail')}
-                  placeholder="Nowy email"
-                  type="email"
-                  className="dark"
-                  helperText={errorsEmail.newEmail?.message}
-                  error={!!errorsEmail.newEmail}
-                />
-                <CustomInput
-                  {...registerEmail('newEmailConfirm')}
-                  placeholder="Potwierdź nowy email"
-                  type="email"
-                  className="dark"
-                  helperText={errorsEmail.newEmailConfirm?.message}
-                  error={!!errorsEmail.newEmailConfirm}
-                />
-              </div>
-
-              <div className="buttons-container">
-                <CustomButton type="submit" className="btn btn-success">
-                  Zmień email
-                </CustomButton>
-              </div>
-            </form>
-          </div>
-        </div>
         <div className="segment">
           <div className="segment-headline">
             <h2>Hasło</h2>
