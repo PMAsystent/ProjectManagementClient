@@ -94,6 +94,9 @@ export const postLogin = createAsyncThunk<any, loginUserType, { rejectValue: str
       if (response.data?.errors && response.data.errors.length > 0) {
         return rejectWithValue(response.data.errors[0]);
       }
+      if (!response.data?.user) {
+        return rejectWithValue('Nie znaleziono użytkownika');
+      }
       return response.data;
     })
     .catch((error) => rejectWithValue(error.response.data.title));
