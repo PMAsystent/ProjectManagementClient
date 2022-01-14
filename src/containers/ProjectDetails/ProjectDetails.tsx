@@ -20,7 +20,8 @@ import {
   selectProjectDeleteFetchStatus,
   selectProjectDetails,
   selectProjectDetailsFetchStatus,
-  setProjectProgressPercentage, setProjectStepsList,
+  setProjectProgressPercentage,
+  setProjectStepsList,
   setProjectTaskList,
 } from 'redux/project/project.slice';
 import { fetchStates } from 'core/enums/redux.statues';
@@ -262,14 +263,14 @@ const ProjectDetails = () => {
                 </h1>
                 <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
                   <Tooltip title="Edycja Projektu">
-                    <EditIcon onClick={() => setEditProjectModal(true)} />
+                    <EditIcon id="edit-project" onClick={() => setEditProjectModal(true)} />
                   </Tooltip>
                   <Tooltip title="Zarchiwizuj Projekt">
-                    <ArchiveIcon onClick={() => setArchiveProjectModal(true)} />
+                    <ArchiveIcon id="archive-project" onClick={() => setArchiveProjectModal(true)} />
                   </Tooltip>
                   {projectDetails?.projectCreator && projectDetails?.projectCreator.userId === user?.userId && (
                     <Tooltip title="Usuń Projekt">
-                      <DeleteIcon onClick={() => setDeleteProjectModal(true)} />
+                      <DeleteIcon id="delete-project" onClick={() => setDeleteProjectModal(true)} />
                     </Tooltip>
                   )}
                 </VisibilityGuard>

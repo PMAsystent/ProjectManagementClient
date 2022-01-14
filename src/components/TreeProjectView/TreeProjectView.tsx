@@ -123,25 +123,25 @@ const TreeProjectView: FC<any> = () => {
                       label={`${step.name} (${step.progressPercentage}%)`}
                       icon={
                         <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
-                          <EditIcon id="edit" />
-                          <DeleteIcon id="delete" />
+                          <EditIcon id="edit-step" />
+                          <DeleteIcon id="delete-step" />
                         </VisibilityGuard>
                       }
                       className="tree-item__task"
                       onClick={(e: any) => {
                         setSelectedStep(step);
                         if (e.target?.id) {
-                          if (e.target.id === 'edit') {
+                          if (e.target.id === 'edit-step') {
                             setEditStepModal(true);
                           }
-                          if (e.target.id === 'delete') {
+                          if (e.target.id === 'delete-step') {
                             setDeleteStepModal(true);
                           }
                         } else if (e.target?.parentNode?.id) {
-                          if (e.target.parentNode.id === 'edit') {
+                          if (e.target.parentNode.id === 'edit-step') {
                             setEditStepModal(true);
                           }
-                          if (e.target.parentNode.id === 'delete') {
+                          if (e.target.parentNode.id === 'delete-step') {
                             setDeleteStepModal(true);
                           }
                         } else {

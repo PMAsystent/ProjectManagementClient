@@ -87,6 +87,7 @@ const SubtaskItem: FC<{
         <Tooltip title="Usuń subtask">
           <DeleteIcon
             fontSize="medium"
+            id="delete-subtask"
             onClick={() => {
               onSubtaskDelete(subtask.id);
             }}
