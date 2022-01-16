@@ -15,3 +15,8 @@ export const putTaskApi = async (data: projectPutTaskType, accessToken: string) 
 export const getTaskApi = async (taskId: number, accessToken: string | null) => {
   return await instance.get<taskDetailsType>(`/Tasks/${taskId}`, { headers: { authorization: `Bearer ${accessToken}` } });
 };
+
+// delete task
+export const deleteTaskApi = async (id: number, accessToken: string) => {
+  return await instance.delete(`/Tasks/${id}`, { headers: { authorization: `Bearer ${accessToken}` } });
+};

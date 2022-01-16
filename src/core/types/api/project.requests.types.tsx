@@ -34,6 +34,7 @@ export interface projectDetailsType extends Omit<projectType, 'isActive'> {
   projectSteps: Array<projectStep>;
   projectTasks: Array<projectPutTaskType>;
   projectAssignedUsers: Array<projectAssignmentsType>;
+  isActive: boolean;
   projectCreator: {
     userId: number;
     userName: string;

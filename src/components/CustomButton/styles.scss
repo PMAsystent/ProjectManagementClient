@@ -48,6 +48,14 @@
   transition-duration: 300ms;
   cursor: pointer;
 
+  &.disabled {
+    cursor: default;
+    background-color: colors.$textColor;
+    &:hover {
+      background-color: colors.$textColor;
+    }
+  }
+
   :active {
     border: none;
   }
