@@ -48,6 +48,7 @@ import { Tooltip } from '@mui/material';
 import useRedirectOnDoneFetchStatus from '../../core/hooks/useRedirectOnDoneFetchStatus';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import { selectTaskSearch } from '../../redux/shared/shared.slice';
+import TaskItem from '../../components/TaskItem/TaskItem';
 
 const ProjectDetails = () => {
   const [step, setStep] = useState<null | projectStep>(null);
@@ -92,6 +93,13 @@ const ProjectDetails = () => {
         name: 'Dashboard',
         handleOnClick: () => history.push(getDashboardPath),
       },
+      {
+        icon: <AddTaskIcon />,
+        name: 'Dodaj nowy task',
+        handleOnClick: () => {
+          setAddTaskModal(true);
+        },
+      },
     ];
     if (projectDetails?.currentUserInfoInProject?.projectRole === projectRoleEnum.SUPER_MEMBER.value) {
       actionsArray.push({
@@ -100,18 +108,8 @@ const ProjectDetails = () => {
         handleOnClick: () => setAddStepModal(true),
       });
     }
-
-    if (stepid) {
-      actionsArray.push({
-        icon: <AddTaskIcon />,
-        name: 'Dodaj nowy task',
-        handleOnClick: () => {
-          setAddTaskModal(true);
-        },
-      });
-    }
     return actionsArray;
-  }, [history, projectDetails?.currentUserInfoInProject?.projectRole, stepid]);
+  }, [history, projectDetails?.currentUserInfoInProject?.projectRole]);
 
   const handleArchiveProject = () => {
     dispatch(archiveProject({ id: +projectid, isActive: false }));
@@ -261,19 +259,21 @@ const ProjectDetails = () => {
                 <h1>
                   {projectDetails?.name} {step?.name && `- ${step.name}`}
                 </h1>
-                <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
-                  <Tooltip title="Edycja Projektu">
-                    <EditIcon id="edit-project" onClick={() => setEditProjectModal(true)} />
-                  </Tooltip>
-                  <Tooltip title="Zarchiwizuj Projekt">
-                    <ArchiveIcon id="archive-project" onClick={() => setArchiveProjectModal(true)} />
-                  </Tooltip>
-                  {projectDetails?.projectCreator && projectDetails?.projectCreator.userId === user?.userId && (
-                    <Tooltip title="Usuń Projekt">
-                      <DeleteIcon id="delete-project" onClick={() => setDeleteProjectModal(true)} />
+                {projectDetails?.isActive && (
+                  <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
+                    <Tooltip title="Edycja Projektu">
+                      <EditIcon id="edit-project" onClick={() => setEditProjectModal(true)} />
                     </Tooltip>
-                  )}
-                </VisibilityGuard>
+                    <Tooltip title="Zarchiwizuj Projekt">
+                      <ArchiveIcon id="archive-project" onClick={() => setArchiveProjectModal(true)} />
+                    </Tooltip>
+                    {projectDetails?.projectCreator && projectDetails?.projectCreator.userId === user?.userId && (
+                      <Tooltip title="Usuń Projekt">
+                        <DeleteIcon id="delete-project" onClick={() => setDeleteProjectModal(true)} />
+                      </Tooltip>
+                    )}
+                  </VisibilityGuard>
+                )}
               </div>
               <div className="info-item">
                 <p>Aktywne Zadania</p>
@@ -297,16 +297,31 @@ const ProjectDetails = () => {
               </div>
               <div className="info-item team">
                 <p>Zespół</p>
-                <AvatarList member={projectDetails?.currentUserInfoInProject?.projectRole || ''} users={projectDetails?.projectAssignedUsers || []} />
+                <AvatarList
+                  disabled={!projectDetails?.isActive}
+                  member={projectDetails?.currentUserInfoInProject?.projectRole || ''}
+                  users={projectDetails?.projectAssignedUsers || []}
+                />
               </div>
               <div className="info-item">
                 <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
-                  <CustomButton onClick={() => setAddStepModal(true)} icon={<PlaylistAddIcon />} className="btn-project" style={{ marginRight: 15 }}>
+                  <CustomButton
+                    disabled={!projectDetails?.isActive}
+                    onClick={() => setAddStepModal(true)}
+                    icon={<PlaylistAddIcon />}
+                    className="btn-project"
+                    style={{ marginRight: 15 }}
+                  >
                     Nowy Step
                   </CustomButton>
                 </VisibilityGuard>
                 {projectDetails?.projectSteps && projectDetails.projectSteps.length > 0 && (
-                  <CustomButton onClick={() => setAddTaskModal(true)} icon={<AddTaskIcon />} className="btn-project">
+                  <CustomButton
+                    disabled={!projectDetails?.isActive}
+                    onClick={() => setAddTaskModal(true)}
+                    icon={<AddTaskIcon />}
+                    className="btn-project"
+                  >
                     Nowy Task
                   </CustomButton>
                 )}
@@ -328,25 +343,53 @@ const ProjectDetails = () => {
               />
             </div>
           </div>
-          <DragDropContext onDragEnd={(result) => onDragEnd(result, columns, setColumns)}>
+          {projectDetails?.isActive ? (
+            <DragDropContext onDragEnd={(result) => onDragEnd(result, columns, setColumns)}>
+              <div className="project-tasks">
+                {Object.entries(columns).map(([columnId, column]: any) => (
+                  <TaskList
+                    tasks={
+                      column?.items.filter((item: any) => {
+                        const name = item.name.toUpperCase();
+                        const search = searchTask.toUpperCase();
+                        return name.includes(search);
+                      }) || []
+                    }
+                    key={columnId}
+                    name={column?.name || ''}
+                    title={column?.title || ''}
+                    prefix={columnId}
+                  />
+                ))}
+              </div>
+            </DragDropContext>
+          ) : (
             <div className="project-tasks">
               {Object.entries(columns).map(([columnId, column]: any) => (
-                <TaskList
-                  tasks={
-                    column?.items.filter((item: any) => {
+                <div key={columnId} className="tasks-container">
+                  <h1>{column?.title || ''}</h1>
+                  <div className="tasks-drop">
+                    {column?.items
+                      .filter((item: any) => {
+                        const name = item.name.toUpperCase();
+                        const search = searchTask.toUpperCase();
+                        return name.includes(search);
+                      })
+                      .map((task: any) => (
+                        <div key={task?.id} className="task-container-drop">
+                          <TaskItem disabled task={task} />
+                        </div>
+                      ))}
+                    {column?.items.filter((item: any) => {
                       const name = item.name.toUpperCase();
                       const search = searchTask.toUpperCase();
                       return name.includes(search);
-                    }) || []
-                  }
-                  key={columnId}
-                  name={column?.name || ''}
-                  title={column?.title || ''}
-                  prefix={columnId}
-                />
+                    }).length === 0 && <div className={'tasks-empty'}>Brak tasków</div>}
+                  </div>
+                </div>
               ))}
             </div>
-          </DragDropContext>
+          )}
         </>
       )}
       <BasicSpeedDial actions={actions} />

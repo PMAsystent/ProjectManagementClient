@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ProjectAssignedModal from 'containers/ProjectAssignedModal/ProjectAssignedModal';
 import VisibilityGuard from 'core/hoc/VisibilityGuard';
 
-const AvatarList: FC<{ users: Array<projectAssignmentsType>; member: string }> = ({ users, member }) => {
+const AvatarList: FC<{ users: Array<projectAssignmentsType>; member: string; disabled?: boolean }> = ({ users, member, disabled }) => {
   const [assignedUsersModalOpen, setAssignedUsersModalOpen] = useState(false);
 
   return (
@@ -50,7 +50,12 @@ const AvatarList: FC<{ users: Array<projectAssignmentsType>; member: string }> =
       )}
       <VisibilityGuard member={member}>
         <Tooltip title="Edycja przypisanych użytkowników">
-          <Avatar onClick={() => setAssignedUsersModalOpen(true)} sx={{ cursor: 'pointer', bgcolor: 'rgb(255, 153, 0)' }}>
+          <Avatar
+            onClick={() => {
+              if (!disabled) setAssignedUsersModalOpen(true);
+            }}
+            sx={{ cursor: !disabled ? 'pointer' : 'default', bgcolor: !disabled ? 'rgb(255, 153, 0)' : 'rgb(180,177,177)' }}
+          >
             <AddIcon />
           </Avatar>
         </Tooltip>

@@ -123,8 +123,12 @@ const TreeProjectView: FC<any> = () => {
                       label={`${step.name} (${step.progressPercentage}%)`}
                       icon={
                         <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
-                          <EditIcon id="edit-step" />
-                          <DeleteIcon id="delete-step" />
+                          {project?.isActive && (
+                            <>
+                              <EditIcon id="edit-step" />
+                              <DeleteIcon id="delete-step" />
+                            </>
+                          )}
                         </VisibilityGuard>
                       }
                       className="tree-item__task"

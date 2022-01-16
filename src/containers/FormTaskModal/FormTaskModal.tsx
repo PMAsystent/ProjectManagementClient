@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   clearTaskDetails,
   clearTaskPostFetchStatus,
+  deleteTask,
   getTask,
   postTask,
   putTask,
@@ -39,6 +40,8 @@ import FeedIcon from '@mui/icons-material/Feed';
 import { selectAccessToken } from '../../redux/auth/auth.slice';
 import { projectStep } from '../../core/types/api/step.request.types';
 import { selectProjectDetails } from '../../redux/project/project.slice';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
@@ -56,6 +59,7 @@ const FormTaskModal: FC<any> = (props) => {
   const taskDetailsFetchStatus = useSelector(selectTaskDetailsFetchStatus);
   const taskDetails = useSelector(selectTaskDetails);
   const projectDetails = useSelector(selectProjectDetails);
+  const [deleteTaskModal, setDeleteTaskModal] = useState<boolean>(false);
   const [step, setStep] = useState<number | ''>(props.stepId || '');
   const [steps, setSteps] = useState<projectStep[]>([]);
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
@@ -150,6 +154,13 @@ const FormTaskModal: FC<any> = (props) => {
     []
   );
 
+  const handleCloseDeleteTask = (success: boolean) => {
+    setDeleteTaskModal(false);
+    if (success) {
+      dispatch(deleteTask());
+    }
+  };
+
   const handleUserSelect = (e: any, value: any) => {
     let assignsArray: any[] = methods.getValues('assignedUsers');
     if (!assignsArray.find((assign) => assign.id === value.id)) {
@@ -194,7 +205,20 @@ const FormTaskModal: FC<any> = (props) => {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} key={'addtask'}>
             <div className="add-task-container">
-              <h1>{props.task ? `${props.task.name} - Edycja` : 'Nowy task'}</h1>
+              <h1>
+                {props.task ? `${props.task.name} - Edycja` : 'Nowy task'}{' '}
+                {props.task && (
+                  <Tooltip
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteTaskModal(true);
+                    }}
+                    title="Usuń Taska"
+                  >
+                    <DeleteIcon id="delete-task" />
+                  </Tooltip>
+                )}
+              </h1>
               {props.task && (
                 <Tooltip title="Przełącz widok">
                   <Button
@@ -295,6 +319,14 @@ const FormTaskModal: FC<any> = (props) => {
             </div>
           </form>
         </FormProvider>
+        {deleteTaskModal && (
+          <ConfirmationModal
+            title={'Usuwanie Task'}
+            text={`Czy napewno chcesz usunąć ${props.task?.name}?`}
+            open={deleteTaskModal}
+            handleClose={handleCloseDeleteTask}
+          />
+        )}
       </div>
     </Modal>
   );

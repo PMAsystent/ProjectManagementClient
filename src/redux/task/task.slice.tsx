@@ -2,18 +2,20 @@ import { rootReducerInterface } from '../rootReducer';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { projectPostTaskType, projectPutTaskType, taskDetailsType } from 'core/types/api/task.request.types';
 import SnackbarUtils from 'core/utils/SnackbarUtils';
-import { getTaskApi, postTaskApi, putTaskApi } from '../../api/utils.task';
+import { deleteTaskApi, getTaskApi, postTaskApi, putTaskApi } from '../../api/utils.task';
 import { getProject } from 'redux/project/project.slice';
 
 export interface taskReducerInterface {
   taskPostFetchStatus: null | string;
   taskDetailsFetchStatus: null | string;
+  taskDeleteFetchStatus: null | string;
   taskDetails: null | taskDetailsType;
 }
 
 const INIT_STATE: taskReducerInterface = {
   taskPostFetchStatus: null,
   taskDetailsFetchStatus: null,
+  taskDeleteFetchStatus: null,
   taskDetails: null,
 };
 
@@ -32,6 +34,27 @@ export const postTask = createAsyncThunk<any, projectPostTaskType, { state: root
       .catch((error) => {
         return rejectWithValue(error.response?.data || '');
       });
+  }
+);
+
+export const deleteTask = createAsyncThunk<any, void, { state: rootReducerInterface; rejectValue: string }>(
+  'task/deleteTask',
+  async (_, { rejectWithValue, getState, dispatch }) => {
+    const {
+      auth: { accessToken },
+      tasks: { taskDetails },
+      project: { projectDetails },
+    } = getState();
+    if (taskDetails?.id) {
+      return deleteTaskApi(taskDetails?.id, accessToken || '')
+        .then(async (response) => {
+          dispatch(getProject(projectDetails?.id || 0));
+          return response.data;
+        })
+        .catch((error) => {
+          return rejectWithValue(error.response?.data || '');
+        });
+    }
   }
 );
 
@@ -113,6 +136,17 @@ export const taskReducer = createSlice({
       .addCase(getTask.rejected, (state, action) => {
         state.taskDetailsFetchStatus = action.meta.requestStatus;
         SnackbarUtils.error('Pobranie taska nie powiodło się');
+      })
+      .addCase(deleteTask.pending, (state, action) => {
+        state.taskDeleteFetchStatus = action.meta.requestStatus;
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.taskDeleteFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.success('Usunięto taska');
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.taskDeleteFetchStatus = action.meta.requestStatus;
+        SnackbarUtils.error('Usuwanie taska nie powiodło się');
       });
   },
 });
