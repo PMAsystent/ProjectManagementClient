@@ -7,7 +7,7 @@ import { projectPutTaskType } from '../../core/types/api/task.request.types';
 import { taskPriority } from '../../core/enums/task.priority';
 import FormTaskModal from '../../containers/FormTaskModal/FormTaskModal';
 
-const TaskItem: FC<{ task: projectPutTaskType }> = ({ task }) => {
+const TaskItem: FC<{ task: projectPutTaskType; disabled?: boolean }> = ({ task, disabled }) => {
   const [editTaskModal, setEditTaskModal] = useState(false);
   const [priority, setPriority] = useState<{ orange: number[]; white: number[] }>({
     orange: [],
@@ -37,10 +37,11 @@ const TaskItem: FC<{ task: projectPutTaskType }> = ({ task }) => {
   return (
     <div className="task">
       <span
+        style={{ cursor: disabled ? 'default' : 'pointer' }}
         className="task-title"
         onClick={(e) => {
           e.stopPropagation();
-          setEditTaskModal(true);
+          if (!disabled) setEditTaskModal(true);
         }}
       >
         <h2>{task.name}</h2>
