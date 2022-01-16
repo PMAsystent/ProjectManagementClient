@@ -8,7 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
 import { sendResetPasswordEmailApi } from '../../api/utils.auth';
 import SnackbarUtils from '../../core/utils/SnackbarUtils';
-import {getLoginPath} from "../../core/routes";
+import { getLoginPath } from '../../core/routes';
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
