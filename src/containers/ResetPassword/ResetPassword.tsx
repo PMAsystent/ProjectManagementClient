@@ -8,6 +8,7 @@ import { useRedirectOnDoneFetchStatus } from '../../core/hooks';
 import { getLoginPath } from '../../core/routes';
 import { clearPostResetPasswordFetchStatus, postResetPassword, selectPostResetPasswordFetchStatus } from '../../redux/auth/auth.slice';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
@@ -38,6 +39,7 @@ const ResetPassword = () => {
     []
   );
   const dispatch = useDispatch();
+  const history = useHistory();
   const postResetPasswordFetchStatus = useSelector(selectPostResetPasswordFetchStatus);
 
   const {
@@ -53,7 +55,8 @@ const ResetPassword = () => {
   });
 
   const onSubmit = (values: any) => {
-    dispatch(postResetPassword({ email: values['email'], newPassword: values['password'], token: 'token123' }));
+    const token = history.location.search.replace('?token=', '');
+    dispatch(postResetPassword({ email: values['email'], newPassword: values['password'], token }));
   };
 
   useRedirectOnDoneFetchStatus({ status: postResetPasswordFetchStatus, path: getLoginPath, clearFunction: clearPostResetPasswordFetchStatus });

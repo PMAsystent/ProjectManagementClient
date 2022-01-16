@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
-import { Button, Modal, Tooltip } from '@mui/material';
+import { Button, MenuItem, Modal, Select, Tooltip } from '@mui/material';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -37,6 +37,9 @@ import SubtaskView from 'components/SubtaskView/SubtaskView';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import FeedIcon from '@mui/icons-material/Feed';
 import { selectAccessToken } from '../../redux/auth/auth.slice';
+import { projectStep } from '../../core/types/api/step.request.types';
+import { selectProjectDetails } from '../../redux/project/project.slice';
+
 const validationSchema = yup.object({
   name: yup.string().required('Nazwa jest wymagana').min(3, 'Nazwa musi mieć conajmniej 3 znaki').max(30, 'Nazwa musi mieć mniej niż 30 znaków'),
   description: yup.string(),
@@ -44,14 +47,17 @@ const validationSchema = yup.object({
     .mixed()
     .test('is-date', 'Data zakończenia jest wymagana', (value) => isValid(value))
     .required('Data zakończenia jest wymagana'),
+  stepId: yup.string().required('Step jest wymagany'),
 });
 
 const FormTaskModal: FC<any> = (props) => {
   const dispatch = useDispatch();
-  const stepId = props.stepId;
   const taskPostFetchStatus = useSelector(selectTaskPostFetchStatus);
   const taskDetailsFetchStatus = useSelector(selectTaskDetailsFetchStatus);
   const taskDetails = useSelector(selectTaskDetails);
+  const projectDetails = useSelector(selectProjectDetails);
+  const [step, setStep] = useState<number | ''>(props.stepId || '');
+  const [steps, setSteps] = useState<projectStep[]>([]);
   const [usersOptions, setUsersOptions] = useState<any[]>([]);
   const [usersOptionsLoading, setUsersOptionsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
@@ -64,6 +70,7 @@ const FormTaskModal: FC<any> = (props) => {
       dueDate: '',
       priority: 1,
       assignedUsers: [],
+      stepId: '',
     }),
     []
   );
@@ -83,9 +90,17 @@ const FormTaskModal: FC<any> = (props) => {
     if (props.task) {
       dispatch(putTask({ ...props.task, ...values }));
     } else {
-      dispatch(postTask({ stepId: stepId, progressPercentage: 0, taskStatus: taskType.TODO, ...values }));
+      dispatch(postTask({ progressPercentage: 0, taskStatus: taskType.TODO, ...values }));
     }
   };
+
+  useEffect(() => {
+    setSteps(projectDetails?.projectSteps || []);
+    if (props.stepId) {
+      methods.setValue('stepId', props.stepId + '');
+      methods.clearErrors('stepId');
+    }
+  }, [methods, projectDetails?.projectSteps, props.stepId]);
 
   useEffect(() => {
     if (props.task) {
@@ -94,7 +109,9 @@ const FormTaskModal: FC<any> = (props) => {
         description: props.task.description,
         dueDate: new Date(props.task.dueDate),
         priority: priorityStringToNumber(props.task.priority),
+        stepId: props.task.stepId,
       });
+      setStep(props.task.stepId);
     }
   }, [methods, props.task]);
 
@@ -146,6 +163,12 @@ const FormTaskModal: FC<any> = (props) => {
     setUsers(assignsArray);
   };
 
+  const handleOnChangeStep = (value: any) => {
+    setStep(value);
+    methods.setValue('stepId', value + '');
+    methods.clearErrors('stepId');
+  };
+
   const handleRemoveUser = (id: number) => {
     if (props.task) {
       dispatch(deleteTaskAssignment({ userId: id, taskId: props.task.id }));
@@ -158,6 +181,7 @@ const FormTaskModal: FC<any> = (props) => {
     clearFunction: clearTaskPostFetchStatus,
     handleClose: props.handleClose,
   });
+
   return (
     <Modal
       open={props.open}
@@ -218,6 +242,21 @@ const FormTaskModal: FC<any> = (props) => {
                     </div>
                   </div>
                   <div className="assigns-form">
+                    <div style={{ marginBottom: '10px' }}>Step</div>
+                    <Select
+                      value={step}
+                      className="custom-select"
+                      onChange={(e) => handleOnChangeStep(e.target.value)}
+                      error={!!methods.formState.errors.step}
+                    >
+                      {Object.values(steps).map((step) => (
+                        <MenuItem key={step.id} value={step.id}>
+                          {step.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <div className={'step-error'}>{!!methods.formState.errors.step && 'Step jest wymagany'}</div>
+                    <CustomInput style={{ width: '0px', height: '0px' }} {...methods.register('stepId')} type="hidden" />
                     <AsyncAutocomplete
                       name={'findUsers'}
                       label={'Dodaj użytkownika'}

@@ -305,7 +305,7 @@ const ProjectDetails = () => {
                     Nowy Step
                   </CustomButton>
                 </VisibilityGuard>
-                {stepid && (
+                {projectDetails?.projectSteps && projectDetails.projectSteps.length > 0 && (
                   <CustomButton onClick={() => setAddTaskModal(true)} icon={<AddTaskIcon />} className="btn-project">
                     Nowy Task
                   </CustomButton>
