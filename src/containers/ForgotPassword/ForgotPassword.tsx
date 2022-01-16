@@ -7,6 +7,8 @@ import * as yup from 'yup';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
 import { sendResetPasswordEmailApi } from '../../api/utils.auth';
+import SnackbarUtils from '../../core/utils/SnackbarUtils';
+import { getLoginPath } from '../../core/routes';
 
 const validationSchema = yup.object({
   email: yup.string().email('Email jest niepoprawny!').required('Email jest wymagany!'),
@@ -45,11 +47,16 @@ const ForgotPassword = () => {
 
   const onSubmit = (values: any) => {
     sendResetPasswordEmailApi({ email: values['email'] })
-      .then((response) => {
-        console.log(response);
+      .then((response: any) => {
+        if (response.data?.isSented) {
+          SnackbarUtils.success('Wysłano email do zmiany hasła');
+          history.push(getLoginPath);
+        } else {
+          SnackbarUtils.success('Nie udało się wysłać emaila do zmiany hasła');
+        }
       })
       .catch((err) => {
-        console.log(err);
+        SnackbarUtils.success('Nie udało się wysłać emaila do zmiany hasła');
       });
   };
 

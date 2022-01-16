@@ -5,7 +5,7 @@ import SnackbarUtils from '../../core/utils/SnackbarUtils';
 import { deleteProjectApi, getProjectApi, getProjectsApi, patchProjectApi, postProjectApi, putProjectApi } from '../../api/utils.project';
 import { projectAssignmentsType } from '../../core/types/api/assigned.request.types';
 import { projectPutTaskType } from 'core/types/api/task.request.types';
-import {projectStep} from "../../core/types/api/step.request.types";
+import { projectStep } from '../../core/types/api/step.request.types';
 
 export interface projectReducerInterface {
   projectList: Array<projectType>;
