@@ -12,6 +12,13 @@
   display: flex;
   flex-wrap: wrap;
   padding-left: 20px;
+  #delete-task {
+    transition: color .25s ease-in-out;
+    cursor: pointer;
+  }
+  #delete-task:hover {
+    color: colors.$errorColor;
+  }
   .step-error {
     color: colors.$errorColor;
     font-size: 0.75rem;
