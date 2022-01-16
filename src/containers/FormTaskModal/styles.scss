@@ -12,6 +12,26 @@
   display: flex;
   flex-wrap: wrap;
   padding-left: 20px;
+  .step-error {
+    color: colors.$errorColor;
+    font-size: 0.75rem;
+    min-height: 14px;
+  }
+
+  .custom-select {
+    width: 100%;
+    background-color: colors.$secondaryColor;
+    color: colors.$textColor;
+    padding: 0 0 0 20px;
+    height: 52px;
+    margin-bottom: 10px;
+    &:focus-visible {
+      outline: -webkit-focus-ring-color auto 1px;
+    }
+    .MuiSvgIcon-root {
+      color: colors.$secondaryColor;
+    }
+  }
 
   .btn-switch-view {
     position: absolute;
