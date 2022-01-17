@@ -38,7 +38,7 @@ const ProjectTile: FC<{ name: string; activeTasks: number; progressBar: number; 
       </div>
       <div>
         <p>Stan</p>
-        <h4>{isActive ? 'Aktywne' : 'Zarchiwizowane'}</h4>
+        <h4>{isActive ? 'Aktywny' : 'Zarchiwizowany'}</h4>
       </div>
       <div>
         <p>Deadline</p>
