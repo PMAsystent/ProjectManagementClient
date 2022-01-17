@@ -93,23 +93,26 @@ const ProjectDetails = () => {
         name: 'Dashboard',
         handleOnClick: () => history.push(getDashboardPath),
       },
-      {
-        icon: <AddTaskIcon />,
-        name: 'Dodaj nowy task',
-        handleOnClick: () => {
-          setAddTaskModal(true);
-        },
-      },
     ];
-    if (projectDetails?.currentUserInfoInProject?.projectRole === projectRoleEnum.SUPER_MEMBER.value) {
+    if (projectDetails?.currentUserInfoInProject?.projectRole === projectRoleEnum.SUPER_MEMBER.value && projectDetails?.isActive) {
       actionsArray.push({
         icon: <PlaylistAddIcon />,
         name: 'Dodaj nowy step',
         handleOnClick: () => setAddStepModal(true),
       });
     }
+
+    if (projectDetails?.isActive) {
+      actionsArray.push({
+        icon: <AddTaskIcon />,
+        name: 'Dodaj nowy task',
+        handleOnClick: () => {
+          setAddTaskModal(true);
+        },
+      });
+    }
     return actionsArray;
-  }, [history, projectDetails?.currentUserInfoInProject?.projectRole]);
+  }, [history, projectDetails?.currentUserInfoInProject?.projectRole, projectDetails?.isActive]);
 
   const handleArchiveProject = () => {
     dispatch(archiveProject({ id: +projectid, isActive: false }));
@@ -284,8 +287,8 @@ const ProjectDetails = () => {
                 <h3>{completedTasks}</h3>
               </div>
               <div className="info-item">
-                <p>Typ Projektu</p>
-                <h3>Aplikacja</h3>
+                <p>Stan</p>
+                <h3>{projectDetails?.isActive ? 'Aktywny' : 'Zarchiwizowany'}</h3>
               </div>
               <div className="info-item">
                 <p>Data Rozpoczęcia</p>
