@@ -15,8 +15,8 @@ describe('Priority Name Modal Tests', () => {
 
   it('Should render the component', () => {
     render(
-      <FormTaskModal open={open} handleClose={handleOnClose} stepId={1} projectId={1}>
-        <PriorityNameDisplayer priorityFieldName={'1'} />
+      <FormTaskModal open={open} handleClose={handleOnClose} projectId={1}>
+        <PriorityNameDisplayer priorityFieldName={'2'} />
       </FormTaskModal>
     );
     screen.getByText('NISKI');
