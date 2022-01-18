@@ -22,7 +22,6 @@ describe('Add Project Modal Tests', () => {
     fireEvent.click(screen.getByText('Zapisz'));
     await waitFor(() => {
       screen.getByText('Data zakończenia jest wymagana');
-      screen.getByText('Opis jest wymagany');
       screen.getByText('Nazwa jest wymagana');
     });
   });
@@ -49,7 +48,6 @@ describe('Add Project Modal Tests', () => {
 
     await waitFor(() => {
       screen.getByText(/Nazwa musi mieć conajmniej 3 znaki/i);
-      screen.getByText(/Opis musi mieć conajmniej 20 znaków/i);
       screen.getByText(/Data zakończenia jest wymagana/i);
     });
   });
@@ -69,7 +67,7 @@ describe('Add Project Modal Tests', () => {
     });
 
     fireEvent.change(datePicker, {
-      target: { value: '12/29/2021' },
+      target: { value: '01/12/2023' },
     });
 
     fireEvent.click(screen.getByText('Zapisz'));
@@ -94,7 +92,7 @@ describe('Add Project Modal Tests', () => {
     });
 
     fireEvent.change(datePicker, {
-      target: { value: '12/29/2021' },
+      target: { value: '01/12/2023' },
     });
 
     fireEvent.click(screen.getByText('Zapisz'));

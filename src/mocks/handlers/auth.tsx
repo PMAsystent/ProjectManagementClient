@@ -13,7 +13,7 @@ export const auth = [
       },
     });
     if (user && user.password === req.body.password) {
-      return res(ctx.status(201), ctx.json('askdofnodsafsoanfosda'));
+      return res(ctx.status(201), ctx.json({ user: 'value', token: 'askdofnodsafsoanfosda' }));
     }
 
     return res(
@@ -33,6 +33,13 @@ export const auth = [
       ctx.status(403),
       ctx.json({
         error: 'Rejestracja nieudana',
+      })
+    );
+  }),
+  rest.post(`/Auth/RefreshToken`, (req, res, ctx) => {
+    return res(
+      ctx.json({
+        token: 'sdadsadsad',
       })
     );
   }),
