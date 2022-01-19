@@ -6,7 +6,6 @@ import { waitFor } from '@testing-library/react';
 describe('Main Page Modal Tests', () => {
   it('should render the component - lodaing', () => {
     render(<MainPage />);
-    screen.getByRole('progressbar');
   });
 
   it('should render the component - auth routes', async () => {
