@@ -69,7 +69,7 @@ const SubtaskView: FC<{ handleClose: any }> = ({ handleClose }) => {
           }}
           onChange={(event: any) => setNewSubtaskName(event.target.value)}
         />
-        <CustomButton type="button" className="btn-success" onClick={() => onAdd()}>
+        <CustomButton data-testid="add" type="button" className="btn-success" onClick={() => onAdd()}>
           Dodaj
         </CustomButton>
       </div>
