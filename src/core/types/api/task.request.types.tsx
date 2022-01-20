@@ -12,7 +12,7 @@ export interface taskDetailsType {
   priority: string;
   taskStatus: string;
   dueDate: string;
-  stepId: number;
+  stepId: number | string;
   assignedUser: Array<taskAssignmentsType>;
   subtasks: Array<projectSubtask>;
   description?: string;

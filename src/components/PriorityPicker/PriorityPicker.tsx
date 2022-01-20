@@ -42,6 +42,7 @@ const PriorityPicker: FC<{ value: number; onChange: any }> = ({ value, onChange 
         <FiberManualRecordIcon
           key={x.key}
           data-key={x.key}
+          data-testid={x.isSelected ? 'active' : ''}
           className={x.isHovered ? 'circle-orange-hover' : x.isSelected ? 'circle-orange' : 'circle'}
           onMouseOver={(event) => handleOnPriorityHover(event.currentTarget.getAttribute('data-key'))}
           onMouseLeave={(event) => handleOnPriorityHoverEnd(event.currentTarget.getAttribute('data-key'))}

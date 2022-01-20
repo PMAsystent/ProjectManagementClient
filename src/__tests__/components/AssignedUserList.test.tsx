@@ -11,14 +11,15 @@ describe('Assigned User List Tests', () => {
   it('Should render with provided users', async () => {
     render(
       <AssignedUserList
+        includeCurrentUser={false}
         users={[
           {
-            id: 1,
+            userId: 1,
             userName: 'johnDoe',
             email: 'johnDoe@gmail.com',
           },
           {
-            id: 2,
+            userId: 2,
             userName: 'jackSparrow',
             email: 'jackSparrow@gmail.com',
           },
@@ -26,19 +27,19 @@ describe('Assigned User List Tests', () => {
       />
     );
 
-    await waitFor(() => screen.getByText(/johnDoe@gmail.com/i));
-    await waitFor(() => screen.getByText(/jackSparrow@gmail.com/i));
+    await waitFor(() => screen.getByText(/johnDoe/i));
+    await waitFor(() => screen.getByText(/jackSparrow/i));
   });
 
   it('should display additional action (display userName) in user', async () => {
     render(
       <AssignedUserList
         addtionalActions={(user: any) => {
-          return <div>{user?.userName}</div>;
+          return <div>{user?.email}</div>;
         }}
         users={[
           {
-            id: 1,
+            userId: 1,
             userName: 'johnDoe',
             email: 'john@gmail.com',
           },
