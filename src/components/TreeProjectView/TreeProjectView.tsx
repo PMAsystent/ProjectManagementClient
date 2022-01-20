@@ -156,15 +156,17 @@ const TreeProjectView: FC<any> = () => {
                   );
                 })}
                 <VisibilityGuard member={projectDetails?.currentUserInfoInProject?.projectRole || ''}>
-                  <TreeItem
-                    nodeId={`${project.id}_Add`}
-                    label="Dodaj step"
-                    className="tree-item__step-add"
-                    onClick={() => {
-                      setProjectId(project.id);
-                      setAddStepModal(true);
-                    }}
-                  />
+                  {project?.isActive && (
+                    <TreeItem
+                      nodeId={`${project.id}_Add`}
+                      label="Dodaj step"
+                      className="tree-item__step-add"
+                      onClick={() => {
+                        setProjectId(project.id);
+                        setAddStepModal(true);
+                      }}
+                    />
+                  )}
                 </VisibilityGuard>
               </TreeItem>
             );
